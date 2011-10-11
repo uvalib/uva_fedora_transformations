@@ -134,6 +134,9 @@
 				<xsl:call-template name="getDescription">
 					<xsl:with-param name="mode" select="'primary'"/>
 				</xsl:call-template>
+				<xsl:call-template name="getLanguageNote">
+					<xsl:with-param name="mode" select="primary"/>
+				</xsl:call-template>
 				<xsl:call-template name="getSubjects">
 					<xsl:with-param name="mode" select="'primary'"/>
 				</xsl:call-template>
@@ -419,7 +422,22 @@
 			</xsl:choose>
 		</xsl:for-each>
 	</xsl:template>
-
+	
+	<xsl:template name="getLanguageNote">
+		<xsl:param name="mode"/>
+		<xsl:for-each select="//mods:note[@type='language']">
+			<field name="language_note_text" source="{$mode}">
+				<xsl:value-of select="current()"/>
+			</field>
+			<field name="language_note_display" source="{$mode}">
+				<xsl:value-of select="current()"/>
+			</field>
+			<xsl:choose>
+				<xsl:when test="$mode = 'secondary'"> </xsl:when>
+			</xsl:choose>
+		</xsl:for-each>		
+	</xsl:template>
+	
 	<xsl:template name="getSubjects">
 		<xsl:param name="mode"/>
 		<xsl:for-each select="//mods:subject">
