@@ -533,7 +533,7 @@
 		<xsl:param name="mode"/>
 		<xsl:for-each select="//mods:language/mods:languageTerm">
 			<xsl:variable name="langCode" select="text()"/>
-			<xsl:if test="langCode != 'zxx'">
+			<xsl:if test="not(langCode='zxx')">
 				<field name="language_facet" source="{$mode}">
 					<xsl:choose>
 						<xsl:when test="$langCode='???'">null</xsl:when>
