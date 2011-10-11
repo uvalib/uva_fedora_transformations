@@ -228,6 +228,9 @@
 		<xsl:call-template name="getFormatFacet">
 			<xsl:with-param name="mode" select="'quaternary'"/>
 		</xsl:call-template>
+		<xsl:call-template name="getMarcDisplay">
+			<xsl:with-param name="mode" select="'quaternary'"/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="getTitle">
@@ -1087,6 +1090,14 @@
 			</field>
 		</xsl:for-each>		
 	</xsl:template>
+	
+	<xsl:template name="getMarcDisplay">
+		<xsl:param name="mode"/>
+		<field name="marc_display" source="{$mode}">
+			<xsl:value-of select="str[@name='marc_display']"/>
+		</field>
+	</xsl:template>
+	
 
 	<xsl:template mode="secondary" match="text()"/>
 	<xsl:template mode="quaternary" match="text()"/>
