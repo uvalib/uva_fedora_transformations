@@ -9,7 +9,7 @@
 	MARC21slim2MODS3-4 (Revision 1.70) 2010227
 
 # Revisions
-
+UVA Revision 1.709 - Transformation of 590 field for local notes
 UVA Revision 1.708 - All <mods:roleTerm> will not be subject to chopping of punctuation as per request of Rya Martin and Perry Roland.
   <roleTerm authority="marcrelator" type="code">
     <xsl:call-template name="chopPunctuation">
@@ -1696,7 +1696,12 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 			select="marc:datafield[@tag=501 or @tag=507 or @tag=513 or @tag=514 or @tag=516 or @tag=522 or @tag=525 or @tag=526 or @tag=544 or @tag=547 or @tag=550 or @tag=552 or @tag=555 or @tag=556 or @tag=565 or @tag=567 or @tag=580 or @tag=584 or @tag=586]">
 			<xsl:call-template name="createNoteFrom5XX"/>
 		</xsl:for-each>
-
+		
+		<!-- Add transfomration to pull local notes 590 into MODS -->
+		<xsl:for-each select="marc:datafield[@tag=590]">
+			<xsl:call-template name="createNoteFrom590"/>
+		</xsl:for-each>
+		
 		<xsl:for-each select="marc:datafield[@tag=034]">
 			<xsl:call-template name="createSubGeoFrom034"/>
 		</xsl:for-each>
@@ -2466,7 +2471,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 				</mods:recordIdentifier>
 			</xsl:for-each>
 
-			<mods:recordOrigin>Converted from MARCXML to MODS version 3.4 using MARC21slim2MODS3-4.xsl (Revision 1.70). UVA (Revision 1.707)</mods:recordOrigin>
+			<mods:recordOrigin>Converted from MARCXML to MODS version 3.4 using MARC21slim2MODS3-4.xsl (Revision 1.70). UVA (Revision 1.709)</mods:recordOrigin>
 
 			<xsl:for-each select="marc:datafield[@tag=040]/marc:subfield[@code='b']">
 				<mods:languageOfCataloging>
@@ -4474,7 +4479,16 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 			<xsl:value-of select="substring($str,1,string-length($str)-1)"/>
 		</mods:note>
 	</xsl:template>
-
+	
+	<!-- Local notes 590 transformation -->
+	<xsl:template name="createNoteFrom590">
+		<mods:note type="local">
+			<xsl:call-template name="xxx880"/>
+			<xsl:call-template name="uri"/>
+			<xsl:value-of select="marc:subfield[@code='a']"/>
+		</mods:note>
+	</xsl:template>
+	
 	<xsl:template name="createNoteFrom5XX">
 		<mods:note>
 			<xsl:call-template name="xxx880"/>
