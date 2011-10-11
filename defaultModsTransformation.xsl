@@ -562,6 +562,12 @@
 			<field name="series_title_facet" source="{$mode}">
 				<xsl:value-of select="current()[normalize-space()]"/>
 			</field>
+			<field name="series_title_text" source="{$mode}">
+				<xsl:value-of select="current()[normalize-space()]"/>
+			</field>
+			<field name="series_title_display" source="{$mode}">
+				<xsl:value-of select="current()[normalize-space()]"/>
+			</field>
 		</xsl:for-each>
 	</xsl:template>
 
