@@ -1,7 +1,7 @@
 <xsl:stylesheet xmlns:mods="http://www.loc.gov/mods/v3" xmlns:marc="http://www.loc.gov/MARC21/slim"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	exclude-result-prefixes="xlink marc" version="1.0">
-	<xsl:include href="/usr/local/projects/tracksys/lib/xslt/MARC21slimUtils.xsl"/>
+	<xsl:include href="./MARC21slimUtils.xsl"/>
 	<xsl:output encoding="UTF-8" indent="yes" method="xml" xml:space="preserve"/>
 	<xsl:strip-space elements="*"/>
 
@@ -4172,7 +4172,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 	</xsl:template>
 
 	<xsl:template name="createNoteFrom500">
-		<mods:note>
+		<mods:note type="description">
 			<xsl:call-template name="xxx880"/>
 			<xsl:call-template name="uri"/>
 			<xsl:value-of select="marc:subfield[@code='a']"/>
