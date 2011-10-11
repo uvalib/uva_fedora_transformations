@@ -137,6 +137,9 @@
 				<xsl:call-template name="getLanguageNote">
 					<xsl:with-param name="mode" select="primary"/>
 				</xsl:call-template>
+				<xsl:call-template name="getLocalNote">
+					<xsl:with-param name="mode" select="primary"/>
+				</xsl:call-template>
 				<xsl:call-template name="getSubjects">
 					<xsl:with-param name="mode" select="'primary'"/>
 				</xsl:call-template>
@@ -430,6 +433,21 @@
 				<xsl:value-of select="current()"/>
 			</field>
 			<field name="language_note_display" source="{$mode}">
+				<xsl:value-of select="current()"/>
+			</field>
+			<xsl:choose>
+				<xsl:when test="$mode = 'secondary'"> </xsl:when>
+			</xsl:choose>
+		</xsl:for-each>		
+	</xsl:template>
+	
+	<xsl:template name="getLocalNote">
+		<xsl:param name="mode"/>
+		<xsl:for-each select="//mods:note[@type='local']">
+			<field name="local_note_text" source="{$mode}">
+				<xsl:value-of select="current()"/>
+			</field>
+			<field name="local_note_display" source="{$mode}">
 				<xsl:value-of select="current()"/>
 			</field>
 			<xsl:choose>
