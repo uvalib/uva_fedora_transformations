@@ -6,74 +6,44 @@
 	<!-- Required Parameters -->
 
 	<!-- Unique identifier for object -->
-	<xsl:param name="pid">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="pid"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- URL for Fedora repository that contains this object. -->
-	<xsl:param name="repository">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="repository"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- Datetime that this index record was produced.  Format:YYYYMMDDHHMM -->
-	<xsl:param name="dateIngestNow">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="dateIngestNow"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- String used by blacklight to determine views.  Probably will be 'jp2k' in the case of image objects, sometimes 'digital book' for bibliographic records.  Unknown for component and EadRefs. -->
-	<xsl:param name="contentModel">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="contentModel"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- Facet use for blacklight to group digital objects.  Default value: 'UVA Library Digital Repository'. -->
-	<xsl:param name="sourceFacet">
-		<xsl:value-of select="'UVA Library Digital Repository'"/>
-	</xsl:param>
+	<xsl:param name="sourceFacet"><xsl:value-of select="'UVA Library Digital Repository'"/></xsl:param>
 
 	<!-- Will contain the transcription text of one object (in the case of an image object), or a concatenated string of all transcription text belonging to children objects (in the case of a bibliographic or colelction object). -->
-	<xsl:param name="totalTranscriptions">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="totalTranscriptions"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- Will contain the title text of one object (in the case of an image object), or a concatenated string of all title text belonging to children objects (in the case of a bibliographic or colelction object). -->
-	<xsl:param name="totalTitles">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="totalTitles"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- Will contain the description text of one object (in the case of an image object), or a concatenated string of all description text belonging to children objects (in the case of a bibliographic or colelction object). -->
-	<xsl:param name="totalDescriptions">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="totalDescriptions"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- While this can be passed to the stylesheet as a params, this method of determination is to be supplanted by an investiagtion of the descMetadata (as written below).  This param is to be deprecated. -->
-	<xsl:param name="shadowedItem">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="shadowedItem"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- Import object's solr record for the analog equivalent to build format_facet fields. -->
-	<xsl:param name="analogSolrRecord">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="analogSolrRecord"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- Import object's RELS-EXT to build belongs_to_facet fields. -->
-	<xsl:param name="externalRelations">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
-
+	<xsl:param name="externalRelations"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- Optional Parameters -->
 	<!-- If this is a child object, we will need many of the fields of the parent included in the child (if it is going to be made uniquely discoverable). -->
-	<xsl:param name="parentModsRecord">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
-
-	<xsl:param name="addDayofWeek">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="parentModsRecord"><xsl:value-of select="false()"/></xsl:param>
 
 	<!-- If this item belongs to a specific collection of objects, that information should be encoded in the above mentioned XPath location. -->
-	<xsl:param name="digitalCollectionFacet"
-		select="//relatedItem[@type='series']/titleInfo[1]/title[1]"/>
+	<xsl:param name="digitalCollectionFacet" select="//relatedItem[@type='series']/titleInfo[1]/title[1]"/>
 
 	<!-- Global Variables -->
 	<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz    '"/>
@@ -1084,10 +1054,10 @@
 		<xsl:param name="mode"/>
 		<!-- As per cataloging and UX instructions, all objects ingested by Tracksys will contain the format_facet of Online -->
 		<field name="format_facet" source="static_value">Online</field>
+		<field name="format_text" source="static_value">Online</field>
 		<xsl:for-each select="arr[@name='format_facet']/str">			
-			<field name="format_facet" source="{$mode}">
-				<xsl:value-of select="current()"/>
-			</field>
+			<field name="format_facet" source="{$mode}"><xsl:value-of select="current()"/></field>
+			<field name="format_text" source="{$mode}"><xsl:value-of select="current()"/></field>
 		</xsl:for-each>		
 	</xsl:template>
 	
