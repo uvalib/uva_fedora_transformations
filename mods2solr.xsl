@@ -1,39 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xpath-default-namespace="http://www.loc.gov/mods/v3" xmlns:mods="http://www.loc.gov/mods/v3"
 	xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="mods fn xs">
-	<xsl:param name="verbose">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
-	<xsl:param name="pid">
-		<xsl:value-of select="//identifier[@displayLabel='UVA Library Fedora Repository PID'][1]"/>
-	</xsl:param>
-	<xsl:param name="setcode" select="/mods:mods/mods:relatedItem[1]/mods:titleInfo[1]/title"></xsl:param>
-	<xsl:param name="repository">http://fedoratest.lib.virginia.edu:8080/fedora</xsl:param>
-		<xsl:param name="dateIngestNow"><xsl:value-of select="false()"/></xsl:param>
-	<xsl:param name="addDayofWeek" select="false()"/>
-	<xsl:param name="shadowedItem"><xsl:value-of select="false()"/></xsl:param>
-	<xsl:param name="contentModel">jp2k</xsl:param>
-	<xsl:param name="collectionName" select="//relatedItem[@type='series']/titleInfo[1]/title[1]"></xsl:param>
-	<xsl:output byte-order-mark="no" encoding="UTF-8" media-type="text/xml" xml:space="preserve" indent="yes"></xsl:output>
-	<!-- UVA-LIB stylesheet for MODS to SOLR 			-->
+	
+	<!-- UVA-LIB stylesheet for converting Holsinger Collection MODS to SOLR -->
 	<!-- created by M. Stephens (ms3uf) on Jan 14/2010 	-->
+	<!-- modified by Andrew Curley (aec6v) on November 10, 2011 -->
+		
+	<!-- Required Parameters -->
+	<!-- Unique identifier for object -->
+	<xsl:param name="pid"><xsl:value-of select="false()"/></xsl:param>
+	
+	<!-- URL for Fedora repository that contains this object. -->
+	<xsl:param name="repository"><xsl:value-of select="false()"/></xsl:param>
+	
+	<!-- Datetime that this index record was produced.  Format:YYYYMMDDHHMM -->
+	<xsl:param name="dateIngestNow"><xsl:value-of select="false()"/></xsl:param>
+	
+	<!-- String used by blacklight to determine views.  Probably will be 'jp2k' in the case of image objects, sometimes 'digital book' for bibliographic records.  Unknown for component and EadRefs. -->
+	<xsl:param name="contentModel"><xsl:value-of select="false()"/></xsl:param>
+	
+	<!-- Facet use for blacklight to group digital objects.  Default value: 'UVA Library Digital Repository'. -->
+	<xsl:param name="sourceFacet"><xsl:value-of select="'UVA Library Digital Repository'"/></xsl:param>
+	
+	<!-- While this can be passed to the stylesheet as a params, this method of determination is to be supplanted by an investiagtion of the descMetadata (as written below).  This param is to be deprecated. -->
+	<xsl:param name="shadowedItem"><xsl:value-of select="false()"/></xsl:param>
+	
+	<!-- If this item belongs to a specific collection of objects, that information should be encoded in the above mentioned XPath location. -->
+	<xsl:param name="collectionName" select="//relatedItem[@type='series']/titleInfo[1]/title[1]"></xsl:param>
+
+	<!-- Global Variables -->
+	<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz    '"/>
+	<!-- whitespace in select is meaningful -->
+	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ,;-:.'"/>
+	
+	<xsl:output byte-order-mark="no" encoding="UTF-8" media-type="text/xml" xml:space="preserve" indent="yes"/>
+
 	<xsl:template match="/">
-		<xsl:if test="$verbose=true()">
-			<xsl:message>Processing mods record <xsl:value-of select="$pid"/> ...</xsl:message>
-		</xsl:if>
+		
+		<!-- custom requirement for Holsinger collection (legacy) -->
 		<xsl:variable name="dayOfWeek">
-			<!-- custom requirement for Holsinger collection (legacy) -->
 			<xsl:for-each select="//dateCreated[@qualifier='inferred']">
 				<xsl:if test="current()/text()">
 					<xsl:value-of select="."/>
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:variable>
+		
 		<add>
 			<doc>
 				<field name="id"><xsl:value-of select="$pid"/></field>
 				<field name="digital_collection_facet"><xsl:value-of select="$collectionName"/></field>
-				<field name="setcode_facet"><xsl:value-of select="$setcode"/></field>
 				<field name="content_model_facet"><xsl:value-of select="$contentModel"/></field>
 				<field name="repository_address_display"><xsl:value-of select="$repository"/></field>
 				<field name="source_facet">UVA Library Digital Repository</field>
@@ -46,6 +62,7 @@
 						<field name="title_facet"><xsl:value-of select="current()"/></field>
 						<field name="title_text"><xsl:value-of select="current()"/></field>
 						<field name="title_display"><xsl:value-of select="current()"/></field>
+						<field name="title_sort_facet"><xsl:value-of select="translate(current(), $uppercase, $lowercase)"/></field>
 					</xsl:if>
 				</xsl:for-each>
 				<xsl:if test="not(//mods/*[1][local-name() = 'titleInfo']/*[local-name() = 'title'])">
@@ -66,49 +83,42 @@
 						<xsl:with-param name="date-node" select="current()/dateIssued[@keyDate='yes'][1]"/>
 						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
 						</xsl:call-template>
-						<xsl:if test="$verbose=true()"><xsl:message>found dateIssued keydate: <xsl:value-of select="current()/dateIssued[@keyDate='yes'][1]"/></xsl:message></xsl:if>
 					</xsl:when>
 					<xsl:when test="current()/dateCreated[@keyDate='yes'][1]">
 						<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node" select="current()/dateCreated[@keyDate='yes'][1]"/>
 						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
 						</xsl:call-template>
-						<xsl:if test="$verbose=true()"><xsl:message>found dateCreated keydate: <xsl:value-of select="current()/dateCreated[@keyDate='yes'][1]"/></xsl:message></xsl:if>
 					</xsl:when>
 					<xsl:when test="current()/dateCaptured[@keyDate='yes'][1]">
 						<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node" select="current()/dateCaptured[@keyDate='yes'][1]"/>
 						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
 						</xsl:call-template>
-						<xsl:if test="$verbose=true()"><xsl:message>found dateCaptured keydate: <xsl:value-of select="current()/dateCaptured[@keyDate='yes'][1]"/></xsl:message></xsl:if>
 					</xsl:when>
 					<xsl:when test="current()/dateValid[@keyDate='yes'][1]">
 						<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node" select="current()/dateValid[@keyDate='yes'][1]"/>
 						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
 						</xsl:call-template>
-						<xsl:if test="$verbose=true()"><xsl:message>found dateValid keydate: <xsl:value-of select="current()/dateValid[@keyDate='yes'][1]"/></xsl:message></xsl:if>
 					</xsl:when>
 					<xsl:when test="current()/copyrightDate[@keyDate='yes'][1]">
 						<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node" select="current()/copyrightDate[@keyDate='yes'][1]"/>
 						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
 						</xsl:call-template>
-						<xsl:if test="$verbose=true()"><xsl:message>found copyrightDate keydate: <xsl:value-of select="current()/copyrightDate[@keyDate='yes'][1]"/></xsl:message></xsl:if>
 					</xsl:when>
 					<xsl:when test="current()/dateOther[@keyDate='yes'][1]">
 						<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node" select="current()/dateOther[@keyDate='yes'][1]"/>
 						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
 						</xsl:call-template>
-						<xsl:if test="$verbose=true()"><xsl:message>found dateOther keydate: <xsl:value-of select="current()/dateOther[@keyDate='yes'][1]"/></xsl:message></xsl:if>
 					</xsl:when>
 					<xsl:otherwise/>
 				</xsl:choose>
 				</xsl:for-each>
 
-				<!-- day of the week (custom for Holsinger) -->
-				<xsl:if test="$collectionName = 'Holsinger Studio Collection' and $addDayofWeek = true()">
+				<!-- day of the week (custom for Holsinger) -->		
 				<xsl:for-each select="//dateCreated[@qualifier='inferred']">
 					<xsl:if test="current()/text()">
 						<field name="dayOfWeek_display"><xsl:value-of select="."/></field>
@@ -116,8 +126,6 @@
 						<field name="dayOfWeek_facet"><xsl:value-of select="."/></field>
 					</xsl:if>
 				</xsl:for-each>
-
-				</xsl:if>
 				
 				<!-- subject text -->
 				<xsl:for-each select="//subject">
@@ -149,7 +157,7 @@
 					<xsl:choose>
 						<xsl:when test="current()/text()= ''"/>
 						<xsl:otherwise>
-							<field name="geographic_location_facet"><xsl:value-of select="current()"/></field>
+							<field name="region_facet"><xsl:value-of select="current()"/></field>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
@@ -227,6 +235,17 @@
 						</xsl:choose>
 					</xsl:variable>
 					<field name="author_facet"><xsl:value-of select="$nameFull"/></field>
+					<xsl:choose>
+						<xsl:when test="child::namePart[@type='date']">
+							<field name="author_display"><xsl:value-of select="$nameFull"/>, <xsl:value-of select="child::namePart[@type='date']/text()"/></field>
+						</xsl:when>
+						<xsl:otherwise>
+							<field name="author_display"><xsl:value-of select="$nameFull"/></field>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					<!-- The following is commented because the special-role is no longer needed.  11/10/11 -->
+					<!--
 					<xsl:variable name="special-role">
 						<xsl:if test="current()/role/roleTerm[not(@type='code')][not(contains(., 'creator'))]"> (<xsl:value-of select="current()/role/roleTerm[not(@type='code')][not(contains(., 'creator'))]"/>)</xsl:if>
 					</xsl:variable>
@@ -237,6 +256,23 @@
 						<xsl:otherwise>
 							<field name="author_display"><xsl:value-of select="$nameFull"/><xsl:value-of select="$special-role"/></field>
 						</xsl:otherwise>
+					</xsl:choose>
+					-->
+					
+					<xsl:choose>
+						<xsl:when test="position() = 1 and child::mods:namePart[@type='date']">
+							<field name="author_sort_facet">
+								<xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="translate(child::mods:namePart[@type='date']/text(), $uppercase, $lowercase)"/>
+							</field>
+						</xsl:when>
+						<xsl:when test="position() = 1">
+							<field name="author_sort_facet">
+								<xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/>
+							</field>
+						</xsl:when>
+						<xsl:otherwise/>
 					</xsl:choose>
 				</xsl:for-each>
 
@@ -287,6 +323,8 @@
 				</xsl:for-each>
 
 				<!-- format facet -->
+				<field name="format_facet">Online</field>
+				<field name="format_text">Online</field>
 				<xsl:for-each select="//mods/genre">
 					<field name="format_text"><xsl:value-of select="current()"/></field>
 					<field name="format_facet"><xsl:value-of select="current()"/></field>
@@ -367,9 +405,6 @@
 						</xsl:call-template>
 						</xsl:variable>
 						<field name="date_received_facet"><xsl:value-of select="$marcdate"/></field>
-						<xsl:if test="$verbose">
-							<xsl:message>FOUND MARC CREATION DATE<xsl:value-of select="fn:dateTime(xs:date($marcdate), xs:time('00:00:00'))"/></xsl:message>
-						</xsl:if>
 					</xsl:when>
 					<xsl:when test="$dateIngestNow = false() and $shadowedItem = false()">
 						<field name="date_received_facet"><xsl:value-of select="fn:dateTime(xs:date('2010-02-01'), xs:time('12:00:00'))"/>Z</field>
@@ -415,11 +450,7 @@
 			<xsl:text>20</xsl:text><xsl:value-of select="fn:substring($date, 1, 2)"/>-<xsl:value-of select="fn:substring($date, 3, 2)"/>-<xsl:value-of select="fn:substring($date, 5, 2)"/>
 		</xsl:variable>
 		<xsl:if test="fn:string-length($date) = 6">
-			<xsl:if test="$verbose">
-				<xsl:message>date is ::<xsl:value-of select="$date"/>::</xsl:message>
-				<xsl:message>output is ::<xsl:value-of select="$output"/>::</xsl:message>
-			</xsl:if>
-		<xsl:value-of select="$output"/>
+			<xsl:value-of select="$output"/>
 		</xsl:if>
 	</xsl:template>
 
