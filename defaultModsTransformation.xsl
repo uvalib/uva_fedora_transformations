@@ -3,7 +3,7 @@
 	xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:uva="http://fedora.lib.virginia.edu/relationships#">
 
-	<!-- Required Parameters -->
+	<!-- Required Parameters  -->
 
 	<!-- Unique identifier for object -->
 	<xsl:param name="pid"><xsl:value-of select="false()"/></xsl:param>
