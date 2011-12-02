@@ -418,20 +418,22 @@
 						<field name="date_received_facet"><xsl:value-of select="fn:current-dateTime()"/></field>
 					</xsl:otherwise>
 				</xsl:choose>
-
-				<!-- set "shadowed_location_facet" field -->
-				<xsl:element name="field">
-					<xsl:attribute name="name">shadowed_location_facet</xsl:attribute>
-					<xsl:choose>
-						<xsl:when test="$shadowedItem = true()">
-							<xsl:text>HIDDEN</xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>VISIBLE</xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:element>
-
+				
+				<!-- Test for deprecated method of determing whether the record is to be shadowed.  Otherwise, use newer method of relying upon descMetadata. -->
+				<xsl:choose>
+					<xsl:when test="$shadowedItem != 'false'">
+						<field name="shadowed_location_facet">
+							<xsl:value-of select="$shadowedItem"/>
+						</field>
+					</xsl:when>
+					<xsl:when
+						test="//mods:identifier[@displayLabel='Accessible index record displayed in VIRGO'][@invalid='yes']">
+						<field name="shadowed_location_facet">HIDDEN</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="shadowed_location_facet">VISIBLE</field>
+					</xsl:otherwise>
+				</xsl:choose>
 			</doc>
 		</add>
 	</xsl:template>
