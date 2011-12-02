@@ -72,8 +72,8 @@
 					<field name="alternate_title_display">untitled</field>
 				</xsl:if>
 
-				<!-- call number (or equivalent search text) -->
-				<xsl:for-each select="//identifier[(@displayLabel='Call Number') or (@displayLabel='Negative Number')]">
+				<!-- Legacy Negative Number -->
+				<xsl:for-each select="//identifier[(@displayLabel='Negative Number')]">
 					<field name="media_retrieval_id_display"><xsl:value-of select="current()"/></field>
 					<field name="media_retrieval_id_facet"><xsl:value-of select="current()"/></field>
 				</xsl:for-each>
