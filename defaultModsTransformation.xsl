@@ -375,39 +375,44 @@
 						select="current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))]"
 					/>)</xsl:if>
 			</xsl:variable>
-			<xsl:choose>
-				<xsl:when test="child::mods:namePart[@type='date']">
-					<field name="author_display" source="{$mode}"><xsl:value-of select="$nameFull"
-						/>, <xsl:value-of select="child::mods:namePart[@type='date']/text()"
-							/><xsl:value-of select="$special-role"/></field>
-				</xsl:when>
-				<xsl:otherwise>
-					<field name="author_display" source="{$mode}">
-						<xsl:value-of select="$nameFull"/>
-						<xsl:value-of select="$special-role"/>
-					</field>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="position() = 1 and child::mods:namePart[@type='date']">
-					<field name="author_sort_facet" source="{$mode}">
-						<xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of
-							select="translate(child::mods:namePart[@type='date']/text(), $uppercase, $lowercase)"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="translate($special-role, $uppercase, $lowercase)"/>
-					</field>
-				</xsl:when>
-				<xsl:when test="position() = 1">
-					<field name="author_sort_facet" source="{$mode}">
-						<xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="translate($special-role, $uppercase, $lowercase)"/>
-					</field>
-				</xsl:when>
-				<xsl:otherwise/>
-			</xsl:choose>
+			<xsl:if test="current()[@usage='primary']">
+				<xsl:choose>
+					<xsl:when test="child::mods:namePart[@type='date']">
+						<field name="author_display" source="{$mode}"><xsl:value-of
+								select="$nameFull"/>, <xsl:value-of
+								select="child::mods:namePart[@type='date']/text()"/><xsl:value-of
+								select="$special-role"/></field>
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="author_display" source="{$mode}">
+							<xsl:value-of select="$nameFull"/>
+							<xsl:value-of select="$special-role"/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="position() = 1 and child::mods:namePart[@type='date']">
+						<field name="author_sort_facet" source="{$mode}">
+							<xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of
+								select="translate(child::mods:namePart[@type='date']/text(), $uppercase, $lowercase)"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="translate($special-role, $uppercase, $lowercase)"
+							/>
+						</field>
+					</xsl:when>
+					<xsl:when test="position() = 1">
+						<field name="author_sort_facet" source="{$mode}">
+							<xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="translate($special-role, $uppercase, $lowercase)"
+							/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise/>
+				</xsl:choose>
+			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 
