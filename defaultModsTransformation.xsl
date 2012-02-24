@@ -135,6 +135,9 @@
 				<xsl:call-template name="getLocalNote">
 					<xsl:with-param name="mode" select="primary"/>
 				</xsl:call-template>
+				<xsl:call-template name="getPublishedDate">
+					<xsl:with-param name="mode" select="primary"/>
+				</xsl:call-template>
 				<xsl:call-template name="getSubjects">
 					<xsl:with-param name="mode" select="'primary'"/>
 				</xsl:call-template>
@@ -459,6 +462,26 @@
 				<xsl:when test="$mode = 'secondary'"> </xsl:when>
 			</xsl:choose>
 		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template name="getPublishedDate">
+		<xsl:param name="mode"/>
+		<xsl:variable name="publishedDate">
+			<xsl:choose>
+				<xsl:when test="//mods:dateIssued[@encoding='marc']">
+					<xsl:value-of select="//mods:dateIssued[@encoding='marc'][1]/text()"/>
+				</xsl:when>
+				<xsl:when test="//mods:dateIssued">
+					<xsl:value-of select="//mods:dateIssued[1]/text()"/>
+				</xsl:when>
+				<xsl:otherwise>Unknown Date</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:if test="$publishedDate">
+			<field name="published_date_display" source="{$mode}">
+				<xsl:value-of select="$publishedDate"/>
+			</field>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="getSubjects">
