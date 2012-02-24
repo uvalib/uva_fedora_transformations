@@ -1126,7 +1126,7 @@
 		<field name="marc_display" source="{$mode}">
 			<xsl:value-of select="str[@name='marc_display']"/>
 		</field>
-		<field name="marc_facet" source="{$mode}">true</field>
+		<field name="marc_display_facet" source="{$mode}">true</field>
 	</xsl:template>
 
 
