@@ -58,6 +58,8 @@
 				<field name="content_model_facet"><xsl:value-of select="$contentModel"/></field>
 				<field name="repository_address_display"><xsl:value-of select="$repository"/></field>
 				<field name="source_facet">UVA Library Digital Repository</field>
+				<field name="call_number_display">MSS 9862</field>
+				<field name="call_number_text">MSS 9862</field>
 
 				<!-- title -->
 				<xsl:for-each select="//mods:title">
