@@ -364,10 +364,6 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<field name="author_facet" source="{$mode}">
-				<xsl:value-of select="$nameFull"/>
-			</field>
-
 			<field name="author_text" source="{$mode}">
 				<xsl:value-of select="$nameFull"/>
 			</field>
@@ -378,21 +374,20 @@
 						select="current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))]"
 					/>)</xsl:if>
 			</xsl:variable>
-			<xsl:if test="current()[@usage='primary']">
+			<xsl:variable name="authorDisplayFacet">
 				<xsl:choose>
 					<xsl:when test="child::mods:namePart[@type='date']">
-						<field name="author_display" source="{$mode}"><xsl:value-of
-								select="$nameFull"/>, <xsl:value-of
-								select="child::mods:namePart[@type='date']/text()"/><xsl:value-of
-								select="$special-role"/></field>
+						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/><xsl:value-of select="$special-role"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<field name="author_display" source="{$mode}">
-							<xsl:value-of select="$nameFull"/>
-							<xsl:value-of select="$special-role"/>
-						</field>
-					</xsl:otherwise>
+						<xsl:value-of select="$nameFull"/>
+						<xsl:value-of select="$special-role"/>
+					</xsl:otherwise>					
 				</xsl:choose>
+			</xsl:variable>
+			<field name="author_facet" source="{$mode}"><xsl:value-of select="normalize-space($authorDisplayFacet)"/></field>
+			<xsl:if test="current()[@usage='primary']">	
+				<field name="author_display" source="{$mode}"><xsl:value-of select="normalize-space($authorDisplayFacet)"/></field>
 				<xsl:choose>
 					<xsl:when test="position() = 1 and child::mods:namePart[@type='date']">
 						<field name="author_sort_facet" source="{$mode}">
@@ -416,6 +411,17 @@
 					<xsl:otherwise/>
 				</xsl:choose>
 			</xsl:if>
+		</xsl:for-each>
+		<!-- corporate author -->
+		<xsl:for-each select="//mods:mods/mods:name[@type='corporate']">
+			<xsl:variable name="corporateName">
+				<xsl:value-of select="current()/mods:namePart/text()"/>
+			</xsl:variable>
+			<xsl:variable name="corporateRoleTerm">
+				<xsl:value-of select="current()/mods:role/mods:roleTerm/text()"/>
+			</xsl:variable>
+			<field name="author_facet"><xsl:value-of select="$corporateName"/><xsl:text>, </xsl:text><xsl:value-of select="$corporateRoleTerm"/></field>
+			<field name="author_text"><xsl:value-of select="$corporateName"/><xsl:text>, </xsl:text><xsl:value-of select="$corporateRoleTerm"/></field>
 		</xsl:for-each>
 	</xsl:template>
 
