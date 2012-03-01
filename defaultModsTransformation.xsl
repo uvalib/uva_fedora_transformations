@@ -78,6 +78,10 @@
 	<!-- AC added this to remove trailing periods from $special-role  -->
 	<xsl:variable name="periods" select="'.'"/>
 	<xsl:variable name="noperiods" select="' '"/>
+	
+	<xsl:param name="publishedDateFacet">
+		<xsl:value-of select="'More than 50 years ago'"/>
+	</xsl:param>
 
 	<xsl:output encoding="UTF-8" media-type="text/xml" xml:space="preserve" indent="yes"/>
 	<xsl:strip-space elements="*"/>
@@ -101,6 +105,10 @@
 
 				<field name="source_facet" source="{$mode}">
 					<xsl:value-of select="$sourceFacet"/>
+				</field>
+				
+				<field name="published_date_facet" source="{$mode}">
+					<xsl:value-of select="$publishedDateFacet"/>
 				</field>
 
 				<xsl:if test="$digitalCollectionFacet != 'false'">
