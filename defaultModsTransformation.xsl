@@ -74,6 +74,10 @@
 	<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz    '"/>
 	<!-- whitespace in select is meaningful -->
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ,;-:'"/>
+	
+	<!-- AC added this to remove trailing periods from $special-role  -->
+	<xsl:variable name="periods" select="'.'"/>
+	<xsl:variable name="noperiods" select="' '"/>
 
 	<xsl:output encoding="UTF-8" media-type="text/xml" xml:space="preserve" indent="yes"/>
 	<xsl:strip-space elements="*"/>
@@ -368,16 +372,14 @@
 				<xsl:value-of select="$nameFull"/>
 			</field>
 			<xsl:variable name="special-role">
-				<xsl:if
-					test="current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))]"
-					> (<xsl:value-of
-						select="current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))]"
-					/>)</xsl:if>
+				<xsl:if	test="current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))]"> 
+					<xsl:value-of select="current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))]"/>
+				</xsl:if>
 			</xsl:variable>
 			<xsl:variable name="authorDisplayFacet">
 				<xsl:choose>
 					<xsl:when test="child::mods:namePart[@type='date']">
-						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/><xsl:value-of select="$special-role"/>
+						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>, <xsl:value-of select="translate($special-role, $periods, $noperiods)"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="$nameFull"/>
