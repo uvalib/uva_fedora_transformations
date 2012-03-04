@@ -433,8 +433,8 @@
 			<xsl:variable name="corporateRoleTerm">
 				<xsl:value-of select="current()/mods:role/mods:roleTerm/text()"/>
 			</xsl:variable>
-			<field name="author_facet"><xsl:value-of select="$corporateName"/><xsl:text>, </xsl:text><xsl:value-of select="$corporateRoleTerm"/></field>
-			<field name="author_text"><xsl:value-of select="$corporateName"/><xsl:text>, </xsl:text><xsl:value-of select="$corporateRoleTerm"/></field>
+			<field name="author_facet"><xsl:value-of select="$corporateName"/><xsl:text>, </xsl:text><xsl:value-of select="translate($corporateRoleTerm, $periods, $noperiods)"/></field>
+			<field name="author_text"><xsl:value-of select="$corporateName"/><xsl:text>, </xsl:text><xsl:value-of select="translate($corporateRoleTerm, $periods, $noperiods)"/></field>
 		</xsl:for-each>
 	</xsl:template>
 
