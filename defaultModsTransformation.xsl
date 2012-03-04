@@ -386,8 +386,11 @@
 			</xsl:variable>
 			<xsl:variable name="authorDisplayFacet">
 				<xsl:choose>
-					<xsl:when test="child::mods:namePart[@type='date']">
+					<xsl:when test="child::mods:namePart[@type='date'] and $special-role != ''">
 						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>, <xsl:value-of select="translate($special-role, $periods, $noperiods)"/>
+					</xsl:when>
+					<xsl:when test="child::mods:namePart[@type='date'] and $special-role = ''">
+						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="$nameFull"/>
