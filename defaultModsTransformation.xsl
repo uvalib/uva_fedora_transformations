@@ -381,20 +381,19 @@
 			</field>
 			<xsl:variable name="special-role">
 				<xsl:if	test="current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))]"> 
-					<xsl:value-of select="current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))]"/>
+					<xsl:value-of select="translate(current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))], $periods, $noperiods)"/>
 				</xsl:if>
 			</xsl:variable>
 			<xsl:variable name="authorDisplayFacet">
 				<xsl:choose>
 					<xsl:when test="child::mods:namePart[@type='date'] and $special-role != ''">
-						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>, <xsl:value-of select="translate($special-role, $periods, $noperiods)"/>
+						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>, <xsl:value-of select="$special-role"/>
 					</xsl:when>
 					<xsl:when test="child::mods:namePart[@type='date'] and $special-role = ''">
 						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="$nameFull"/>
-						<xsl:value-of select="$special-role"/>
+						<xsl:value-of select="$nameFull"/>, <xsl:value-of select="$special-role"/>
 					</xsl:otherwise>					
 				</xsl:choose>
 			</xsl:variable>
@@ -409,7 +408,7 @@
 							<xsl:value-of
 								select="translate(child::mods:namePart[@type='date']/text(), $uppercase, $lowercase)"/>
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="translate($special-role, $uppercase, $lowercase)"
+							<xsl:value-of select="$special-role"
 							/>
 						</field>
 					</xsl:when>
@@ -417,7 +416,7 @@
 						<field name="author_sort_facet" source="{$mode}">
 							<xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/>
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="translate($special-role, $uppercase, $lowercase)"
+							<xsl:value-of select="$special-role"
 							/>
 						</field>
 					</xsl:when>
