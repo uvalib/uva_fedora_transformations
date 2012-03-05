@@ -386,14 +386,21 @@
 			</xsl:variable>
 			<xsl:variable name="authorDisplayFacet">
 				<xsl:choose>
-					<xsl:when test="child::mods:namePart[@type='date'] and $special-role != ''">
-						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>, <xsl:value-of select="$special-role"/>
-					</xsl:when>
-					<xsl:when test="child::mods:namePart[@type='date'] and $special-role = ''">
-						<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>
+					<xsl:when test="child::mods:namePart[@type='date']">
+						<xsl:if test="$special-role != ''">
+							<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>, <xsl:value-of select="$special-role"/>
+						</xsl:if>
+						<xsl:if test="$special-role = ''">
+							<xsl:value-of select="$nameFull"/>,	<xsl:value-of select="child::mods:namePart[@type='date']/text()"/>
+						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="$nameFull"/>, <xsl:value-of select="$special-role"/>
+						<xsl:if test="$special-role != ''">
+							<xsl:value-of select="$nameFull"/>, <xsl:value-of select="$special-role"/>
+						</xsl:if>
+						<xsl:if test="$special-role = ''">
+							<xsl:value-of select="$nameFull"/>
+						</xsl:if>
 					</xsl:otherwise>					
 				</xsl:choose>
 			</xsl:variable>
