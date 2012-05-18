@@ -80,6 +80,7 @@
 				<xsl:for-each select="//identifier[(@displayLabel='Negative Number')]">
 					<field name="media_retrieval_id_display"><xsl:value-of select="current()"/></field>
 					<field name="media_retrieval_id_facet"><xsl:value-of select="current()"/></field>
+					<field name="media_retrieval_id_text"><xsl:value-of select="current()"/></field>
 				</xsl:for-each>
 
 				<!-- SOLR can take only one year_multisort_i field, so we need to choose which mods element to utilize -->
