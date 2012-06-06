@@ -186,8 +186,15 @@
 				<!-- library facet -->
 				<field name="library_facet"><xsl:value-of select="$libraryName"/></field>
 				<xsl:for-each select="//location/physicalLocation[not(@authority='oclcorg')]">
-					<xsl:if test="current()/text() != ' '">
-						<field name="location_display"><xsl:value-of select="current()/text()"/></field>
+					<xsl:variable name="normalizedLibraryName">
+						<xsl:choose>
+							<xsl:when test="./text()='Special Collections, University of Virginia Library, Charlottesville, Va.'">Special Collections</xsl:when>
+							<xsl:when test="./text()='Historical Collections &amp; Services, Claude Moore Health Sciences Library, Charlottesville, Va.'">Health Sciences</xsl:when>
+							<xsl:when test="./text()='Special Collections, Arthur J. Morris Law Library, Charlottesville, Va.'">Law School</xsl:when>
+						</xsl:choose>
+					</xsl:variable>
+					<xsl:if test="$normalizedLibraryName != ''">
+						<field name="Library_facet"><xsl:value-of select="$normalizedLibraryName"/></field>
 					</xsl:if>
 				</xsl:for-each>
 
