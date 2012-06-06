@@ -27,10 +27,7 @@
 	
 	<!-- If this item belongs to a specific collection of objects, that information should be encoded in the above mentioned XPath location. -->
 	<xsl:param name="collectionName" select="//relatedItem[@type='series' and @displayLabel='Part of']/titleInfo[1]/title[1]"></xsl:param>
-
-	<!--  All Holsinger items are housed in Special Collections, but since the MODS records give the complete location and we only need a short name, we specify it here -->
-	<xsl:variable name="libraryName">Special Collections</xsl:variable>
-
+	
 	<!-- Global Variables -->
 	<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz    '"/>
 	<!-- whitespace in select is meaningful -->
@@ -130,7 +127,6 @@
 				</xsl:for-each>
 
 				<!-- library facet -->
-				<field name="library_facet"><xsl:value-of select="$libraryName"/></field>
 				<xsl:for-each select="//location/physicalLocation[not(@authority='oclcorg')]">
 					<xsl:variable name="normalizedLibraryName">
 						<xsl:choose>
