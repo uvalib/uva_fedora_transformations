@@ -93,58 +93,6 @@
 					<field name="media_retrieval_id_facet"><xsl:value-of select="current()"/></field>
 					<field name="media_retrieval_id_text"><xsl:value-of select="current()"/></field>
 				</xsl:for-each>
-
-				<!-- SOLR can take only one year_multisort_i field, so we need to choose which mods element to utilize -->
-				<xsl:for-each select="//originInfo[1]">
-				<xsl:choose>
-					<xsl:when test="current()/dateIssued[@keyDate='yes'][1]">
-						<xsl:call-template name="build-dates">
-						<xsl:with-param name="date-node" select="current()/dateIssued[@keyDate='yes'][1]"/>
-						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
-						</xsl:call-template>
-					</xsl:when>
-					<xsl:when test="current()/dateCreated[@keyDate='yes'][1]">
-						<xsl:call-template name="build-dates">
-						<xsl:with-param name="date-node" select="current()/dateCreated[@keyDate='yes'][1]"/>
-						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
-						</xsl:call-template>
-					</xsl:when>
-					<xsl:when test="current()/dateCaptured[@keyDate='yes'][1]">
-						<xsl:call-template name="build-dates">
-						<xsl:with-param name="date-node" select="current()/dateCaptured[@keyDate='yes'][1]"/>
-						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
-						</xsl:call-template>
-					</xsl:when>
-					<xsl:when test="current()/dateValid[@keyDate='yes'][1]">
-						<xsl:call-template name="build-dates">
-						<xsl:with-param name="date-node" select="current()/dateValid[@keyDate='yes'][1]"/>
-						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
-						</xsl:call-template>
-					</xsl:when>
-					<xsl:when test="current()/copyrightDate[@keyDate='yes'][1]">
-						<xsl:call-template name="build-dates">
-						<xsl:with-param name="date-node" select="current()/copyrightDate[@keyDate='yes'][1]"/>
-						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
-						</xsl:call-template>
-					</xsl:when>
-					<xsl:when test="current()/dateOther[@keyDate='yes'][1]">
-						<xsl:call-template name="build-dates">
-						<xsl:with-param name="date-node" select="current()/dateOther[@keyDate='yes'][1]"/>
-						<xsl:with-param name="day-of-week" select="$dayOfWeek"/>
-						</xsl:call-template>
-					</xsl:when>
-					<xsl:otherwise/>
-				</xsl:choose>
-				</xsl:for-each>
-
-				<!-- day of the week (custom for Holsinger) -->		
-				<xsl:for-each select="//dateCreated[@qualifier='inferred']">
-					<xsl:if test="current()/text()">
-						<field name="dayOfWeek_display"><xsl:value-of select="."/></field>
-						<field name="dayOfWeek_text"><xsl:value-of select="."/></field>
-						<field name="dayOfWeek_facet"><xsl:value-of select="."/></field>
-					</xsl:if>
-				</xsl:for-each>
 				
 				<!-- subject text -->
 				<xsl:for-each select="//subject">
