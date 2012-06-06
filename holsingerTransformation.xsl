@@ -58,9 +58,21 @@
 				<field name="content_model_facet"><xsl:value-of select="$contentModel"/></field>
 				<field name="repository_address_display"><xsl:value-of select="$repository"/></field>
 				<field name="source_facet">UVA Library Digital Repository</field>
-				<field name="call_number_display">MSS 9862</field>
-				<field name="call_number_text">MSS 9862</field>
 
+				<!-- call number -->
+				
+				<xsl:for-each select="//mods:identifier">
+					<xsl:if test="@type='accessionNumber'">
+						<field name="call_number_display">
+							<xsl:value-of select="current()"/>
+						</field>
+						<field name="call_number_text">
+							<xsl:value-of select="current()"/>
+						</field>
+					</xsl:if>
+				</xsl:for-each>
+				
+				
 				<!-- title -->
 				<xsl:for-each select="//mods:title">
 					<xsl:if test="position() = 1 or @type='uniform'">
