@@ -88,8 +88,9 @@
 					<field name="alternate_title_display">untitled</field>
 				</xsl:if>
 
-				<!-- Legacy Negative Number -->
-				<xsl:for-each select="//identifier[(@displayLabel='Negative Number')]">
+				<!-- searchable legacy identifier -->
+				
+				<xsl:for-each select="//identifier[(@displayLabel='Negative Number' or @displayLabel='Prints Number')]">
 					<field name="media_retrieval_id_display"><xsl:value-of select="current()"/></field>
 					<field name="media_retrieval_id_facet"><xsl:value-of select="current()"/></field>
 					<field name="media_retrieval_id_text"><xsl:value-of select="current()"/></field>
