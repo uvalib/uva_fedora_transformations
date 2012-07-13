@@ -123,6 +123,43 @@
 					</field>
 				</xsl:for-each>
 
+				<!-- SOLR can take only one year_multisort_i field, so we need to choose which mods element to utilize -->
+				<xsl:for-each select="//originInfo[1]">
+					<xsl:choose>
+						<xsl:when test="current()/dateIssued[@keyDate='yes'][1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node" select="current()/dateIssued[@keyDate='yes'][1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/dateCreated[@keyDate='yes'][1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node" select="current()/dateCreated[@keyDate='yes'][1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/dateCaptured[@keyDate='yes'][1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node" select="current()/dateCaptured[@keyDate='yes'][1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/dateValid[@keyDate='yes'][1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node" select="current()/dateValid[@keyDate='yes'][1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/copyrightDate[@keyDate='yes'][1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node" select="current()/copyrightDate[@keyDate='yes'][1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/dateOther[@keyDate='yes'][1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node" select="current()/dateOther[@keyDate='yes'][1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:otherwise/>
+					</xsl:choose>
+				</xsl:for-each>
+
 				<!-- subject text -->
 				<xsl:for-each select="//subject">
 					<xsl:variable name="text-content">
