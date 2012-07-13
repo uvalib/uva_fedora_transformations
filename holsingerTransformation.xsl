@@ -111,7 +111,7 @@
 				<!-- searchable legacy identifier -->
 
 				<xsl:for-each
-					select="//identifier[(@displayLabel='Negative Number' or @displayLabel='Prints Number')]">
+					select="//identifier[(@displayLabel='Negative Number' or @displayLabel='Prints Number' or @displayLabel='Originating Collection')]">
 					<field name="media_retrieval_id_display">
 						<xsl:value-of select="current()"/>
 					</field>
