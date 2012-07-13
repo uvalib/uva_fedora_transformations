@@ -449,7 +449,7 @@
 					<xsl:variable name="descriptionDisplay">
 						<xsl:for-each select="current()/child::*">
 							<xsl:choose>
-								<xsl:when test="local-name() = 'form'"><xsl:value-of select="."/>; </xsl:when>
+								<xsl:when test="local-name() = 'form'"><xsl:value-of select="."/></xsl:when>
 								<xsl:when
 									test="local-name() = 'note' and ./@displayLabel = 'condition' and not( matches( text(),
 									'^\s+$'))">
@@ -467,10 +467,10 @@
 					</xsl:variable>
 					<xsl:if test="$descriptionDisplay">
 						<field name="media_description_display">
-							<xsl:value-of select="$descriptionDisplay"/>
+							<xsl:value-of select="normalize-space($descriptionDisplay)"/>
 						</field>
 						<field name="desc_meta_file_display">
-							<xsl:value-of select="$descriptionDisplay"/>
+							<xsl:value-of select="normalize-space($descriptionDisplay)"/>
 						</field>
 					</xsl:if>
 				</xsl:for-each>
