@@ -52,15 +52,6 @@
 
 	<xsl:template match="/">
 
-		<!-- custom requirement for Holsinger collection (legacy) -->
-		<xsl:variable name="dayOfWeek">
-			<xsl:for-each select="//dateCreated[@qualifier='inferred']">
-				<xsl:if test="current()/text()">
-					<xsl:value-of select="."/>
-				</xsl:if>
-			</xsl:for-each>
-		</xsl:variable>
-
 		<add>
 			<doc>
 				<field name="id">
@@ -573,7 +564,6 @@
 
 	<xsl:template name="build-dates">
 		<xsl:param name="date-node" select="'No node sent to template build-dates'"/>
-		<xsl:param name="day-of-week"/>
 		<xsl:for-each select="$date-node">
 			<xsl:choose>
 				<xsl:when test="matches(., '^\d{4}')">
@@ -585,8 +575,6 @@
 					</field>
 					<field name="year_display">
 						<xsl:value-of select="."/>
-						<xsl:if test="matches($day-of-week, '\w')"> (<xsl:value-of
-								select="$day-of-week"/>)</xsl:if>
 					</field>
 					<field name="date_text">
 						<xsl:value-of select="."/>
@@ -600,8 +588,6 @@
 				<xsl:otherwise>
 					<field name="published_date_display">
 						<xsl:value-of select="."/>
-						<xsl:if test="matches($day-of-week, '\w')"> (<xsl:value-of
-								select="$day-of-week"/>)</xsl:if>
 					</field>
 				</xsl:otherwise>
 			</xsl:choose>
