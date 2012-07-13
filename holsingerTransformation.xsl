@@ -498,8 +498,7 @@
 							<xsl:otherwise>RESTRICTED</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>:
-							<xsl:value-of select="$accessRestriction"/></field>
+					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>: <xsl:value-of select="$accessRestriction"/></field>
 					<field name="access_text">
 						<xsl:value-of select="$accessRestriction"/>
 					</field>
@@ -514,8 +513,7 @@
 							<xsl:otherwise>RESTRICTED</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>:
-							<xsl:value-of select="$accessUse"/></field>
+					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>: <xsl:value-of select="$accessUse"/></field>
 					<field name="access_text">
 						<xsl:value-of select="$accessUse"/>
 					</field>
