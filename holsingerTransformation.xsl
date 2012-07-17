@@ -219,7 +219,7 @@
 						</xsl:choose>
 					</xsl:variable>
 					<xsl:if test="$normalizedLibraryName != ''">
-						<field name="Library_facet">
+						<field name="library_facet">
 							<xsl:value-of select="$normalizedLibraryName"/>
 						</field>
 					</xsl:if>
