@@ -128,32 +128,38 @@
 					<xsl:choose>
 						<xsl:when test="current()/dateIssued[@keyDate='yes'][1]">
 							<xsl:call-template name="build-dates">
-								<xsl:with-param name="date-node" select="current()/dateIssued[@keyDate='yes'][1]"/>
+								<xsl:with-param name="date-node"
+									select="current()/dateIssued[@keyDate='yes'][1]"/>
 							</xsl:call-template>
 						</xsl:when>
 						<xsl:when test="current()/dateCreated[@keyDate='yes'][1]">
 							<xsl:call-template name="build-dates">
-								<xsl:with-param name="date-node" select="current()/dateCreated[@keyDate='yes'][1]"/>
+								<xsl:with-param name="date-node"
+									select="current()/dateCreated[@keyDate='yes'][1]"/>
 							</xsl:call-template>
 						</xsl:when>
 						<xsl:when test="current()/dateCaptured[@keyDate='yes'][1]">
 							<xsl:call-template name="build-dates">
-								<xsl:with-param name="date-node" select="current()/dateCaptured[@keyDate='yes'][1]"/>
+								<xsl:with-param name="date-node"
+									select="current()/dateCaptured[@keyDate='yes'][1]"/>
 							</xsl:call-template>
 						</xsl:when>
 						<xsl:when test="current()/dateValid[@keyDate='yes'][1]">
 							<xsl:call-template name="build-dates">
-								<xsl:with-param name="date-node" select="current()/dateValid[@keyDate='yes'][1]"/>
+								<xsl:with-param name="date-node"
+									select="current()/dateValid[@keyDate='yes'][1]"/>
 							</xsl:call-template>
 						</xsl:when>
 						<xsl:when test="current()/copyrightDate[@keyDate='yes'][1]">
 							<xsl:call-template name="build-dates">
-								<xsl:with-param name="date-node" select="current()/copyrightDate[@keyDate='yes'][1]"/>
+								<xsl:with-param name="date-node"
+									select="current()/copyrightDate[@keyDate='yes'][1]"/>
 							</xsl:call-template>
 						</xsl:when>
 						<xsl:when test="current()/dateOther[@keyDate='yes'][1]">
 							<xsl:call-template name="build-dates">
-								<xsl:with-param name="date-node" select="current()/dateOther[@keyDate='yes'][1]"/>
+								<xsl:with-param name="date-node"
+									select="current()/dateOther[@keyDate='yes'][1]"/>
 							</xsl:call-template>
 						</xsl:when>
 						<xsl:otherwise/>
@@ -498,7 +504,8 @@
 							<xsl:otherwise>RESTRICTED</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>: <xsl:value-of select="$accessRestriction"/></field>
+					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>:
+							<xsl:value-of select="$accessRestriction"/></field>
 					<field name="access_text">
 						<xsl:value-of select="$accessRestriction"/>
 					</field>
@@ -513,7 +520,8 @@
 							<xsl:otherwise>RESTRICTED</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>: <xsl:value-of select="$accessUse"/></field>
+					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>:
+							<xsl:value-of select="$accessUse"/></field>
 					<field name="access_text">
 						<xsl:value-of select="$accessUse"/>
 					</field>
