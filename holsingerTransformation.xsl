@@ -451,35 +451,58 @@
 				</xsl:for-each>
 
 				<!-- physical description -->
-				<xsl:for-each select="//mods/physicalDescription">
-					<xsl:variable name="descriptionDisplay">
-						<xsl:for-each select="current()/child::*">
-							<xsl:choose>
-								<xsl:when test="local-name() = 'form'"><xsl:value-of select="."/></xsl:when>
-								<xsl:when
-									test="local-name() = 'note' and ./@displayLabel = 'condition' and not( matches( text(),
+
+				<xsl:choose>
+					<xsl:when test="//mods/abstract">
+						<xsl:variable name="descriptionDisplay">
+							<xsl:value-of select="//mods/abstract"/>
+						</xsl:variable>
+						<xsl:if test="$descriptionDisplay">
+							<field name="media_description_display">
+								<xsl:value-of select="normalize-space($descriptionDisplay)"/>
+							</field>
+							<field name="desc_meta_file_display">
+								<xsl:value-of select="normalize-space($descriptionDisplay)"/>
+							</field>
+						</xsl:if>
+					</xsl:when>
+
+					<xsl:otherwise>
+						<xsl:for-each select="//mods/physicalDescription">
+							<xsl:variable name="descriptionDisplay">
+								<xsl:for-each select="current()/child::*">
+									<xsl:choose>
+										<xsl:when test="local-name() = 'form'">
+											<xsl:value-of select="."/>
+										</xsl:when>
+										<xsl:when
+											test="local-name() = 'note' and ./@displayLabel = 'condition' and not( matches( text(),
 									'^\s+$'))">
-									<xsl:value-of select="."/>
-								</xsl:when>
-								<xsl:when
-									test="local-name() = 'note' and ./@displayLabel = 'size inches'">
-									<xsl:text xml:space="default">Plate size: </xsl:text>
-									<xsl:value-of select="."/>
-									<xsl:text xml:space="default"> inches; </xsl:text>
-								</xsl:when>
-								<xsl:otherwise/>
-							</xsl:choose>
+											<xsl:value-of select="."/>
+										</xsl:when>
+										<xsl:when
+											test="local-name() = 'note' and ./@displayLabel = 'size inches'">
+											<xsl:text xml:space="default">Plate size: </xsl:text>
+											<xsl:value-of select="."/>
+											<xsl:text xml:space="default"> inches; </xsl:text>
+										</xsl:when>
+										<xsl:otherwise/>
+									</xsl:choose>
+								</xsl:for-each>
+							</xsl:variable>
+
+							<xsl:if test="$descriptionDisplay">
+								<field name="media_description_display">
+									<xsl:value-of select="normalize-space($descriptionDisplay)"/>
+								</field>
+								<field name="desc_meta_file_display">
+									<xsl:value-of select="normalize-space($descriptionDisplay)"/>
+								</field>
+							</xsl:if>
 						</xsl:for-each>
-					</xsl:variable>
-					<xsl:if test="$descriptionDisplay">
-						<field name="media_description_display">
-							<xsl:value-of select="normalize-space($descriptionDisplay)"/>
-						</field>
-						<field name="desc_meta_file_display">
-							<xsl:value-of select="normalize-space($descriptionDisplay)"/>
-						</field>
-					</xsl:if>
-				</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
+
 
 				<!-- staff note -->
 				<xsl:for-each select="//mods/note[@displayLabel='staff']">
