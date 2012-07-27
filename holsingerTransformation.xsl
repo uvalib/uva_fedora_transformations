@@ -211,6 +211,11 @@
 
 				<!-- library facet -->
 				<xsl:for-each select="//location/physicalLocation[not(@authority='oclcorg')]">
+					<xsl:if test="current()/text() != ' '">
+						<field name="location_display">
+							<xsl:value-of select="current()/text()"/>
+						</field>
+					</xsl:if>
 					<xsl:variable name="normalizedLibraryName">
 						<xsl:choose>
 							<xsl:when
