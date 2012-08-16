@@ -3,7 +3,9 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:pbcore="http://www.pbcore.org/PBCore/PBCoreNamespace.html"
     xmlns:apia="http://www.fedora.info/definitions/1/0/access/"
-    exclude-result-prefixes="xs pbcore apia"
+    xmlns:doc="http://www.oxygenxml.com/ns/doc/xsl"
+    xmlns:mapping="http://lib.virginia.edu/mapping"
+    exclude-result-prefixes="xs pbcore apia doc mapping"
     version="2.0">
     <!--
         Required solr fields for video display:
@@ -49,6 +51,28 @@
         the port is assumed to be 8080 and the context name "fedora" -->
     <xsl:variable name="fedora-host">localhost</xsl:variable>
     
+    <doc:doc>
+        <doc:desc>
+            <doc:p>
+                This matches the root of the PBCore document and outputs a corresponding SOLR add document.
+                This transformation was written for the WSLS Collection and makes assumptions
+                about the structure of the incoming PBCore document that may be unsuitable for 
+                other materials.
+            </doc:p>
+            <doc:p>
+                The following solr fields are automatically populated:
+                <doc:ul>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="$pid">id</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="'[the content smodel of the objects in fedora]'">content_model_facet</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="'Video', 'Online'">format_facet</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="'UVA Library Digital Repository'">source_facet</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="TBD - the Kaltura URL">url_display</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="TBD">digital_collection_facet</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="The date the item was first ingested into the repository">date_received_facet</doc:li>
+                </doc:ul>
+            </doc:p>
+        </doc:desc>
+    </doc:doc>
     <xsl:template match="/">
         <add>
             <doc>
@@ -86,11 +110,29 @@
     
     <xsl:template match="*" priority="-1" />
     
+    <doc:doc>
+        <doc:desc>
+            <doc:ul>
+                <doc:li mapping:type="solrField">title_display</doc:li>
+                <doc:li mapping:type="solrField">title_text</doc:li>
+            </doc:ul>
+        </doc:desc>
+    </doc:doc>
     <xsl:template match="pbcore:pbcoreTitle">
         <field name="title_display"><xsl:value-of select="text()" /></field>
         <field name="title_text"><xsl:value-of select="text()" /></field>
     </xsl:template>
     
+    <doc:doc>
+        <doc:desc>
+            <doc:ul>
+                <doc:li mapping:type="solrField">date_coverage_display</doc:li>
+                <doc:li mapping:type="solrField">date_coverage_text</doc:li>
+                <doc:li mapping:type="solrField">published_date_display</doc:li>
+                <doc:li mapping:type="solrField">year_multisort_i</doc:li>
+            </doc:ul>
+        </doc:desc>
+    </doc:doc>
     <xsl:template match="pbcore:pbcoreAssetDate">
         <field name="date_coverage_display"><xsl:value-of select="text()" /></field>
         <field name="date_coverage_text"><xsl:value-of select="text()" /></field>
@@ -100,18 +142,40 @@
         </field>
     </xsl:template>
     
+    <doc:doc>
+        <doc:desc>
+            <doc:ul>
+                <doc:li mapping:type="solrField">video_runtime_display</doc:li>
+            </doc:ul>
+        </doc:desc>
+    </doc:doc>
     <xsl:template match="pbcore:pbcoreInstantiation[1]/pbcore:instantiationEssenceTrack/pbcore:essenceTrackAnnotation[@annotationType='Source_Duration_String']">
         <field name="video_run_time_display">
             <xsl:value-of select="text()" />
         </field>
     </xsl:template>
 
+    <doc:doc>
+        <doc:desc>
+            <doc:ul>
+                <doc:li mapping:type="solrField">subject_facet</doc:li>
+            </doc:ul>
+        </doc:desc>
+    </doc:doc>
     <xsl:template match="pbcore:pbcoreSubject[@subjectType='Topic']">
         <field name="subject_facet">
             <xsl:value-of select="text()" />
         </field>
     </xsl:template>
     
+    <doc:doc>
+        <doc:desc>
+            <doc:ul>
+                <doc:li mapping:type="solrField">abstract_display</doc:li>
+                <doc:li mapping:type="solrField">abstract_text</doc:li>
+            </doc:ul>
+        </doc:desc>
+    </doc:doc>
     <xsl:template match="pbcore:pbcoreDescription[@descriptionType='abstract']">
         <field name="abstract_display">
             <xsl:value-of select="text()" />
@@ -122,6 +186,13 @@
         
     </xsl:template>
 
+    <doc:doc>
+        <doc:desc>
+            <doc:ul>
+                <doc:li mapping:type="solrField">region_facet</doc:li>
+            </doc:ul>
+        </doc:desc>
+    </doc:doc>
     <xsl:template match="pbcore:pbcoreSubject[@subjectType='Place']">
         <field name="region_facet">
             <xsl:value-of select="text()" />
