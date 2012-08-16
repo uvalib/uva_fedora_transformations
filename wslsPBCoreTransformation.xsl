@@ -89,11 +89,12 @@
                 <field name="medium_display">
                     <xsl:text>electronic resource</xsl:text>
                 </field>
+                <!--  TODO: this needs to be provided
                 <field name="url_display">
-                    <!-- TODO: this needs to be provided -->
                 </field>
+                -->
                 <field name="digital_collection_facet">
-                    <!-- TODO: this needs to be provided, maybe "WSLS" or something more descriptive yet pithy -->
+                    <xsl:text>WSLS-TV News Film Collection, 1951 to 1971</xsl:text>
                 </field>
                 
                 <!-- Pull the required "date_received_facet" from fedora --> 
