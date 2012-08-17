@@ -72,6 +72,21 @@
 					<xsl:value-of select="$repository"/>
 				</field>
 				<field name="source_facet">UVA Library Digital Repository</field>
+				
+				<!-- date indexed -->
+				
+				<field name="date_indexed_facet">
+					<xsl:value-of select="$dateIngestNow"/>
+				</field>
+				
+				<!-- date received -->
+				
+				<field name="date_received_facet">
+					<xsl:value-of select="$dateReceived"/>
+				</field>
+				<field name="date_received_text">
+					<xsl:value-of select="$dateReceived"/>
+				</field>
 
 				<!-- call number -->
 
