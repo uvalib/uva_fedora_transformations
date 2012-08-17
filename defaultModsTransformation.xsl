@@ -14,6 +14,11 @@
 	<xsl:param name="repository">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
+     
+        <!-- Date DL Ingest for the object being indexed for the creation of date_received_facet and date_received_text -->
+	<xsl:param name="dateReceived">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
 
 	<!-- Datetime that this index record was produced.  Format:YYYYMMDDHHMM -->
 	<xsl:param name="dateIngestNow">
@@ -95,6 +100,12 @@
 				</field>
 				<field name="date_indexed_facet" source="{$mode}">
 					<xsl:value-of select="$dateIngestNow"/>
+				</field>
+				<field name="date_received_facet" source="{$mode}">
+					<xsl:value-of select="$dateReceived"/>
+				</field>
+				<field name="date_received_text" source="{$mode}">
+					<xsl:value-of select="$dateReceived"/>
 				</field>
 				<field name="repository_address_display" source="{$mode}">
 					<xsl:value-of select="$repository"/>
