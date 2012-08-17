@@ -500,7 +500,7 @@
 								<xsl:for-each select="current()/child::*">
 									<xsl:choose>
 										<xsl:when test="local-name() = 'form'">
-											<xsl:value-of select="."/>
+											<xsl:value-of select="."/><xsl:text> </xsl:text>
 										</xsl:when>
 										<xsl:when
 											test="local-name() = 'note' and ./@displayLabel = 'condition' and not( matches( text(),
