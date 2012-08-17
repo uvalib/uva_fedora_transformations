@@ -23,6 +23,11 @@
 	<xsl:param name="dateIngestNow">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
+	
+	<!-- Date DL Ingest for the object being indexed for the creation of date_received_facet and date_received_text -->
+	<xsl:param name="dateReceived">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
 
 	<!-- String used by blacklight to determine views.  Probably will be 'jp2k' in the case of image objects, sometimes 'digital book' for bibliographic records.  Unknown for component and EadRefs. -->
 	<xsl:param name="contentModel">
