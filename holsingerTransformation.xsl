@@ -62,6 +62,8 @@
 				<field name="id">
 					<xsl:value-of select="$pid"/>
 				</field>
+				<!-- At this time, no Holsinger items will have MARC in them, so this value can be set to false -->
+                <field name="marc_display_facet">false</field>
 				<field name="digital_collection_facet">
 					<xsl:value-of select="$collectionName"/>
 				</field>
