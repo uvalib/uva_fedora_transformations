@@ -23,6 +23,11 @@
 	<xsl:param name="dateIngestNow">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
+	
+	<!-- Date DL Ingest for the object being indexed for the creation of date_received_facet and date_received_text -->
+	<xsl:param name="dateReceived">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
 
 	<!-- String used by blacklight to determine views.  Probably will be 'jp2k' in the case of image objects, sometimes 'digital book' for bibliographic records.  Unknown for component and EadRefs. -->
 	<xsl:param name="contentModel">
@@ -57,6 +62,8 @@
 				<field name="id">
 					<xsl:value-of select="$pid"/>
 				</field>
+				<!-- At this time, no Holsinger items will have MARC in them, so this value can be set to false -->
+                <field name="marc_display_facet">false</field>
 				<field name="digital_collection_facet">
 					<xsl:value-of select="$collectionName"/>
 				</field>
@@ -67,6 +74,21 @@
 					<xsl:value-of select="$repository"/>
 				</field>
 				<field name="source_facet">UVA Library Digital Repository</field>
+				
+				<!-- date indexed -->
+				
+				<field name="date_indexed_facet">
+					<xsl:value-of select="$dateIngestNow"/>
+				</field>
+				
+				<!-- date received -->
+				
+				<field name="date_received_facet">
+					<xsl:value-of select="$dateReceived"/>
+				</field>
+				<field name="date_received_text">
+					<xsl:value-of select="$dateReceived"/>
+				</field>
 
 				<!-- call number -->
 
@@ -325,8 +347,8 @@
 					<xsl:choose>
 						<xsl:when test="child::namePart[@type='date']">
 							<field name="author_display"><xsl:value-of select="$nameFull"/>,
-									<xsl:value-of select="child::namePart[@type='date']/text()"
-								/></field>
+									<xsl:value-of select="child::namePart[@type='date']/text()"/>
+						    </field>
 						</xsl:when>
 						<xsl:otherwise>
 							<field name="author_display">
@@ -478,7 +500,7 @@
 								<xsl:for-each select="current()/child::*">
 									<xsl:choose>
 										<xsl:when test="local-name() = 'form'">
-											<xsl:value-of select="."/>
+											<xsl:value-of select="."/><xsl:text> </xsl:text>
 										</xsl:when>
 										<xsl:when
 											test="local-name() = 'note' and ./@displayLabel = 'condition' and not( matches( text(),
@@ -532,8 +554,7 @@
 							<xsl:otherwise>RESTRICTED</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>:
-							<xsl:value-of select="$accessRestriction"/></field>
+					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>: <xsl:value-of select="$accessRestriction"/></field>
 					<field name="access_text">
 						<xsl:value-of select="$accessRestriction"/>
 					</field>
@@ -548,8 +569,7 @@
 							<xsl:otherwise>RESTRICTED</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>:
-							<xsl:value-of select="$accessUse"/></field>
+					<field name="access_display"><xsl:value-of select="current()/@displayLabel"/>: <xsl:value-of select="$accessUse"/></field>
 					<field name="access_text">
 						<xsl:value-of select="$accessUse"/>
 					</field>
