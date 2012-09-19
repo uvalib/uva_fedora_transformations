@@ -22,7 +22,7 @@
     <xsl:param name="thisUrl" required="yes" />
     <xsl:param name="debug" required="no" />
     
-    <xsl:template match="*" priority="-1" />
+    <xsl:template match="*" priority="-1" mode="#all" />
 
     <xsl:template match="/">
         <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" version="3.4"
