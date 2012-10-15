@@ -5,7 +5,8 @@
     xmlns:apia="http://www.fedora.info/definitions/1/0/access/"
     xmlns:doc="http://www.oxygenxml.com/ns/doc/xsl"
     xmlns:mapping="http://lib.virginia.edu/mapping"
-    exclude-result-prefixes="xs pbcore apia doc mapping"
+    xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result"
+    exclude-result-prefixes="xs pbcore apia doc mapping s"
     version="2.0">
     <!--
         Required solr fields for video display:
@@ -51,6 +52,9 @@
         the port is assumed to be 8080 and the context name "fedora" -->
     <xsl:variable name="fedora-host">localhost</xsl:variable>
     
+    <!-- Must be the fedora url used for public access requests to the content. -->
+    <xsl:variable name="fedora-proxy-url">http://fedoraproxy.lib.virginia.edu/fedora/</xsl:variable>
+    
     <doc:doc>
         <doc:desc>
             <doc:p>
@@ -66,8 +70,8 @@
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'[the content smodel of the objects in fedora]'">content_model_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'Video', 'Online'">format_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'UVA Library Digital Repository'">source_facet</doc:li>
-                    <doc:li mapping:type="solrField" mapping:sourceXPath="TBD - the Kaltura URL">url_display</doc:li>
-                    <doc:li mapping:type="solrField" mapping:sourceXPath="TBD">digital_collection_facet</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="[the Kaltura URL]">url_display</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="'WSLS-TV News Film Collection, 1951 to 1971'">digital_collection_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="The date the item was first ingested into the repository">date_received_facet</doc:li>
                 </doc:ul>
             </doc:p>
@@ -79,6 +83,9 @@
                 <field name="id"><xsl:value-of select="$pid"/></field>
                 <field name="format_facet">
                     <xsl:text>Video</xsl:text>
+                </field>
+                <field name="format_facet">
+                    <xsl:text>Streaming Video</xsl:text>
                 </field>
                 <field name="format_facet">
                     <xsl:text>Online</xsl:text>
@@ -97,12 +104,20 @@
                     <xsl:text>WSLS-TV News Film Collection, 1951 to 1971</xsl:text>
                 </field>
                 
-                <!-- Pull the required "date_received_facet" from fedora --> 
+                <!-- Pull the required "date_received_facet" from fedora as well as the content models --> 
                 <xsl:variable name="objectProfile" select="document(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '?format=xml'))" />
                 <xsl:variable name="createDate" select="$objectProfile/apia:objectProfile/apia:objCreateDate/text()" />
                 <field name="date_received_facet">
                     <xsl:value-of select="concat(substring($createDate, 1, 4), substring($createDate, 6, 2), substring($createDate, 9, 2))" />
                 </field> 
+                <xsl:for-each select="$objectProfile/apia:objectProfile/apia:objModels/apia:model">
+                    <xsl:if test="not(starts-with(current(), 'info:fedora/fedora-system'))">
+                        <field name="content_model_facet"><xsl:value-of select="substring(text(), string-length('info:fedora/') + 1)" /></field>
+                    </xsl:if>
+                </xsl:for-each>
+                
+                <!-- Pull the script (if one's available) and index the full text -->
+                <xsl:call-template name="lookupAnchorScript"><xsl:with-param name="itemPid" select="$pid" /></xsl:call-template>
                 
                 <xsl:apply-templates select="pbcore:pbcoreDescriptionDocument//*" />
             </doc>
@@ -131,6 +146,7 @@
                 <doc:li mapping:type="solrField">date_coverage_text</doc:li>
                 <doc:li mapping:type="solrField">published_date_display</doc:li>
                 <doc:li mapping:type="solrField">year_multisort_i</doc:li>
+                <doc:li mapping:type="solrField">published_date_facet</doc:li>
             </doc:ul>
         </doc:desc>
     </doc:doc>
@@ -138,9 +154,27 @@
         <field name="date_coverage_display"><xsl:value-of select="text()" /></field>
         <field name="date_coverage_text"><xsl:value-of select="text()" /></field>
         <field name="published_date_display"><xsl:value-of select="text()" /></field>
+        <xsl:variable name="year" select="concat('19', substring-after(substring-after(text(), '/'), '/'))" />
         <field name="year_multisort_i">
-            <xsl:value-of select="substring(text(), 7, 4)" />
+            <xsl:value-of select="$year" />
         </field>
+        <xsl:variable name="age" select="number(substring(string(current-date()), 1, 4)) - number($year)" />
+        <xsl:if test="$age &lt;= 1">
+            <field name="published_date_facet"><xsl:text>This year</xsl:text></field>
+        </xsl:if>
+        <xsl:if test="$age &lt;= 3">
+            <field name="published_date_facet"><xsl:text>Last 3 years</xsl:text></field>
+        </xsl:if>
+        <xsl:if test="$age &lt;= 10">
+            <field name="published_date_facet"><xsl:text>Last 10 years</xsl:text></field>
+        </xsl:if>
+        <xsl:if test="$age &lt;= 50">
+            <field name="published_date_facet"><xsl:text>Last 50 years</xsl:text></field>
+        </xsl:if>
+        <xsl:if test="$age &gt; 50">
+            <field name="published_date_facet"><xsl:text>More than 50 years ago</xsl:text></field>
+        </xsl:if>
+    
     </xsl:template>
     
     <doc:doc>
@@ -150,8 +184,21 @@
             </doc:ul>
         </doc:desc>
     </doc:doc>
-    <xsl:template match="pbcore:pbcoreInstantiation[1]/pbcore:instantiationEssenceTrack/pbcore:essenceTrackAnnotation[@annotationType='Source_Duration_String']">
+    <xsl:template match="pbcore:pbcoreInstantiation/pbcore:instantiationDuration">
         <field name="video_run_time_display">
+            <xsl:value-of select="text()" />
+        </field>
+    </xsl:template>
+    
+    <doc:doc>
+        <doc:desc>
+            <doc:ul>
+                <doc:li mapping:type="solrField">url_display</doc:li>
+            </doc:ul>
+        </doc:desc>
+    </doc:doc>
+    <xsl:template match="pbcore:pbcoreInstantiation/pbcore:instantiationLocation">
+        <field name="url_display">
             <xsl:value-of select="text()" />
         </field>
     </xsl:template>
@@ -198,6 +245,41 @@
         <field name="region_facet">
             <xsl:value-of select="text()" />
         </field>
+    </xsl:template>
+    
+    <!-- Performs a fedora resource index query that will identify the  
+        anchor script for the clip described by this PBCore record.  This
+        template will then output several fields associated with that
+        script.
+    -->
+    <doc:doc>
+        <doc:desc>
+            <doc:ul>
+                <doc:li mapping:type="solrField" mapping:sourceXPath="[anchor script pdf location]">anchor_script_pdf_url_display</doc:li>
+                <doc:li mapping:type="solrField" mapping:sourceXPath="[anchor script text]">anchor_script_text</doc:li>
+            </doc:ul>
+        </doc:desc>
+    </doc:doc>
+    <xsl:template name="lookupAnchorScript">
+        <xsl:param name="itemPid" required="yes" />
+        <xsl:variable name="lookupScript">
+            <xsl:text>http://</xsl:text><xsl:value-of select="$fedora-host" /><xsl:text>:8080/fedora/risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24script%20from%20%3C%23ri%3E%20where%20%24script%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Fwsls%2Frelationships%23isAnchorScriptFor%3E%20%3Cinfo%3Afedora%2F</xsl:text>
+            <xsl:value-of select="$itemPid" />
+            <xsl:text>%3E</xsl:text>
+        </xsl:variable>
+        <xsl:variable name="scriptUri" select="document($lookupScript)/s:sparql/s:results/s:result/s:script/@uri" />
+        <xsl:if test="$scriptUri">
+            <xsl:variable name="scriptPid" select="substring($scriptUri, string-length('info:fedora/') + 1)" />
+            <field name="anchor_script_pdf_url_display">
+                <xsl:value-of select="concat($fedora-proxy-url, 'objects/', $scriptPid, '/datastreams/scriptPDF/content')" />
+            </field>
+            <field name="anchor_script_thumbnail_url_display">
+                <xsl:value-of select="concat($fedora-proxy-url, 'objects/', $scriptPid, '/datastreams/thumbnail/content')" />
+            </field>
+            <xsl:variable name="anchorScriptText" select="unparsed-text(concat('http://', $fedora-host, ':8080/fedora/objects/', $scriptPid, '/datastreams/scriptTXT/content'))" />
+            <field name="anchor_script_text" boost="0.1"><xsl:value-of select="$anchorScriptText" /></field>
+            <field name="anchor_script_display"><xsl:value-of select="$anchorScriptText" /></field>
+        </xsl:if>
     </xsl:template>
     
 </xsl:stylesheet>
