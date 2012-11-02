@@ -158,7 +158,7 @@
         <xsl:variable name="title" select="mods:titleInfo/mods:title[1]" />
         <xsl:variable name="date" select="mods:originInfo/mods:dateIssued[1]/text()" />
         <xsl:variable name="unitId" select="mods:location/mods:holdingSimple/mods:copyInformation/mods:note[@type='call_number'][1]/text()" />
-        <xsl:variable name="accessrestrict" select="mods:accessCondition[1]/text()" />>
+        <xsl:variable name="accessrestrict" select="mods:accessCondition[1]/text()" />
         <eadheader>
           <filedesc>
             <titlestmt>
