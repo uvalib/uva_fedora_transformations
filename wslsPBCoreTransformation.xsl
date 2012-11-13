@@ -8,40 +8,6 @@
     xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result"
     exclude-result-prefixes="xs pbcore apia doc mapping s"
     version="2.0">
-    <!--
-        Required solr fields for video display:
-          format_facet = "Video"
-          source_facet = "UVA Library Digital Repository"
-          year_multisort_i (needed for sorting, must be four digits)
-          date_received_facet (needed for sorting, must be 8 digits)
-        
-        Used to build index display (_index_partials/_dl_video.html.erb):
-          (the title) 
-            title_display
-            medium_display = "electronic resource"
-            subtitle_display (optional)
-            date_coverage_display
-          
-          (thumbnails) 
-          url_display ~= "http://www.kaltura.com/kwidget/wid/_419852/entry_id/1_pnz05jjn||Part one of two.","..."
-          
-          author_display (one value)
-          author_facet
-          author_sort_facet
-          
-          format_facet
-          published_date_display
-          
-        Used to build full display (_show_partials/_dl_video.html.erb):
-        
-        DUPE format_facet = "Videos"
-        !! Description came from marc... possibly we'll need to update this to come from a new field
-        video_director_facet
-        release_date_facet
-        video_run_time_display (simple number, in minutes)
-        DUPE url_display
-        subject_facet
-    -->
     
     <xsl:output byte-order-mark="no" encoding="UTF-8" media-type="text/xml" xml:space="preserve" indent="yes"/>
     
@@ -50,10 +16,10 @@
     
     <!-- Must be the URL for the fedora repository in which the object resides, 
         the port is assumed to be 8080 and the context name "fedora" -->
-    <xsl:variable name="fedora-host">localhost</xsl:variable>
+    <xsl:param name="fedora-host">localhost</xsl:param>
     
     <!-- Must be the fedora url used for public access requests to the content. -->
-    <xsl:variable name="fedora-proxy-url">http://fedoraproxy.lib.virginia.edu/fedora/</xsl:variable>
+    <xsl:param name="fedora-proxy-url">http://fedoraproxy.lib.virginia.edu/fedora/</xsl:param>
     
     <doc:doc>
         <doc:desc>
@@ -69,10 +35,12 @@
                     <doc:li mapping:type="solrField" mapping:sourceXPath="$pid">id</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'[the content smodel of the objects in fedora]'">content_model_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'Video', 'Online'">format_facet</doc:li>
-                    <doc:li mapping:type="solrField" mapping:sourceXPath="'UVA Library Digital Repository'">source_facet</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="'Digital Library'">source_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="[the Kaltura URL]">url_display</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'WSLS-TV News Film Collection, 1951 to 1971'">digital_collection_facet</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="'WSLS-TV News Film Collection, 1951 to 1971'">text</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="The date the item was first ingested into the repository">date_received_facet</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="[the entire pbcore record]">pbcore_display</doc:li>
                 </doc:ul>
             </doc:p>
         </doc:desc>
@@ -91,16 +59,12 @@
                     <xsl:text>Online</xsl:text>
                 </field>
                 <field name="source_facet">
-                    <xsl:text>UVA Library Digital Repository</xsl:text>
+                    <xsl:text>Digital Library</xsl:text>
                 </field>
-                <field name="medium_display">
-                    <xsl:text>electronic resource</xsl:text>
-                </field>
-                <!--  TODO: this needs to be provided
-                <field name="url_display">
-                </field>
-                -->
                 <field name="digital_collection_facet">
+                    <xsl:text>WSLS-TV News Film Collection, 1951 to 1971</xsl:text>
+                </field>
+                <field name="text">
                     <xsl:text>WSLS-TV News Film Collection, 1951 to 1971</xsl:text>
                 </field>
                 
@@ -120,6 +84,10 @@
                 <xsl:call-template name="lookupAnchorScript"><xsl:with-param name="itemPid" select="$pid" /></xsl:call-template>
                 
                 <xsl:apply-templates select="pbcore:pbcoreDescriptionDocument//*" />
+                
+                <field name="pbcore_display">
+                    <xsl:value-of select="unparsed-text(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/datastreams/metadata/content'))" />
+                </field>
             </doc>
         </add>
     </xsl:template>
@@ -176,20 +144,7 @@
         </xsl:if>
     
     </xsl:template>
-    
-    <doc:doc>
-        <doc:desc>
-            <doc:ul>
-                <doc:li mapping:type="solrField">video_runtime_display</doc:li>
-            </doc:ul>
-        </doc:desc>
-    </doc:doc>
-    <xsl:template match="pbcore:pbcoreInstantiation/pbcore:instantiationDuration">
-        <field name="video_run_time_display">
-            <xsl:value-of select="text()" />
-        </field>
-    </xsl:template>
-    
+
     <doc:doc>
         <doc:desc>
             <doc:ul>
@@ -207,31 +162,47 @@
         <doc:desc>
             <doc:ul>
                 <doc:li mapping:type="solrField">subject_facet</doc:li>
+                <doc:li mapping:type="solrField">subject_text</doc:li>
             </doc:ul>
         </doc:desc>
     </doc:doc>
     <xsl:template match="pbcore:pbcoreSubject[@subjectType='Topic']">
         <field name="subject_facet">
-            <xsl:value-of select="text()" />
+            <xsl:value-of select="normalize-space(text())" />
+        </field>
+        <field name="subject_text">
+            <xsl:value-of select="normalize-space(text())" />
         </field>
     </xsl:template>
     
     <doc:doc>
         <doc:desc>
             <doc:ul>
-                <doc:li mapping:type="solrField">abstract_display</doc:li>
+                <doc:li mapping:type="solrField">subject_facet</doc:li>
+                <doc:li mapping:type="solrField">subject_text</doc:li>
+            </doc:ul>
+        </doc:desc>
+    </doc:doc>
+    <xsl:template match="pbcore:pbcoreSubject[@subjectType='Entity']">
+        <field name="subject_facet">
+            <xsl:value-of select="normalize-space(text())" />
+        </field>
+        <field name="subject_text">
+            <xsl:value-of select="normalize-space(text())" />
+        </field>
+    </xsl:template>
+    
+    <doc:doc>
+        <doc:desc>
+            <doc:ul>
                 <doc:li mapping:type="solrField">abstract_text</doc:li>
             </doc:ul>
         </doc:desc>
     </doc:doc>
     <xsl:template match="pbcore:pbcoreDescription[@descriptionType='abstract']">
-        <field name="abstract_display">
-            <xsl:value-of select="text()" />
-        </field>
         <field name="abstract_text">
             <xsl:value-of select="text()" />
         </field>
-        
     </xsl:template>
 
     <doc:doc>
@@ -243,7 +214,7 @@
     </doc:doc>
     <xsl:template match="pbcore:pbcoreSubject[@subjectType='Place']">
         <field name="region_facet">
-            <xsl:value-of select="text()" />
+            <xsl:value-of select="normalize-space(text())" />
         </field>
     </xsl:template>
     
@@ -256,6 +227,8 @@
         <doc:desc>
             <doc:ul>
                 <doc:li mapping:type="solrField" mapping:sourceXPath="[anchor script pdf location]">anchor_script_pdf_url_display</doc:li>
+                <doc:li mapping:type="solrField" mapping:sourceXPath="[anchor script text location]">anchor_script_text_url_display</doc:li>
+                <doc:li mapping:type="solrField" mapping:sourceXPath="[anchor script thumbnail location]">anchor_script_thumbnail_url_display</doc:li>
                 <doc:li mapping:type="solrField" mapping:sourceXPath="[anchor script text]">anchor_script_text</doc:li>
             </doc:ul>
         </doc:desc>
@@ -275,6 +248,9 @@
             </field>
             <field name="anchor_script_thumbnail_url_display">
                 <xsl:value-of select="concat($fedora-proxy-url, 'objects/', $scriptPid, '/datastreams/thumbnail/content')" />
+            </field>
+            <field name="anchor_script_text_url_display">
+                <xsl:value-of select="concat($fedora-proxy-url, 'objects/', $scriptPid, '/datastreams/scriptTEXT/content')" />
             </field>
             <xsl:variable name="anchorScriptText" select="unparsed-text(concat('http://', $fedora-host, ':8080/fedora/objects/', $scriptPid, '/datastreams/scriptTXT/content'))" />
             <field name="anchor_script_text" boost="0.1"><xsl:value-of select="$anchorScriptText" /></field>
