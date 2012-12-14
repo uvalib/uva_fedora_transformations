@@ -346,8 +346,7 @@
 					</field>
 					<xsl:choose>
 						<xsl:when test="child::namePart[@type='date']">
-							<field name="author_display"><xsl:value-of select="$nameFull"/>,
-									<xsl:value-of select="child::namePart[@type='date']/text()"/>
+							<field name="author_display"><xsl:value-of select="$nameFull"/>, <xsl:value-of select="child::namePart[@type='date']/text()"/>
 						    </field>
 						</xsl:when>
 						<xsl:otherwise>
