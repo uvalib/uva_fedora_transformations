@@ -263,7 +263,7 @@
 					<xsl:variable name="fname">
 						<xsl:choose>
 							<xsl:when
-								test="current()/namePart[@type='family'] and current()/namePart[@type='family'][substring-before(., ',')!='']">
+								test="current()/namePart[@type='family'] and current()/namePart[@type='family'][substring-before(., ',')!='']">sd
 								<xsl:value-of
 									select="substring-before(current()/namePart[@type='family'], ',')"
 								/>
@@ -376,16 +376,11 @@
 							<field name="author_sort_facet">
 								<xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/>
 								<xsl:text> </xsl:text>
-								<xsl:value-of
-									select="translate(child::mods:namePart[@type='date']/text(), $uppercase, $lowercase)"
-								/>
+								<xsl:value-of select="translate(child::mods:namePart[@type='date']/text(), $uppercase, $lowercase)"/>
 							</field>
 						</xsl:when>
 						<xsl:when test="position() = 1">
-							<field name="author_sort_facet">
-								<xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"
-								/>
-							</field>
+							<field name="author_sort_facet"><xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/></field>
 						</xsl:when>
 						<xsl:otherwise/>
 					</xsl:choose>
@@ -395,8 +390,7 @@
 				<xsl:for-each select="//mods/relatedItem[@type='series'][not(@displayLabel='Part of')]">
 					<xsl:variable name="dateRange" xml:space="default">
 						<xsl:choose>
-							<xsl:when
-								test="//mods/relatedItem[1]/originInfo[1]/dateCreated[@point='start'] and
+							<xsl:when test="//mods/relatedItem[1]/originInfo[1]/dateCreated[@point='start'] and
 								//mods/relatedItem[1]/originInfo[1]/dateCreated[@point='end']"
 								>, <xsl:value-of
 									select="//mods/relatedItem[1]/originInfo[1]/dateCreated[@point='start']"
@@ -443,8 +437,7 @@
 						</xsl:for-each>
 					</field>
 					<field name="series_title_facet">
-						<xsl:for-each
-							select="current()/titleInfo/descendant::*[local-name() != 'nonSort']">
+						<xsl:for-each select="current()/titleInfo/descendant::*[local-name() != 'nonSort']">
 							<xsl:value-of select="."/>
 							<xsl:if test="position() != last()">
 								<xsl:text> </xsl:text>
