@@ -416,6 +416,25 @@
 							<xsl:otherwise/>
 						</xsl:choose>
 					</xsl:variable>
+				    
+				    <xsl:variable name="volume" xml:space="default">
+				        <xsl:choose>
+				            <xsl:when test="current()/part/detail[@type='volume']">
+				                <xsl:value-of select="current()/part/detail[@type='volume']/number"/>
+				            </xsl:when>
+				            <xsl:otherwise/>
+				        </xsl:choose>
+				    </xsl:variable>
+				    
+				    <xsl:variable name="issue" xml:space="default">
+				        <xsl:choose>
+				            <xsl:when test="current()/part/detail[@type='issue']">
+				                <xsl:value-of select="current()/part/detail[@type='issue']/number"/>
+				            </xsl:when>
+				            <xsl:otherwise/>
+				        </xsl:choose>
+				    </xsl:variable>
+				    
 					<field name="series_title_text">
 						<xsl:value-of select="current()/@displayLabel"/>
 						<xsl:for-each select="current()/titleInfo/descendant::*">
@@ -433,10 +452,17 @@
 						</xsl:for-each>
 					</field>
 					<field name="series_title_display">
-						<xsl:for-each
-							select="current()/titleInfo/descendant::*[local-name() != 'nonSort']">
-							<xsl:value-of select="."/>
-							<xsl:value-of xml:space="default" select="$dateRange"/>
+						<xsl:for-each select="current()/titleInfo/descendant::*[local-name() != 'nonSort']">
+						    <xsl:value-of select="."/> 
+						    <xsl:if test="$dateRange">
+						        <xsl:value-of xml:space="default" select="$dateRange"/> 
+						    </xsl:if>
+						    <xsl:if test="$volume">
+						        <xsl:text>, Volume </xsl:text> <xsl:value-of xml:space="default" select="$volume"/> 
+						    </xsl:if>
+						    <xsl:if test="$issue">
+						        <xsl:text>, Issue </xsl:text> <xsl:value-of xml:space="default" select="$issue"/>
+						    </xsl:if>
 							<xsl:if test="position() != last()">
 								<xsl:text> </xsl:text>
 							</xsl:if>
