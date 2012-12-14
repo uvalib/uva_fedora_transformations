@@ -393,7 +393,7 @@
 				</xsl:for-each>
 
 				<!-- series facet -->
-				<xsl:for-each select="//mods/relatedItem[@type='series'][not(@displayLabel='Appears in')]">
+				<xsl:for-each select="//mods/relatedItem[@type='series'][not(@displayLabel='Part of')]">
 					<xsl:variable name="dateRange" xml:space="default">
 						<xsl:choose>
 							<xsl:when
