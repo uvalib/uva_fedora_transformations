@@ -430,7 +430,6 @@
 				    </xsl:variable>
 				    
 					<field name="series_title_text">
-						<xsl:value-of select="current()/@displayLabel"/>
 						<xsl:for-each select="current()/titleInfo/descendant::*">
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="."/>
