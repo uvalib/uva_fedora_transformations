@@ -24,6 +24,10 @@
 	<xsl:param name="dateIngestNow">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
+	
+	<xsl:param name="policyFacet">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
 
 	<!-- String used by blacklight to determine views.  Probably will be 'jp2k' in the case of image objects, sometimes 'digital book' for bibliographic records.  Unknown for component and EadRefs. -->
 	<xsl:param name="contentModel">
@@ -112,6 +116,9 @@
 				</field>
 				<field name="content_model_facet" source="{$mode}">
 					<xsl:value-of select="$contentModel"/>
+				</field>
+				<field name="policy_facet" source="{$mode}">
+					<xsl:value-of select="$policyFacet"/>
 				</field>
 
 				<field name="source_facet" source="{$mode}">

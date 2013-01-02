@@ -24,6 +24,10 @@
 		<xsl:value-of select="false()"/>
 	</xsl:param>
 	
+	<xsl:param name="policyFacet">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
+	
 	<!-- Date DL Ingest for the object being indexed for the creation of date_received_facet and date_received_text -->
 	<xsl:param name="dateReceived">
 		<xsl:value-of select="false()"/>
@@ -69,6 +73,9 @@
 				</field>
 				<field name="content_model_facet">
 					<xsl:value-of select="$contentModel"/>
+				</field>
+				<field name="policy_facet" source="{$mode}">
+					<xsl:value-of select="$policyFacet"/>
 				</field>
 				<field name="repository_address_display">
 					<xsl:value-of select="$repository"/>
