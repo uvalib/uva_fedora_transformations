@@ -74,7 +74,7 @@
 				<field name="content_model_facet">
 					<xsl:value-of select="$contentModel"/>
 				</field>
-				<field name="policy_facet" source="{$mode}">
+				<field name="policy_facet">
 					<xsl:value-of select="$policyFacet"/>
 				</field>
 				<field name="repository_address_display">
