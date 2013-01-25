@@ -117,9 +117,12 @@
 				<field name="content_model_facet" source="{$mode}">
 					<xsl:value-of select="$contentModel"/>
 				</field>
-				<field name="policy_facet" source="{$mode}">
-					<xsl:value-of select="$policyFacet"/>
-				</field>
+				
+				<xsl:if test="$policyFacet != 'false'">
+					<field name="policy_facet" source="{$mode}">
+						<xsl:value-of select="$policyFacet"/>
+					</field>
+				</xsl:if>
 
 				<field name="source_facet" source="{$mode}">
 					<xsl:value-of select="$sourceFacet"/>
