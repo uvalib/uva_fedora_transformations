@@ -456,10 +456,10 @@
 						    <xsl:if test="$dateRange">
 						        <xsl:value-of xml:space="default" select="$dateRange"/> 
 						    </xsl:if>
-						    <xsl:if test="$volume">
+						    <xsl:if test="$volume != ''">
 						        <xsl:text>, Volume </xsl:text> <xsl:value-of xml:space="default" select="$volume"/> 
 						    </xsl:if>
-						    <xsl:if test="$issue">
+						    <xsl:if test="$issue != ''">
 						        <xsl:text>, Issue </xsl:text> <xsl:value-of xml:space="default" select="$issue"/>
 						    </xsl:if>
 							<xsl:if test="position() != last()">
