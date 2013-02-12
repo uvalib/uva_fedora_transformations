@@ -74,8 +74,8 @@
 				<field name="content_model_facet">
 					<xsl:value-of select="$contentModel"/>
 				</field>
-                                <xsl:if test="$policyFacet != 'false'">
-					<field name="policy_facet" source="{$mode}">
+                <xsl:if test="$policyFacet != 'false'">
+					<field name="policy_facet">
 						<xsl:value-of select="$policyFacet"/>
 					</field>
 				</xsl:if>
