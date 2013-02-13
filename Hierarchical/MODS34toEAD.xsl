@@ -43,7 +43,8 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result"
     xmlns:mods="http://www.loc.gov/mods/v3"
-    exclude-result-prefixes="xs s mods"
+    xmlns:apia="http://www.fedora.info/definitions/1/0/access/"
+    exclude-result-prefixes="xs s mods apia"
     version="2.0">
     
     <xsl:output byte-order-mark="no" encoding="UTF-8" media-type="text/xml" xml:space="preserve" indent="yes"/>
@@ -60,6 +61,26 @@
         <xsl:variable name="parentComponentType">
             <xsl:call-template name="getParentComponentType" />
         </xsl:variable>
+        
+        <xsl:variable name="objectProfile" select="document(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '?format=xml'))" />
+        <xsl:variable name="cmodels">
+            <xsl:for-each select="$objectProfile/apia:objectProfile/apia:objModels/apia:model">
+                <xsl:if test="not(starts-with(current(), 'info:fedora/fedora-system'))">
+                    <value><xsl:value-of select="substring(text(), string-length('info:fedora/') + 1)" /></value>
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:variable name="level">
+            <xsl:choose>
+                <xsl:when test="$cmodels/value = 'uva-lib:eadItemCModel'">
+                    <xsl:text>item</xsl:text>
+                </xsl:when>
+                <xsl:when test="$cmodels/value = 'uva-lib:eadComponentCModel'">
+                    <xsl:text>series</xsl:text>
+                </xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        
         <xsl:choose>
             <xsl:when test="$parentComponentType = ''">
                 <ead>
@@ -68,26 +89,36 @@
             </xsl:when>
             <xsl:when test="$parentComponentType = 'ead'">
                 <c01>
+                    <xsl:attribute name="level" select="$level" />
+                    <xsl:attribute name="id" select="$pid" />
                     <xsl:apply-templates select="*" mode="component" />
                 </c01>
             </xsl:when>
             <xsl:when test="$parentComponentType = 'c01'">
                 <c02>
+                    <xsl:attribute name="level" select="$level" />
+                    <xsl:attribute name="id" select="$pid" />
                     <xsl:apply-templates select="*" mode="component" />
                 </c02>
             </xsl:when>
             <xsl:when test="$parentComponentType = 'c02'">
                 <c03>
+                    <xsl:attribute name="level" select="$level" />
+                    <xsl:attribute name="id" select="$pid" />
                     <xsl:apply-templates select="*" mode="component" />
                 </c03>
             </xsl:when>
             <xsl:when test="$parentComponentType = 'c03'">
                 <c04>
+                    <xsl:attribute name="level" select="$level" />
+                    <xsl:attribute name="id" select="$pid" />
                     <xsl:apply-templates select="*" mode="component" />
                 </c04>
             </xsl:when>
             <xsl:otherwise>
                 <c>
+                    <xsl:attribute name="level" select="$level" />
+                    <xsl:attribute name="id" select="$pid" />
                     <xsl:apply-templates select="*" mode="component" />
                 </c>
             </xsl:otherwise>
