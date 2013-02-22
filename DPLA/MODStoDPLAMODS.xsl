@@ -5,8 +5,9 @@
   xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:uva-rels="http://fedora.lib.virginia.edu/relationships#"
+  xmlns:fedora-model="info:fedora/fedora-system:def/model#"
   xmlns="http://www.loc.gov/mods/v3"
-  exclude-result-prefixes="xs rdf uva-rels"
+  exclude-result-prefixes="xs rdf uva-rels s fedora-model"
   version="2.0">
   
   <xsl:param name="pid" required="yes" />
@@ -50,13 +51,21 @@
   -->
   <xsl:template name="lookupDigitizedExemplar">
     <xsl:param name="itemPid" required="yes" />
-    <xsl:variable name="lookupExemplars">
-      <xsl:value-of select="$fedora-url" /><xsl:text>risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24exemplar%20from%20%3C%23ri%3E%20where%20%3Cinfo%3Afedora%2F</xsl:text>
-      <xsl:value-of select="$itemPid" />
-      <xsl:text>%3E%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasExemplar%3E%20%24exemplar</xsl:text>
-    </xsl:variable>
-    <xsl:message><xsl:value-of select="$lookupExemplars" /></xsl:message>
-    <xsl:value-of select="document($lookupExemplars)/s:sparql/s:results/s:result/s:exemplar/@uri" />
+    <!-- first see if it is a info:fedora/djatoka:jp2CModel object itself -->
+    <xsl:variable name="hasImages" select="count(document(concat($fedora-url, 'objects/', $itemPid, '/datastreams/RELS-EXT/content'))//fedora-model:hasModel[@rdf:resource='info:fedora/djatoka:jp2CModel'])" />
+    <xsl:if test="$hasImages = 1">
+      <xsl:text>info:fedora/</xsl:text><xsl:value-of select="$itemPid" />
+    </xsl:if>
+    <xsl:if test="$hasImages != 1">
+      <xsl:message>hasImages = <xsl:value-of select="$hasImages" /></xsl:message>
+      <xsl:variable name="lookupExemplars">
+        <xsl:value-of select="$fedora-url" /><xsl:text>risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24exemplar%20from%20%3C%23ri%3E%20where%20%3Cinfo%3Afedora%2F</xsl:text>
+        <xsl:value-of select="$itemPid" />
+        <xsl:text>%3E%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasExemplar%3E%20%24exemplar</xsl:text>
+      </xsl:variable>
+      <xsl:message><xsl:value-of select="$lookupExemplars" /></xsl:message>
+      <xsl:value-of select="document($lookupExemplars)/s:sparql/s:results/s:result/s:exemplar/@uri" />
+   </xsl:if>
   </xsl:template>
   
 </xsl:stylesheet>

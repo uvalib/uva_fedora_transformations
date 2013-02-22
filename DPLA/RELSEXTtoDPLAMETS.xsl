@@ -38,7 +38,7 @@
         <mets:dmdSec>
           <xsl:attribute name="ID" select="concat(translate($childPid, ':', '_'), '-mods')" />
           <mets:mdRef LOCTYPE="PURL" MDTYPE="MODS">
-            <xsl:attribute name="xlink:href">http://fedoraproxy.lib.virginia.edu/fedora/objects/<xsl:value-of select="$childPid" />/methods/uva-lib:mods/getMODS</xsl:attribute>
+            <xsl:attribute name="xlink:href">http://fedoraproxy.lib.virginia.edu/fedora/objects/<xsl:value-of select="$childPid" />/methods/uva-lib:modsSDef/getMODS</xsl:attribute>
           </mets:mdRef>
         </mets:dmdSec>
       </xsl:for-each>
