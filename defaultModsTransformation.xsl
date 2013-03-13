@@ -532,40 +532,54 @@
 		<!-- SOLR can take only one year_multisort_i field, so we need to choose which mods element to utilize -->
 		<xsl:for-each select="//mods:mods/mods:originInfo[1]">
 			<xsl:choose>
+				<xsl:when test="current()/mods:dateIssued[@encoding='marc'][1]">
+					<xsl:call-template name="build-dates">
+						<xsl:with-param name="mode" select="primary"/>
+						<xsl:with-param name="date-node"
+							select="current()/mods:dateIssued[@encoding='marc'][1]"/>
+						
+					</xsl:call-template>
+				</xsl:when>
 				<xsl:when test="current()/mods:dateIssued[1]">
 					<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node"
 							select="current()/mods:dateIssued[1]"/>
+						<xsl:with-param name="mode" select="primary"/>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:when test="current()/mods:dateCreated[1]">
 					<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node"
 							select="current()/mods:dateCreated[1]"/>
+						<xsl:with-param name="mode" select="primary"/>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:when test="current()/mods:dateCaptured[1]">
 					<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node"
 							select="current()/mods:dateCaptured[1]"/>
+						<xsl:with-param name="mode" select="primary"/>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:when test="current()/mods:dateValid[1]">
 					<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node"
 							select="current()/mods:dateValid[1]"/>
+						<xsl:with-param name="mode" select="primary"/>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:when test="current()/mods:copyrightDate[1]">
 					<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node"
 							select="current()/mods:copyrightDate[1]"/>
+						<xsl:with-param name="mode" select="primary"/>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:when test="current()/mods:dateOther[1]">
 					<xsl:call-template name="build-dates">
 						<xsl:with-param name="date-node"
 							select="current()/mods:dateOther[1]"/>
+						<xsl:with-param name="mode" select="primary"/>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise/>
@@ -1242,32 +1256,23 @@
 	
 	<xsl:template name="build-dates">
 		<xsl:param name="date-node" select="'No node sent to template build-dates'"/>
+		<xsl:variable name="mode" select="'primary'"/>
 		<xsl:for-each select="$date-node">
 			<xsl:choose>
 				<xsl:when test="matches(., '^\d{4}')">
 					<xsl:variable name="yearOnly">
 						<xsl:value-of select="substring(., 1, 4)"/>
 					</xsl:variable>
-					<field name="year_multisort_i">
+					<field name="year_multisort_i" source="{$mode}">
 						<xsl:value-of select="$yearOnly"/>
 					</field>
-					<field name="year_display">
+					<field name="year_display" source="{$mode}">
 						<xsl:value-of select="."/>
 					</field>
-					<field name="date_text">
-						<xsl:value-of select="."/>
-					</field>
-				</xsl:when>
-				<xsl:when test="./text() = 'Unknown Date' or ./text() = 'Unknown date'">
-					<field name="published_date_display">
+					<field name="date_text" source="{$mode}">
 						<xsl:value-of select="."/>
 					</field>
 				</xsl:when>
-				<xsl:otherwise>
-					<field name="published_date_display">
-						<xsl:value-of select="."/>
-					</field>
-				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:for-each>
 	</xsl:template>
