@@ -570,10 +570,7 @@
 		<xsl:if test="$publishedDate">
 			<field name="published_date_display" source="{$mode}">
 				<xsl:value-of select="$publishedDate"/>
-			</field>
-			<field name="year_multisort_i" source="{$mode}">
-				<xsl:value-of select="$publishedDate"/>
-			</field>			
+			</field>		
 		</xsl:if>
 	</xsl:template>
 
