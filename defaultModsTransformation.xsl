@@ -168,9 +168,53 @@
 				<xsl:call-template name="getLocalNote">
 					<xsl:with-param name="mode" select="primary"/>
 				</xsl:call-template>
-				<xsl:call-template name="getPublishedDate">
+				
+				<!-- SOLR can take only one year_multisort_i field, so we need to choose which mods element to utilize -->
+				<xsl:for-each select="//mods:mods/mods:originInfo[1]">
+					<xsl:choose>
+						<xsl:when test="current()/mods:dateIssued[1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node"
+									select="current()/mods:dateIssued[1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/mods:dateCreated[1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node"
+									select="current()/mods:dateCreated[1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/mods:dateCaptured[1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node"
+									select="current()/mods:dateCaptured[1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/mods:dateValid[1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node"
+									select="current()/mods:dateValid[1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/mods:copyrightDate[1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node"
+									select="current()/mods:copyrightDate[1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="current()/mods:dateOther[1]">
+							<xsl:call-template name="build-dates">
+								<xsl:with-param name="date-node"
+									select="current()/mods:dateOther[1]"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:otherwise/>
+					</xsl:choose>
+				</xsl:for-each>
+				
+				<!--<xsl:call-template name="getPublishedDate">
 					<xsl:with-param name="mode" select="primary"/>
-				</xsl:call-template>
+				</xsl:call-template>-->
 				<xsl:call-template name="getSubjects">
 					<xsl:with-param name="mode" select="'primary'"/>
 				</xsl:call-template>
@@ -527,6 +571,9 @@
 			<field name="published_date_display" source="{$mode}">
 				<xsl:value-of select="$publishedDate"/>
 			</field>
+			<field name="year_multisort_i" source="{$mode}">
+				<xsl:value-of select="$publishedDate"/>
+			</field>			
 		</xsl:if>
 	</xsl:template>
 
@@ -1192,6 +1239,38 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:copy-of select="normalize-space(current())"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template name="build-dates">
+		<xsl:param name="date-node" select="'No node sent to template build-dates'"/>
+		<xsl:for-each select="$date-node">
+			<xsl:choose>
+				<xsl:when test="matches(., '^\d{4}')">
+					<xsl:variable name="yearOnly">
+						<xsl:value-of select="substring(., 1, 4)"/>
+					</xsl:variable>
+					<field name="year_multisort_i">
+						<xsl:value-of select="$yearOnly"/>
+					</field>
+					<field name="year_display">
+						<xsl:value-of select="."/>
+					</field>
+					<field name="date_text">
+						<xsl:value-of select="."/>
+					</field>
+				</xsl:when>
+				<xsl:when test="./text() = 'Unknown Date' or ./text() = 'Unknown date'">
+					<field name="published_date_display">
+						<xsl:value-of select="."/>
+					</field>
+				</xsl:when>
+				<xsl:otherwise>
+					<field name="published_date_display">
+						<xsl:value-of select="."/>
+					</field>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:for-each>
