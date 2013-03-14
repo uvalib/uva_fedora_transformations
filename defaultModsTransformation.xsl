@@ -512,22 +512,6 @@
 	
 	<xsl:template name="getPublishedDate">
 		<xsl:param name="mode"/>
-		<xsl:variable name="publishedDate">
-			<xsl:choose>
-				<xsl:when test="//mods:dateIssued[@encoding='marc']">
-					<xsl:value-of select="//mods:dateIssued[@encoding='marc'][1]/text()"/>
-				</xsl:when>
-				<xsl:when test="//mods:dateIssued">
-					<xsl:value-of select="//mods:dateIssued[1]/text()"/>
-				</xsl:when>
-				<xsl:otherwise>Unknown Date</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:if test="$publishedDate">
-			<field name="published_date_display" source="{$mode}">
-				<xsl:value-of select="$publishedDate"/>
-			</field>		
-		</xsl:if>
 		
 		<!-- SOLR can take only one year_multisort_i field, so we need to choose which mods element to utilize -->
 		<xsl:for-each select="//mods:mods/mods:originInfo[1]">
@@ -1258,22 +1242,26 @@
 		<xsl:param name="date-node" select="'No node sent to template build-dates'"/>
 		<xsl:variable name="mode" select="'primary'"/>
 		<xsl:for-each select="$date-node">
-			<xsl:choose>
-				<xsl:when test="matches(., '^\d{4}')">
-					<xsl:variable name="yearOnly">
+			<xsl:variable name="yearOnly">
+				<xsl:choose>
+					<xsl:when test="matches(., '^\d{4}')">
 						<xsl:value-of select="substring(., 1, 4)"/>
-					</xsl:variable>
-					<field name="year_multisort_i" source="{$mode}">
-						<xsl:value-of select="$yearOnly"/>
-					</field>
-					<field name="year_display" source="{$mode}">
-						<xsl:value-of select="$yearOnly"/>
-					</field>
-					<field name="date_text" source="{$mode}">
-						<xsl:value-of select="$yearOnly"/>
-					</field>
-				</xsl:when>
-			</xsl:choose>
+					</xsl:when>
+					<xsl:otherwise>Unknown Date</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>			
+			<field name="published_date_display" source="{$mode}">
+				<xsl:value-of select="$yearOnly"/>
+			</field>
+			<field name="year_multisort_i" source="{$mode}">
+				<xsl:value-of select="$yearOnly"/>
+			</field>
+			<field name="year_display" source="{$mode}">
+				<xsl:value-of select="$yearOnly"/>
+			</field>
+			<field name="date_text" source="{$mode}">
+				<xsl:value-of select="$yearOnly"/>
+			</field>
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>
