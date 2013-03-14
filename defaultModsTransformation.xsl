@@ -1267,10 +1267,10 @@
 						<xsl:value-of select="$yearOnly"/>
 					</field>
 					<field name="year_display" source="{$mode}">
-						<xsl:value-of select="."/>
+						<xsl:value-of select="$yearOnly"/>
 					</field>
 					<field name="date_text" source="{$mode}">
-						<xsl:value-of select="."/>
+						<xsl:value-of select="$yearOnly"/>
 					</field>
 				</xsl:when>
 			</xsl:choose>
