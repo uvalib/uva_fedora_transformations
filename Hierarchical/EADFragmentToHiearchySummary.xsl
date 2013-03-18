@@ -10,7 +10,6 @@
     <xsl:param name="fedora-host">localhost</xsl:param>
     <xsl:param name="pid" required="yes" />
     <xsl:param name="debug" />
-    <xsl:param name="scopecontent_p_max">1</xsl:param>
     <xsl:param name="component_max">3</xsl:param>
     
     <xsl:template match="/">
@@ -32,16 +31,54 @@
           <xsl:otherwise>
             <collection>
               <xsl:variable name="title">
-                <xsl:for-each select="frontmatter/titlepage/titleproper//text()">
+                <xsl:for-each select="archdesc/did/unittitle//text()">
                   <xsl:value-of select="current()" />
                 </xsl:for-each>
               </xsl:variable>
               <title><xsl:value-of select="normalize-space($title)"></xsl:value-of></title>
+              <xsl:for-each select="archdesc/did">
+                <descsummary>
+                <head><xsl:value-of select="head" /></head>
+                <xsl:for-each select="node()[@label]">
+                  <field>
+                    <head><xsl:value-of select="@label" /></head>
+                    <value><xsl:value-of select="node()" /></value>
+                  </field>
+                </xsl:for-each>
+                </descsummary>
+              </xsl:for-each>
+              <xsl:for-each select="archdesc/descgrp[@type='admininfo']">
+                <admininfo>
+                  <head><xsl:value-of select="head" /></head>
+                  <xsl:for-each select="node()[head]">
+                    <field>
+                      <head><xsl:value-of select="head" /></head>
+                      <value><xsl:value-of select="p" /></value>
+                    </field>
+                  </xsl:for-each>
+                </admininfo>
+              </xsl:for-each>
+              <xsl:variable name="bioghistCount" select="count(archdesc/bioghist/p)" />
+              <xsl:if test="$bioghistCount &gt; 0">
+                <bioghist>
+                  <p_count><xsl:value-of select="$bioghistCount" /></p_count>
+                  <head><xsl:value-of select="archdesc/bioghist/head[1]" /></head>
+                  <xsl:for-each select="archdesc/bioghist/p[position()]">
+                    <xsl:variable name="p">
+                      <xsl:for-each select="current()//text()">
+                        <xsl:value-of select="current()" />
+                      </xsl:for-each>
+                    </xsl:variable>
+                    <p><xsl:value-of select="normalize-space($p)" /></p>
+                  </xsl:for-each>
+                </bioghist>
+              </xsl:if>
               <xsl:variable name="count" select="count(archdesc/scopecontent/p)" />
               <xsl:if test="$count &gt; 0">
                 <scopecontent>
                   <p_count><xsl:value-of select="$count"></xsl:value-of></p_count>
-                  <xsl:for-each select="archdesc/scopecontent/p[position() &lt;= number($scopecontent_p_max)]">
+                  <head><xsl:value-of select="archdesc/scopecontent/head[1]" /></head>
+                  <xsl:for-each select="archdesc/scopecontent/p[position()]">
                     <xsl:variable name="p">
                       <xsl:for-each select="current()//text()">
                         <xsl:value-of select="current()" />
@@ -106,7 +143,7 @@
             <xsl:if test="$count &gt; 0">
                 <scopecontent>
                     <p_count><xsl:value-of select="$count"></xsl:value-of></p_count>
-                    <xsl:for-each select="//scopecontent/p[position() &lt;= number($scopecontent_p_max)]">
+                    <xsl:for-each select="//scopecontent/p[position()]">
                         <xsl:variable name="p">
                             <xsl:for-each select="current()//text()">
                                 <xsl:value-of select="current()" />
@@ -195,7 +232,7 @@
                 <xsl:if test="count($currentMetadataFragment//scopecontent/p) &gt; 0">
                     <scopecontent>
                         <p_count><xsl:value-of select="count($currentMetadataFragment//scopecontent/p)"></xsl:value-of></p_count>
-                        <xsl:for-each select="$currentMetadataFragment//scopecontent/p[position() &lt;= number($scopecontent_p_max)]">
+                        <xsl:for-each select="$currentMetadataFragment//scopecontent/p[position()]">
                             <xsl:variable name="p">
                                 <xsl:for-each select="current()//text()">
                                     <xsl:value-of select="current()" />
