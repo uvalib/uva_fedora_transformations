@@ -72,10 +72,10 @@
         </xsl:variable>
         <xsl:variable name="level">
             <xsl:choose>
-                <xsl:when test="$cmodels/value = 'uva-lib:eadItemCModel'">
+                <xsl:when test="$cmodels/value[text() = 'uva-lib:eadItemCModel']">
                     <xsl:text>item</xsl:text>
                 </xsl:when>
-                <xsl:when test="$cmodels/value = 'uva-lib:eadComponentCModel'">
+                <xsl:when test="$cmodels/value[text() = 'uva-lib:eadComponentCModel']">
                     <xsl:text>series</xsl:text>
                 </xsl:when>
             </xsl:choose>
