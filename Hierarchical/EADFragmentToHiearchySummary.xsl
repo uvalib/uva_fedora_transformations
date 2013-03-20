@@ -36,17 +36,19 @@
                 </xsl:for-each>
               </xsl:variable>
               <title><xsl:value-of select="normalize-space($title)"></xsl:value-of></title>
-              <xsl:for-each select="archdesc/did">
-                <descsummary>
-                <head><xsl:value-of select="head" /></head>
-                <xsl:for-each select="node()[@label]">
-                  <field>
-                    <head><xsl:value-of select="@label" /></head>
-                    <value><xsl:value-of select="node()" /></value>
-                  </field>
+              <xsl:if test="archdesc/did/head">
+                <xsl:for-each select="archdesc/did[head]">
+                  <descsummary>
+                  <head><xsl:value-of select="head" /></head>
+                  <xsl:for-each select="node()[@label]">
+                    <field>
+                      <head><xsl:value-of select="@label" /></head>
+                      <value><xsl:value-of select="node()" /></value>
+                    </field>
+                  </xsl:for-each>
+                  </descsummary>
                 </xsl:for-each>
-                </descsummary>
-              </xsl:for-each>
+              </xsl:if>
               <xsl:for-each select="archdesc/descgrp[@type='admininfo']">
                 <admininfo>
                   <head><xsl:value-of select="head" /></head>
