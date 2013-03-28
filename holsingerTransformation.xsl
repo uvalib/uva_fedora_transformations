@@ -71,6 +71,9 @@
 				<field name="digital_collection_facet">
 					<xsl:value-of select="$collectionName"/>
 				</field>
+				<field name="digital_collection_text">
+					<xsl:value-of select="$collectionName"/>
+				</field>
 				<field name="content_model_facet">
 					<xsl:value-of select="$contentModel"/>
 				</field>
