@@ -110,6 +110,9 @@
                 <xsl:element name="extent">
                     <xsl:value-of select="descmeta/physdesc[@type='extent']"/>
                 </xsl:element>
+                <xsl:element name="digitalOrigin">
+                    <xsl:value-of>reformatted digital</xsl:value-of>
+                </xsl:element>
             </xsl:element>
 
 
