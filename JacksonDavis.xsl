@@ -131,7 +131,12 @@
                     <xsl:value-of>reformatted digital</xsl:value-of>
                 </xsl:element>
             </xsl:element>
-
+            
+            <!-- creates <abstract> -->
+            
+            <xsl:element name="abstract">
+                <xsl:value-of select="descmeta/description[@type='contents']/text()"/>
+            </xsl:element>
 
             <xsl:for-each select="descmeta/pid">
                 <tr>
