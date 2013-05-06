@@ -90,7 +90,7 @@
                     <xsl:attribute name="keyDate">
                         <xsl:value-of>yes</xsl:value-of>
                     </xsl:attribute>
-                    <xsl:value-of>1915</xsl:value-of>
+                    <xsl:value-of select="(descmeta/time/date[@type='begin'])[1]/text()"/>
                 </xsl:element>
                 <xsl:element name="dateCreated">
                     <xsl:attribute name="encoding">
@@ -99,7 +99,8 @@
                     <xsl:attribute name="point">
                         <xsl:value-of>end</xsl:value-of>
                     </xsl:attribute>
-                    <xsl:value-of>1947</xsl:value-of>
+                    
+                    <xsl:value-of select="(descmeta/time/date[@type='end'])[1]/text()"/>
                 </xsl:element>
             </xsl:element>
             
