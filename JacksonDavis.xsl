@@ -137,6 +137,31 @@
             <xsl:element name="abstract">
                 <xsl:value-of select="descmeta/description[@type='contents']/text()"/>
             </xsl:element>
+            
+            <!-- creates <subject> -->
+            
+            <xsl:for-each select="descmeta/subject">
+               <xsl:element name="subject">
+                   <xsl:attribute name="authority">
+                       <xsl:value-of select="./@scheme"/>
+                   </xsl:attribute>
+                   <xsl:choose>
+                       <xsl:when test="./text(),' -- '">
+                           <xsl:element name="topic">
+                               <xsl:value-of select="substring-before(./text(),' -- ')"/>
+                           </xsl:element>
+                           <xsl:element name="topic">
+                               <xsl:value-of select="substring-after(./text(),' -- ')"/>
+                           </xsl:element>
+                       </xsl:when>
+                       <xsl:otherwise>
+                           <xsl:element name="topic">
+                               <xsl:value-of select='./text()'/>
+                           </xsl:element>
+                       </xsl:otherwise>
+                   </xsl:choose>
+               </xsl:element>  
+            </xsl:for-each>
 
             <xsl:for-each select="descmeta/pid">
                 <tr>
