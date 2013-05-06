@@ -20,17 +20,15 @@
             <xsl:element name="name">
                 <xsl:attribute name="authority">naf</xsl:attribute>
                 <xsl:attribute name="type">personal</xsl:attribute>
-                
                 <xsl:element name="namePart">
                     <xsl:value-of>Davis, Jackson, 1882-1947</xsl:value-of>
                 </xsl:element>
-                
                 <xsl:element name="role">
                     <xsl:element name="roleTerm">
                         <xsl:attribute name="type">
                             <xsl:value-of>text</xsl:value-of>
                         </xsl:attribute>
-                    <xsl:value-of>photographer</xsl:value-of>
+                        <xsl:value-of>photographer</xsl:value-of>
                     </xsl:element>
                     <xsl:element name="roleTerm">
                         <xsl:attribute name="type">
