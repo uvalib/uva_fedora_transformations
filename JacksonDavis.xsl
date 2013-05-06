@@ -15,6 +15,8 @@
                 </xsl:element>
             </xsl:for-each>
             
+            <!-- creates <name> and subelements -->
+
             <xsl:element name="name">
                 <xsl:attribute name="authority">naf</xsl:attribute>
                 <xsl:attribute name="type">personal</xsl:attribute>
@@ -42,12 +44,16 @@
                 </xsl:element>
             </xsl:element>
             
+            <!-- creates <typeOfResource> -->
+
             <xsl:element name="typeOfResource">
                 <xsl:attribute name="collection">
                     <xsl:value-of>yes</xsl:value-of>
                 </xsl:attribute>
                 <xsl:value-of>still image</xsl:value-of>
             </xsl:element>
+            
+            <!-- creates <genre> -->
             
             <xsl:element name="genre">
                 <xsl:attribute name="authority">
@@ -56,6 +62,8 @@
                 <xsl:value-of>black-and-white photographs</xsl:value-of>
             </xsl:element>
             
+            <!-- creates <originInfo> and subelements -->
+
             <xsl:element name="originInfo">
                 <xsl:element name="place">
                     <xsl:element name="placeTerm">
@@ -97,6 +105,8 @@
                 </xsl:element>
             </xsl:element>
             
+            <!-- creates <physicalDescription> and subelements -->
+
             <xsl:element name="physicalDescription">
                 <xsl:element name="form">
                     <xsl:attribute name="authority">
