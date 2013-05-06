@@ -112,6 +112,14 @@
                     </xsl:attribute>
                     <xsl:value-of select="descmeta/mediatype/form/text()"/>
                 </xsl:element>
+                <xsl:for-each select="descmeta/description[@type='technique']">
+                    <xsl:element name="form">
+                        <xsl:attribute name="type">
+                            <xsl:value-of>technique</xsl:value-of>
+                        </xsl:attribute>
+                        <xsl:value-of select="./text()"/>
+                    </xsl:element>
+                </xsl:for-each>
                 <xsl:element name="internetMediaType">
                     <xsl:value-of>image/tiff</xsl:value-of>
                 </xsl:element>
