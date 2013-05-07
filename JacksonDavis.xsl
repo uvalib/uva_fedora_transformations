@@ -7,14 +7,14 @@
 
     <xsl:template match="/">
         <mods>
-            <xsl:for-each select="descmeta/title[@type='Constructed']">
+            <xsl:for-each select="/gdms/div/divdesc/title[@type='Constructed']">
                 <xsl:element name="titleInfo">
                     <xsl:element name="title">
                         <xsl:value-of select="./text()"/>
                     </xsl:element>
                 </xsl:element>
             </xsl:for-each>
-            
+           
             <!-- creates <name> and subelements -->
 
             <xsl:element name="name">
@@ -90,7 +90,7 @@
                     <xsl:attribute name="keyDate">
                         <xsl:value-of>yes</xsl:value-of>
                     </xsl:attribute>
-                    <xsl:value-of select="(descmeta/time/date[@type='begin'])[1]/text()"/>
+                    <xsl:value-of select="(gdms/div/divdesc/time/date[@type='begin'])[1]/text()"/>
                 </xsl:element>
                 <xsl:element name="dateCreated">
                     <xsl:attribute name="encoding">
@@ -99,8 +99,7 @@
                     <xsl:attribute name="point">
                         <xsl:value-of>end</xsl:value-of>
                     </xsl:attribute>
-                    
-                    <xsl:value-of select="(descmeta/time/date[@type='end'])[1]/text()"/>
+                    <xsl:value-of select="(gdms/div/divdesc/time/date[@type='end'])[1]/text()"/>
                 </xsl:element>
             </xsl:element>
             
@@ -109,11 +108,11 @@
             <xsl:element name="physicalDescription">
                 <xsl:element name="form">
                     <xsl:attribute name="authority">
-                        <xsl:value-of select="descmeta/mediatype/form/authority/text()"/>
+                        <xsl:value-of select="gdms/div/divdesc/mediatype/form/authority/text()"/>
                     </xsl:attribute>
-                    <xsl:value-of select="descmeta/mediatype/form/text()"/>
+                    <xsl:value-of select="gdms/div/divdesc/mediatype/form/text()"/>
                 </xsl:element>
-                <xsl:for-each select="descmeta/description[@type='technique']">
+                <xsl:for-each select="gdms/div/divdesc/description[@type='technique']">
                     <xsl:element name="form">
                         <xsl:attribute name="type">
                             <xsl:value-of>technique</xsl:value-of>
@@ -125,7 +124,7 @@
                     <xsl:value-of>image/tiff</xsl:value-of>
                 </xsl:element>
                 <xsl:element name="extent">
-                    <xsl:value-of select="descmeta/physdesc[@type='extent']"/>
+                    <xsl:value-of select="gdms/div/divdesc/physdesc[@type='extent']"/>
                 </xsl:element>
                 <xsl:element name="digitalOrigin">
                     <xsl:value-of>reformatted digital</xsl:value-of>
@@ -135,12 +134,12 @@
             <!-- creates <abstract> -->
             
             <xsl:element name="abstract">
-                <xsl:value-of select="descmeta/description[@type='contents']/text()"/>
+                <xsl:value-of select="gdms/div/resgrp/res/description[@type='view']/text()"/>
             </xsl:element>
             
             <!-- creates <subject> -->
             
-            <xsl:for-each select="descmeta/subject">
+            <xsl:for-each select="gdms/div/divdesc/subject">
                <xsl:element name="subject">
                    <xsl:attribute name="authority">
                        <xsl:value-of select="./@scheme"/>
@@ -162,14 +161,7 @@
                    </xsl:choose>
                </xsl:element>  
             </xsl:for-each>
-
-            <xsl:for-each select="descmeta/pid">
-                <tr>
-                    <td>
-                        <xsl:value-of select="./text()"/>
-                    </td>
-                </tr>
-            </xsl:for-each>
+ 
         </mods>
     </xsl:template>
 </xsl:stylesheet>
