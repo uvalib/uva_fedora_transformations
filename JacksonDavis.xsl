@@ -141,10 +141,17 @@
             
             <xsl:for-each select="gdms/div/divdesc/subject">
                <xsl:element name="subject">
+                   <xsl:if test=".[@scheme]">
                    <xsl:attribute name="authority">
                        <xsl:value-of select="./@scheme"/>
                    </xsl:attribute>
+                   </xsl:if>
                    <xsl:choose>
+                       <xsl:when test="not(contains(./text(),' -- '))">
+                           <xsl:element name="topic">
+                               <xsl:value-of select="./text()"/>
+                           </xsl:element>
+                       </xsl:when>
                        <xsl:when test="./text(),' -- '">
                            <xsl:element name="topic">
                                <xsl:value-of select="substring-before(./text(),' -- ')"/>
@@ -153,11 +160,6 @@
                                <xsl:value-of select="substring-after(./text(),' -- ')"/>
                            </xsl:element>
                        </xsl:when>
-                       <xsl:otherwise>
-                           <xsl:element name="topic">
-                               <xsl:value-of select='./text()'/>
-                           </xsl:element>
-                       </xsl:otherwise>
                    </xsl:choose>
                </xsl:element>  
             </xsl:for-each>
