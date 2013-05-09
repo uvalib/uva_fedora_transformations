@@ -244,6 +244,18 @@
                     <xsl:value-of>http://search.lib.virginia.edu/catalog/u2884151</xsl:value-of>
                 </xsl:element>
             </xsl:element>
+            
+            <!-- creates <identifier> for collection accession number -->
+            
+            <xsl:element name="identifier">
+                <xsl:attribute name="type">
+                    <xsl:value-of>accessionNumber</xsl:value-of>
+                </xsl:attribute>
+                <xsl:attribute name="displayLabel">
+                    <xsl:value-of>Collection Accession Number</xsl:value-of>
+                </xsl:attribute>
+                <xsl:value-of>MSS 3072, 3072-a</xsl:value-of>
+            </xsl:element>
  
         </mods>
     </xsl:template>
