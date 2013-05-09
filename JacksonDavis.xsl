@@ -385,6 +385,7 @@
                     <xsl:element name="languageTerm">
                         <xsl:attribute name="type">
                             <xsl:value-of>code</xsl:value-of>
+                        </xsl:attribute>
                         <xsl:attribute name="authority">
                             <xsl:value-of>iso639-2b</xsl:value-of>
                         </xsl:attribute>
