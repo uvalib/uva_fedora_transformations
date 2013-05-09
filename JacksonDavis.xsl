@@ -163,6 +163,29 @@
                    </xsl:choose>
                </xsl:element>  
             </xsl:for-each>
+            
+            <!-- creates <relatedItem> for Jackson Davis Collection-->
+            
+            <xsl:element name="relatedItem">
+                <xsl:attribute name="type">
+                    <xsl:value-of>series</xsl:value-of>
+                </xsl:attribute>
+                <xsl:attribute name="displayLabel">
+                    <xsl:value-of>Part of</xsl:value-of>
+                </xsl:attribute>
+                <xsl:element name="titleInfo">
+                    <xsl:element name="title">
+                        <xsl:value-of>The Jackson Davis Collection of African American Photographs</xsl:value-of>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:element name="name">
+                    <xsl:attribute name="authority">naf</xsl:attribute>
+                    <xsl:attribute name="type">personal</xsl:attribute>
+                    <xsl:element name="namePart">
+                        <xsl:value-of>Davis, Jackson, 1882-1947</xsl:value-of>
+                    </xsl:element> 
+                </xsl:element>
+            </xsl:element>
  
         </mods>
     </xsl:template>
