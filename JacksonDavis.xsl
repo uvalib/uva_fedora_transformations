@@ -351,6 +351,22 @@
                     />
                 </xsl:element>
             </xsl:element>
+
+            <!-- creates <accessCondition> -->
+
+            <xsl:element name="accessCondition">
+                <xsl:attribute name="type">
+                    <xsl:value-of>useAndReproduction</xsl:value-of>
+                </xsl:attribute>
+                <xsl:value-of>For more information about the use of this
+                    material, please go to http://search.lib.virginia.edu/terms</xsl:value-of>
+            </xsl:element>
+
+            <xsl:element name="accessCondition">
+                <xsl:attribute name="type">
+                    <xsl:value-of>restrictionOnAccess</xsl:value-of>
+                </xsl:attribute>
+            </xsl:element>
             </xsl:element>
 
         </mods>
