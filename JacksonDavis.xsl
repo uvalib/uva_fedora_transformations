@@ -303,6 +303,17 @@
                 <xsl:value-of
                     select="gdms/div/resgrp/res/identifier[@type='negative number']/text()"/>
             </xsl:element>
+
+            <!-- creates <identifier> for image PID -->
+
+            <xsl:element name="identifier">
+                <xsl:attribute name="type">
+                    <xsl:value-of>legacy</xsl:value-of>
+                </xsl:attribute>
+                <xsl:attribute name="displayLabel">
+                    <xsl:value-of>image PID</xsl:value-of>
+                </xsl:attribute>
+                <xsl:value-of select="gdms/div/resgrp/res/@id"/>
             </xsl:element>
 
             <!-- creates <identifier> for EAD ID -->
