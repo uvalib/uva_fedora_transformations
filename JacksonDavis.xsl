@@ -280,6 +280,18 @@
                 </xsl:attribute>
                 <xsl:value-of select="/gdms/div/resgrp/res/identifier[@type='UVa Fine Arts']/text()"/>
             </xsl:element>
+            
+            <!-- creates <identifier> for legacy negative number -->
+            
+            <xsl:element name="identifier">
+                <xsl:attribute name="type">
+                    <xsl:value-of>legacy</xsl:value-of>
+                </xsl:attribute>
+                <xsl:attribute name="displayLabel">
+                    <xsl:value-of>Negative Number</xsl:value-of>
+                </xsl:attribute>
+                <xsl:value-of select="gdms/div/resgrp/res/identifier[@type='negative number']/text()"/>
+            </xsl:element>
  
         </mods>
     </xsl:template>
