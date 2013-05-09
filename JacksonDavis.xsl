@@ -342,6 +342,15 @@
                     </xsl:attribute>
                     <xsl:value-of>VA@</xsl:value-of>
                 </xsl:element>
+                <xsl:element name="url">
+                    <xsl:attribute name="usage">
+                        <xsl:value-of>primary display</xsl:value-of>
+                    </xsl:attribute>
+                    <xsl:value-of
+                        select="concat('http://search.lib.virginia.edu/catalog/',gdms/gdmshead/gdmsid/system)"
+                    />
+                </xsl:element>
+            </xsl:element>
             </xsl:element>
 
         </mods>
