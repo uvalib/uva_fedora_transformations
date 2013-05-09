@@ -292,6 +292,18 @@
                 </xsl:attribute>
                 <xsl:value-of select="gdms/div/resgrp/res/identifier[@type='negative number']/text()"/>
             </xsl:element>
+            
+            <!-- creates <identifier> for EAD ID -->
+            
+            <xsl:element name="identifier">
+                <xsl:attribute name="type">
+                    <xsl:value-of>local</xsl:value-of>
+                </xsl:attribute>
+                <xsl:attribute name="displayLabel">
+                    <xsl:value-of>UVa EAD ID</xsl:value-of>
+                </xsl:attribute>
+                <xsl:value-of select="/gdms/div/resgrp/res/identifier[@type='UVa EAD ID']/text()"/>
+            </xsl:element>
  
         </mods>
     </xsl:template>
