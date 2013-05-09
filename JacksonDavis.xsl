@@ -268,6 +268,18 @@
                 </xsl:attribute>
                 <xsl:value-of select="gdms/div/divdesc/identifier[@type='UVa Fine Arts']/text()"/>
             </xsl:element>
+            
+            <!-- creates <identifier> for legacy FA number (2/2) -->
+            
+            <xsl:element name="identifier">
+                <xsl:attribute name="type">
+                    <xsl:value-of>legacy</xsl:value-of>
+                </xsl:attribute>
+                <xsl:attribute name="displayLabel">
+                    <xsl:value-of>UVa Fine Arts Identifier</xsl:value-of>
+                </xsl:attribute>
+                <xsl:value-of select="/gdms/div/resgrp/res/identifier[@type='UVa Fine Arts']/text()"/>
+            </xsl:element>
  
         </mods>
     </xsl:template>
