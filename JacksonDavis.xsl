@@ -327,6 +327,22 @@
                 </xsl:attribute>
                 <xsl:value-of select="/gdms/div/resgrp/res/identifier[@type='UVa EAD ID']/text()"/>
             </xsl:element>
+
+            <!-- creates <location> -->
+
+            <xsl:element name="location">
+                <xsl:element name="physicalLocation">
+                    <xsl:value-of>Special Collections, University of Virginia Library,
+                        Charlottesville, Va.</xsl:value-of>
+                </xsl:element>
+                <xsl:element name="physicalLocation">
+                    <xsl:attribute name="authority">
+                        <xsl:value-of>oclcorg</xsl:value-of>
+                    </xsl:attribute>
+                    <xsl:value-of>VA@</xsl:value-of>
+                </xsl:element>
+            </xsl:element>
+
         </mods>
     </xsl:template>
 </xsl:stylesheet>
