@@ -14,7 +14,7 @@
                     </xsl:element>
                 </xsl:element>
             </xsl:for-each>
-           
+
             <!-- creates <name> and subelements -->
 
             <xsl:element name="name">
@@ -41,7 +41,7 @@
                     </xsl:element>
                 </xsl:element>
             </xsl:element>
-            
+
             <!-- creates <typeOfResource> -->
 
             <xsl:element name="typeOfResource">
@@ -50,16 +50,16 @@
                 </xsl:attribute>
                 <xsl:value-of>still image</xsl:value-of>
             </xsl:element>
-            
+
             <!-- creates <genre> -->
-            
+
             <xsl:element name="genre">
                 <xsl:attribute name="authority">
                     <xsl:value-of>aat</xsl:value-of>
                 </xsl:attribute>
                 <xsl:value-of>black-and-white photographs</xsl:value-of>
             </xsl:element>
-            
+
             <!-- creates <originInfo> and subelements -->
 
             <xsl:element name="originInfo">
@@ -102,7 +102,7 @@
                     <xsl:value-of select="(gdms/div/divdesc/time/date[@type='end'])[1]/text()"/>
                 </xsl:element>
             </xsl:element>
-            
+
             <!-- creates <physicalDescription> and subelements -->
 
             <xsl:element name="physicalDescription">
@@ -130,42 +130,42 @@
                     <xsl:value-of>reformatted digital</xsl:value-of>
                 </xsl:element>
             </xsl:element>
-            
+
             <!-- creates <abstract> -->
-            
+
             <xsl:element name="abstract">
                 <xsl:value-of select="gdms/div/resgrp/res/description[@type='view']/text()"/>
             </xsl:element>
-            
+
             <!-- creates <subject> -->
-            
+
             <xsl:for-each select="gdms/div/divdesc/subject">
-               <xsl:element name="subject">
-                   <xsl:if test=".[@scheme]">
-                   <xsl:attribute name="authority">
-                       <xsl:value-of select="./@scheme"/>
-                   </xsl:attribute>
-                   </xsl:if>
-                   <xsl:choose>
-                       <xsl:when test="not(contains(./text(),' -- '))">
-                           <xsl:element name="topic">
-                               <xsl:value-of select="./text()"/>
-                           </xsl:element>
-                       </xsl:when>
-                       <xsl:when test="./text(),' -- '">
-                           <xsl:element name="topic">
-                               <xsl:value-of select="substring-before(./text(),' -- ')"/>
-                           </xsl:element>
-                           <xsl:element name="topic">
-                               <xsl:value-of select="substring-after(./text(),' -- ')"/>
-                           </xsl:element>
-                       </xsl:when>
-                   </xsl:choose>
-               </xsl:element>  
+                <xsl:element name="subject">
+                    <xsl:if test=".[@scheme]">
+                        <xsl:attribute name="authority">
+                            <xsl:value-of select="./@scheme"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:choose>
+                        <xsl:when test="not(contains(./text(),' -- '))">
+                            <xsl:element name="topic">
+                                <xsl:value-of select="./text()"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="./text(),' -- '">
+                            <xsl:element name="topic">
+                                <xsl:value-of select="substring-before(./text(),' -- ')"/>
+                            </xsl:element>
+                            <xsl:element name="topic">
+                                <xsl:value-of select="substring-after(./text(),' -- ')"/>
+                            </xsl:element>
+                        </xsl:when>
+                    </xsl:choose>
+                </xsl:element>
             </xsl:for-each>
-            
+
             <!-- creates <relatedItem> for Jackson Davis Collection-->
-            
+
             <xsl:element name="relatedItem">
                 <xsl:attribute name="type">
                     <xsl:value-of>series</xsl:value-of>
@@ -175,7 +175,8 @@
                 </xsl:attribute>
                 <xsl:element name="titleInfo">
                     <xsl:element name="title">
-                        <xsl:value-of>The Jackson Davis Collection of African American Photographs</xsl:value-of>
+                        <xsl:value-of>The Jackson Davis Collection of African American
+                            Photographs</xsl:value-of>
                     </xsl:element>
                 </xsl:element>
                 <xsl:element name="name">
@@ -183,12 +184,12 @@
                     <xsl:attribute name="type">personal</xsl:attribute>
                     <xsl:element name="namePart">
                         <xsl:value-of>Davis, Jackson, 1882-1947</xsl:value-of>
-                    </xsl:element> 
+                    </xsl:element>
                 </xsl:element>
             </xsl:element>
-            
+
             <!-- creates <relatedItem> for Papers and Photographs of Jackson Davis -->
-            
+
             <xsl:element name="relatedItem">
                 <xsl:attribute name="type">
                     <xsl:value-of>host</xsl:value-of>
@@ -196,18 +197,22 @@
                 <xsl:attribute name="displayLabel">
                     <xsl:value-of>Digitized from</xsl:value-of>
                 </xsl:attribute>
+
                 <xsl:element name="titleInfo">
                     <xsl:element name="title">
-                        <xsl:value-of>Papers and photographs of Jackson Davis [manuscript] 1906-1947 and n.d.</xsl:value-of>
+                        <xsl:value-of>Papers and photographs of Jackson Davis [manuscript] 1906-1947
+                            and n.d.</xsl:value-of>
                     </xsl:element>
                 </xsl:element>
+
                 <xsl:element name="name">
                     <xsl:attribute name="authority">naf</xsl:attribute>
                     <xsl:attribute name="type">personal</xsl:attribute>
                     <xsl:element name="namePart">
                         <xsl:value-of>Davis, Jackson, 1882-1947</xsl:value-of>
-                    </xsl:element> 
+                    </xsl:element>
                 </xsl:element>
+
                 <xsl:element name="originInfo">
                     <xsl:element name="dateCreated">
                         <xsl:attribute name="encoding">
@@ -221,6 +226,7 @@
                         </xsl:attribute>
                         <xsl:value-of>1906</xsl:value-of>
                     </xsl:element>
+
                     <xsl:element name="dateCreated">
                         <xsl:attribute name="encoding">
                             <xsl:value-of>w3cdtf</xsl:value-of>
@@ -231,12 +237,14 @@
                         <xsl:value-of>1947</xsl:value-of>
                     </xsl:element>
                 </xsl:element>
+
                 <xsl:element name="identifier">
                     <xsl:attribute name="type">
                         <xsl:value-of>local</xsl:value-of>
                     </xsl:attribute>
                     <xsl:value-of>MSS 3072, 3072-a</xsl:value-of>
                 </xsl:element>
+
                 <xsl:element name="identifier">
                     <xsl:attribute name="type">
                         <xsl:value-of>uri</xsl:value-of>
@@ -244,9 +252,10 @@
                     <xsl:value-of>http://search.lib.virginia.edu/catalog/u2884151</xsl:value-of>
                 </xsl:element>
             </xsl:element>
-            
+
+
             <!-- creates <identifier> for collection accession number -->
-            
+
             <xsl:element name="identifier">
                 <xsl:attribute name="type">
                     <xsl:value-of>accessionNumber</xsl:value-of>
@@ -256,9 +265,9 @@
                 </xsl:attribute>
                 <xsl:value-of>MSS 3072, 3072-a</xsl:value-of>
             </xsl:element>
-            
+
             <!-- creates <identifier> for legacy FA number (1/2) -->
-            
+
             <xsl:element name="identifier">
                 <xsl:attribute name="type">
                     <xsl:value-of>legacy</xsl:value-of>
@@ -268,9 +277,9 @@
                 </xsl:attribute>
                 <xsl:value-of select="gdms/div/divdesc/identifier[@type='UVa Fine Arts']/text()"/>
             </xsl:element>
-            
+
             <!-- creates <identifier> for legacy FA number (2/2) -->
-            
+
             <xsl:element name="identifier">
                 <xsl:attribute name="type">
                     <xsl:value-of>legacy</xsl:value-of>
@@ -278,11 +287,12 @@
                 <xsl:attribute name="displayLabel">
                     <xsl:value-of>UVa Fine Arts Identifier</xsl:value-of>
                 </xsl:attribute>
-                <xsl:value-of select="/gdms/div/resgrp/res/identifier[@type='UVa Fine Arts']/text()"/>
+                <xsl:value-of select="/gdms/div/resgrp/res/identifier[@type='UVa Fine Arts']/text()"
+                />
             </xsl:element>
-            
+
             <!-- creates <identifier> for legacy negative number -->
-            
+
             <xsl:element name="identifier">
                 <xsl:attribute name="type">
                     <xsl:value-of>legacy</xsl:value-of>
@@ -290,11 +300,13 @@
                 <xsl:attribute name="displayLabel">
                     <xsl:value-of>Negative Number</xsl:value-of>
                 </xsl:attribute>
-                <xsl:value-of select="gdms/div/resgrp/res/identifier[@type='negative number']/text()"/>
+                <xsl:value-of
+                    select="gdms/div/resgrp/res/identifier[@type='negative number']/text()"/>
             </xsl:element>
-            
+            </xsl:element>
+
             <!-- creates <identifier> for EAD ID -->
-            
+
             <xsl:element name="identifier">
                 <xsl:attribute name="type">
                     <xsl:value-of>local</xsl:value-of>
@@ -304,7 +316,6 @@
                 </xsl:attribute>
                 <xsl:value-of select="/gdms/div/resgrp/res/identifier[@type='UVa EAD ID']/text()"/>
             </xsl:element>
- 
         </mods>
     </xsl:template>
 </xsl:stylesheet>
