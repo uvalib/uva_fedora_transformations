@@ -186,6 +186,64 @@
                     </xsl:element> 
                 </xsl:element>
             </xsl:element>
+            
+            <!-- creates <relatedItem> for Papers and Photographs of Jackson Davis -->
+            
+            <xsl:element name="relatedItem">
+                <xsl:attribute name="type">
+                    <xsl:value-of>host</xsl:value-of>
+                </xsl:attribute>
+                <xsl:attribute name="displayLabel">
+                    <xsl:value-of>Digitized from</xsl:value-of>
+                </xsl:attribute>
+                <xsl:element name="titleInfo">
+                    <xsl:element name="title">
+                        <xsl:value-of>Papers and photographs of Jackson Davis [manuscript] 1906-1947 and n.d.</xsl:value-of>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:element name="name">
+                    <xsl:attribute name="authority">naf</xsl:attribute>
+                    <xsl:attribute name="type">personal</xsl:attribute>
+                    <xsl:element name="namePart">
+                        <xsl:value-of>Davis, Jackson, 1882-1947</xsl:value-of>
+                    </xsl:element> 
+                </xsl:element>
+                <xsl:element name="originInfo">
+                    <xsl:element name="dateCreated">
+                        <xsl:attribute name="encoding">
+                            <xsl:value-of>w3cdtf</xsl:value-of>
+                        </xsl:attribute>
+                        <xsl:attribute name="keyDate">
+                            <xsl:value-of>yes</xsl:value-of>
+                        </xsl:attribute>
+                        <xsl:attribute name="point">
+                            <xsl:value-of>begin</xsl:value-of>
+                        </xsl:attribute>
+                        <xsl:value-of>1906</xsl:value-of>
+                    </xsl:element>
+                    <xsl:element name="dateCreated">
+                        <xsl:attribute name="encoding">
+                            <xsl:value-of>w3cdtf</xsl:value-of>
+                        </xsl:attribute>
+                        <xsl:attribute name="point">
+                            <xsl:value-of>end</xsl:value-of>
+                        </xsl:attribute>
+                        <xsl:value-of>1947</xsl:value-of>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:element name="identifier">
+                    <xsl:attribute name="type">
+                        <xsl:value-of>local</xsl:value-of>
+                    </xsl:attribute>
+                    <xsl:value-of>MSS 3072, 3072-a</xsl:value-of>
+                </xsl:element>
+                <xsl:element name="identifier">
+                    <xsl:attribute name="type">
+                        <xsl:value-of>uri</xsl:value-of>
+                    </xsl:attribute>
+                    <xsl:value-of>http://search.lib.virginia.edu/catalog/u2884151</xsl:value-of>
+                </xsl:element>
+            </xsl:element>
  
         </mods>
     </xsl:template>
