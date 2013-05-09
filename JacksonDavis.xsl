@@ -367,6 +367,36 @@
                     <xsl:value-of>restrictionOnAccess</xsl:value-of>
                 </xsl:attribute>
             </xsl:element>
+
+            <!-- creates <recordInfo> -->
+
+            <xsl:element name="recordInfo">
+                <xsl:element name="recordContentSource">
+                    <xsl:attribute name="authority">
+                        <xsl:value-of>marcorg</xsl:value-of>
+                    </xsl:attribute>
+                    <xsl:value-of>viu</xsl:value-of>
+                </xsl:element>
+                <xsl:element name="recordOrigin">
+                    <xsl:value-of
+                        select="concat(gdms/gdmshead/filedesc/pubstmt/note,'The records were then transformed from GDMS into MODS by Digital Curation Services, using JacksonDavis.xsl')"/>
+                </xsl:element>
+                <xsl:element name="languageOfCataloging">
+                    <xsl:element name="languageTerm">
+                        <xsl:attribute name="type">
+                            <xsl:value-of>code</xsl:value-of>
+                        <xsl:attribute name="authority">
+                            <xsl:value-of>iso639-2b</xsl:value-of>
+                        </xsl:attribute>
+                        <xsl:value-of>eng</xsl:value-of>
+                    </xsl:element>
+                </xsl:element>
+                <xsl:element name="recordCreationDate">
+                    <xsl:attribute name="encoding">
+                        <xsl:value-of>w3cdtf</xsl:value-of>
+                    </xsl:attribute>
+                    <xsl:value-of select="date:new()"/>
+                </xsl:element>
             </xsl:element>
 
         </mods>
