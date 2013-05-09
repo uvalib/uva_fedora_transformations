@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+    xmlns:date="java:java.util.Date">
     <xsl:output byte-order-mark="no" encoding="UTF-8" media-type="text/xml" xml:space="default"
         indent="yes"/>
 
