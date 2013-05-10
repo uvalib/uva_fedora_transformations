@@ -237,7 +237,7 @@
                                 <xsl:value-of>yes</xsl:value-of>
                             </xsl:attribute>
                             <xsl:attribute name="point">
-                                <xsl:value-of>begin</xsl:value-of>
+                                <xsl:value-of>start</xsl:value-of>
                             </xsl:attribute>
                             <xsl:value-of>1906</xsl:value-of>
                         </xsl:element>
