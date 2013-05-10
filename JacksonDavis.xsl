@@ -11,12 +11,10 @@
         <xsl:value-of select="$filename"/>
         <!-- Creating  -->
         <xsl:result-document href="{$filename}" format="xml">
-            <xsl:element name="mods" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:mods="http://www.loc.gov/mods/v3" xmlns="http://www.loc.gov/mods/v3"
-                xmlns:date="java:java.util.Date"
-                xmlns:fn="http://www.w3.org/2005/xpath-functions"
-                xsi:schemaLocation="http://www.loc.gov/mods/v3
-                http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+            
+                <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd"
+                xmlns:mods="http://www.loc.gov/mods/v3" xmlns="http://www.loc.gov/mods/v3">
                 <xsl:for-each select="gdms/div/divdesc/title[@type='Constructed']">
                     <xsl:element name="titleInfo">
                         <xsl:element name="title">
@@ -418,7 +416,8 @@
                     </xsl:element>
                 </xsl:element>
 
-            </xsl:element>
+            
+                </mods>
         </xsl:result-document>
     </xsl:template>
 
