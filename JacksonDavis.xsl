@@ -11,8 +11,8 @@
         <xsl:value-of select="$filename"/>
         <!-- Creating  -->
         <xsl:result-document href="{$filename}" format="xml">
-            
-                <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+            <mods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd"
                 xmlns:mods="http://www.loc.gov/mods/v3" xmlns="http://www.loc.gov/mods/v3">
                 <xsl:for-each select="gdms/div/divdesc/title[@type='Constructed']">
@@ -88,29 +88,136 @@
                             <xsl:value-of>United States</xsl:value-of>
                         </xsl:element>
                     </xsl:element>
-                    <xsl:element name="dateCreated">
-                        <xsl:attribute name="encoding">
-                            <xsl:value-of>w3cdtf</xsl:value-of>
-                        </xsl:attribute>
-                        <xsl:attribute name="point">
-                            <xsl:value-of>start</xsl:value-of>
-                        </xsl:attribute>
-                        <xsl:attribute name="keyDate">
-                            <xsl:value-of>yes</xsl:value-of>
-                        </xsl:attribute>
-                        <xsl:value-of select="(gdms/div/divdesc/time/date[@type='begin'])[1]/text()"
-                        />
-                    </xsl:element>
-                    <xsl:element name="dateCreated">
-                        <xsl:attribute name="encoding">
-                            <xsl:value-of>w3cdtf</xsl:value-of>
-                        </xsl:attribute>
-                        <xsl:attribute name="point">
-                            <xsl:value-of>end</xsl:value-of>
-                        </xsl:attribute>
-                        <xsl:value-of select="(gdms/div/divdesc/time/date[@type='end'])[1]/text()"/>
-                    </xsl:element>
+
+                    <xsl:choose>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='January'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-01')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='February'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-02')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='March'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-03')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='April'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-04')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='May'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-05')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='June'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-06')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='July'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-07')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='August'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-08')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='September'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-09')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='October'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-10')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='November'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-11')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='December'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-12')"/>
+                            </xsl:element>
+                        </xsl:when>
+                        <xsl:when test="(gdms/div/divdesc/time/date[@type='begin'])">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="encoding">
+                                    <xsl:value-of>w3cdtf</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:attribute name="point">
+                                    <xsl:value-of>start</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of
+                                    select="(gdms/div/divdesc/time/date[@type='begin'])[1]/text()"/>
+                            </xsl:element>
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="encoding">
+                                    <xsl:value-of>w3cdtf</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:attribute name="point">
+                                    <xsl:value-of>end</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of
+                                    select="(gdms/div/divdesc/time/date[@type='end'])[1]/text()"/>
+                            </xsl:element>
+                        </xsl:when>
+                        
+                    </xsl:choose>
+
                 </xsl:element>
+
+
+
 
                 <!-- creates <physicalDescription> and subelements -->
 
@@ -195,7 +302,8 @@
                     </xsl:attribute>
                     <xsl:element name="titleInfo">
                         <xsl:element name="title">
-                            <xsl:value-of>The Jackson Davis Collection of African American Photographs</xsl:value-of>
+                            <xsl:value-of>The Jackson Davis Collection of African American
+                                Photographs</xsl:value-of>
                         </xsl:element>
                     </xsl:element>
                     <xsl:element name="name">
@@ -219,7 +327,8 @@
 
                     <xsl:element name="titleInfo">
                         <xsl:element name="title">
-                            <xsl:value-of>Papers and photographs of Jackson Davis [manuscript] 1906-1947 and n.d.</xsl:value-of>
+                            <xsl:value-of>Papers and photographs of Jackson Davis [manuscript]
+                                1906-1947 and n.d.</xsl:value-of>
                         </xsl:element>
                     </xsl:element>
 
@@ -352,7 +461,8 @@
 
                 <xsl:element name="location">
                     <xsl:element name="physicalLocation">
-                        <xsl:value-of>Special Collections, University of Virginia Library, Charlottesville, Va.</xsl:value-of>
+                        <xsl:value-of>Special Collections, University of Virginia Library,
+                            Charlottesville, Va.</xsl:value-of>
                     </xsl:element>
                     <xsl:element name="physicalLocation">
                         <xsl:attribute name="authority">
@@ -365,7 +475,8 @@
                             <xsl:value-of>primary display</xsl:value-of>
                         </xsl:attribute>
                         <xsl:value-of
-                            select="concat('http://search.lib.virginia.edu/catalog/',gdms/gdmshead/gdmsid/system)"/>
+                            select="concat('http://search.lib.virginia.edu/catalog/',gdms/gdmshead/gdmsid/system)"
+                        />
                     </xsl:element>
                 </xsl:element>
 
@@ -375,7 +486,8 @@
                     <xsl:attribute name="type">
                         <xsl:value-of>useAndReproduction</xsl:value-of>
                     </xsl:attribute>
-                    <xsl:value-of>For more information about the use of this material, please go to http://search.lib.virginia.edu/terms</xsl:value-of>
+                    <xsl:value-of>For more information about the use of this material, please go to
+                        http://search.lib.virginia.edu/terms</xsl:value-of>
                 </xsl:element>
 
                 <xsl:element name="accessCondition">
@@ -395,7 +507,8 @@
                     </xsl:element>
                     <xsl:element name="recordOrigin">
                         <xsl:value-of
-                            select="concat(gdms/gdmshead/filedesc/pubstmt/note,'The records were then transformed from GDMS into MODS by Digital Curation Services, using JacksonDavis.xsl')"/>
+                            select="concat(gdms/gdmshead/filedesc/pubstmt/note,'The records were then transformed from GDMS into MODS by Digital Curation Services, using JacksonDavis.xsl')"
+                        />
                     </xsl:element>
                     <xsl:element name="languageOfCataloging">
                         <xsl:element name="languageTerm">
@@ -416,8 +529,8 @@
                     </xsl:element>
                 </xsl:element>
 
-            
-                </mods>
+
+            </mods>
         </xsl:result-document>
     </xsl:template>
 
