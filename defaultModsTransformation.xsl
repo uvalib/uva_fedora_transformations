@@ -1253,9 +1253,11 @@
 			<field name="published_date_display" source="{$mode}">
 				<xsl:value-of select="$yearOnly"/>
 			</field>
-			<field name="year_multisort_i" source="{$mode}">
-				<xsl:value-of select="$yearOnly"/>
-			</field>
+			<xsl:if test="$yearOnly != 'Unknown Date'">
+				<field name="year_multisort_i" source="{$mode}">
+					<xsl:value-of select="$yearOnly"/>
+				</field>
+			</xsl:if>
 			<field name="year_display" source="{$mode}">
 				<xsl:value-of select="$yearOnly"/>
 			</field>
