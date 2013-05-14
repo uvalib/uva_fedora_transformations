@@ -1,7 +1,7 @@
 <xsl:stylesheet xmlns:mods="http://www.loc.gov/mods/v3" xmlns:marc="http://www.loc.gov/MARC21/slim"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	exclude-result-prefixes="xlink marc" version="2.0">
-	<xsl:include href="/usr/local/data_repos/uva_fedora_transformations/MARC21slimUtils.xsl"/>
+	<xsl:include href="/usr/local/projects/uva_fedora_transformations/MARC21slimUtils.xsl"/>
 	<xsl:output encoding="UTF-8" indent="yes" method="xml" xml:space="preserve"/>
 	<xsl:strip-space elements="*"/>
 
