@@ -71,6 +71,11 @@
                 <!-- creates <originInfo> and subelements -->
 
                 <xsl:element name="originInfo">
+                    <xsl:variable name="date">
+                        <xsl:if test="(gdms/div[1]/divdesc[1]/time[2]/date[1]/text())">
+                            <xsl:value-of select="(concat('-',gdms/div[1]/divdesc[1]/time[2]/date[1]/text()))"/>   
+                        </xsl:if>
+                    </xsl:variable>
                     <xsl:element name="place">
                         <xsl:element name="placeTerm">
                             <xsl:attribute name="type">
@@ -90,12 +95,16 @@
                     </xsl:element>
 
                     <xsl:choose>
+                        
+                        
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='January'])">
                             <xsl:element name="dateCreated">
+                                
+                                
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-01')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-01',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='February'])">
@@ -103,7 +112,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-02')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-02',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='March'])">
@@ -111,7 +120,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-03')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-03',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='April'])">
@@ -119,7 +128,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-04')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-04',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='May'])">
@@ -127,7 +136,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-05')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-05',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='June'])">
@@ -135,7 +144,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-06')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-06',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='July'])">
@@ -143,7 +152,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-07')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-07',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='August'])">
@@ -151,7 +160,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-08')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-08',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='September'])">
@@ -159,7 +168,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-09')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-09',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='October'])">
@@ -167,7 +176,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-10')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-10',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='November'])">
@@ -175,7 +184,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-11')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-11',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='December'])">
@@ -183,7 +192,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-12')"/>
+                                <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-12',$date)"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='begin'])">
