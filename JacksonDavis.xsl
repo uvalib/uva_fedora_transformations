@@ -73,7 +73,7 @@
                 <xsl:element name="originInfo">
                     <xsl:variable name="date">
                         <xsl:if test="(gdms/div[1]/divdesc[1]/time[2]/date[1]/text())">
-                            <xsl:value-of select="(concat('-',gdms/div[1]/divdesc[1]/time[2]/date[1]/text()))"/>   
+                            <xsl:value-of select="(concat('-',gdms/div[1]/divdesc[1]/time[2]/date[1]/text()))"/>
                         </xsl:if>
                     </xsl:variable>
                     <xsl:element name="place">
@@ -95,12 +95,38 @@
                     </xsl:element>
 
                     <xsl:choose>
-                        
-                        
+
+                        <!-- creates <dateCreated> -->
+
+                        <!-- when date is YYYY - YYYY -->
+                        <xsl:when test="(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-')">
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="encoding">
+                                    <xsl:value-of>w3cdtf</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:attribute name="point">
+                                    <xsl:value-of>start</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:attribute name="keyDate">
+                                    <xsl:value-of>yes</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="substring-before(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-')"/>
+                            </xsl:element>
+                            <xsl:element name="dateCreated">
+                                <xsl:attribute name="encoding">
+                                    <xsl:value-of>w3cdtf</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:attribute name="point">
+                                    <xsl:value-of>end</xsl:value-of>
+                                </xsl:attribute>
+                                <xsl:value-of select="substring-after(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-')"/>
+                            </xsl:element>
+                        </xsl:when>
+
+                        <!-- when date contains Month string in @type -->
+
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='January'])">
                             <xsl:element name="dateCreated">
-                                
-                                
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
@@ -195,6 +221,9 @@
                                 <xsl:value-of select="concat(gdms/div[1]/divdesc[1]/time[1]/date[1]/text(),'-12',$date)"/>
                             </xsl:element>
                         </xsl:when>
+
+                        <!-- when there is a date range with @begin and @end -->
+
                         <xsl:when test="(gdms/div/divdesc/time/date[@type='begin'])">
                             <xsl:element name="dateCreated">
                                 <xsl:attribute name="encoding">
@@ -206,8 +235,7 @@
                                 <xsl:attribute name="keyDate">
                                     <xsl:value-of>yes</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of
-                                    select="(gdms/div/divdesc/time/date[@type='begin'])[1]/text()"/>
+                                <xsl:value-of select="(gdms/div/divdesc/time/date[@type='begin'])[1]/text()"/>
                             </xsl:element>
                             <xsl:element name="dateCreated">
                                 <xsl:attribute name="encoding">
@@ -216,11 +244,10 @@
                                 <xsl:attribute name="point">
                                     <xsl:value-of>end</xsl:value-of>
                                 </xsl:attribute>
-                                <xsl:value-of
-                                    select="(gdms/div/divdesc/time/date[@type='end'])[1]/text()"/>
+                                <xsl:value-of select="(gdms/div/divdesc/time/date[@type='end'])[1]/text()"/>
                             </xsl:element>
                         </xsl:when>
-                        
+
                     </xsl:choose>
 
                 </xsl:element>
@@ -311,8 +338,7 @@
                     </xsl:attribute>
                     <xsl:element name="titleInfo">
                         <xsl:element name="title">
-                            <xsl:value-of>The Jackson Davis Collection of African American
-                                Photographs</xsl:value-of>
+                            <xsl:value-of>The Jackson Davis Collection of African American Photographs</xsl:value-of>
                         </xsl:element>
                     </xsl:element>
                     <xsl:element name="name">
@@ -336,8 +362,7 @@
 
                     <xsl:element name="titleInfo">
                         <xsl:element name="title">
-                            <xsl:value-of>Papers and photographs of Jackson Davis [manuscript]
-                                1906-1947 and n.d.</xsl:value-of>
+                            <xsl:value-of>Papers and photographs of Jackson Davis [manuscript] 1906-1947 and n.d.</xsl:value-of>
                         </xsl:element>
                     </xsl:element>
 
@@ -411,8 +436,7 @@
                     <xsl:attribute name="displayLabel">
                         <xsl:value-of>UVa Fine Arts Identifier</xsl:value-of>
                     </xsl:attribute>
-                    <xsl:value-of select="gdms/div/divdesc/identifier[@type='UVa Fine Arts']/text()"
-                    />
+                    <xsl:value-of select="gdms/div/divdesc/identifier[@type='UVa Fine Arts']/text()"/>
                 </xsl:element>
 
                 <!-- creates <identifier> for legacy FA number (2/2) -->
@@ -424,8 +448,7 @@
                     <xsl:attribute name="displayLabel">
                         <xsl:value-of>UVa Fine Arts Identifier</xsl:value-of>
                     </xsl:attribute>
-                    <xsl:value-of
-                        select="/gdms/div/resgrp/res/identifier[@type='UVa Fine Arts']/text()"/>
+                    <xsl:value-of select="/gdms/div/resgrp/res/identifier[@type='UVa Fine Arts']/text()"/>
                 </xsl:element>
 
                 <!-- creates <identifier> for legacy negative number -->
@@ -437,8 +460,7 @@
                     <xsl:attribute name="displayLabel">
                         <xsl:value-of>Negative Number</xsl:value-of>
                     </xsl:attribute>
-                    <xsl:value-of
-                        select="gdms/div/resgrp/res/identifier[@type='negative number']/text()"/>
+                    <xsl:value-of select="gdms/div/resgrp/res/identifier[@type='negative number']/text()"/>
                 </xsl:element>
 
                 <!-- creates <identifier> for image PID -->
@@ -462,16 +484,14 @@
                     <xsl:attribute name="displayLabel">
                         <xsl:value-of>UVa EAD ID</xsl:value-of>
                     </xsl:attribute>
-                    <xsl:value-of
-                        select="/gdms/div/resgrp/res/identifier[@type='UVa EAD ID']/text()"/>
+                    <xsl:value-of select="/gdms/div/resgrp/res/identifier[@type='UVa EAD ID']/text()"/>
                 </xsl:element>
 
                 <!-- creates <location> -->
 
                 <xsl:element name="location">
                     <xsl:element name="physicalLocation">
-                        <xsl:value-of>Special Collections, University of Virginia Library,
-                            Charlottesville, Va.</xsl:value-of>
+                        <xsl:value-of>Special Collections, University of Virginia Library, Charlottesville, Va.</xsl:value-of>
                     </xsl:element>
                     <xsl:element name="physicalLocation">
                         <xsl:attribute name="authority">
@@ -483,9 +503,7 @@
                         <xsl:attribute name="usage">
                             <xsl:value-of>primary display</xsl:value-of>
                         </xsl:attribute>
-                        <xsl:value-of
-                            select="concat('http://search.lib.virginia.edu/catalog/',gdms/gdmshead/gdmsid/system)"
-                        />
+                        <xsl:value-of select="concat('http://search.lib.virginia.edu/catalog/',gdms/gdmshead/gdmsid/system)"/>
                     </xsl:element>
                 </xsl:element>
 
@@ -495,8 +513,7 @@
                     <xsl:attribute name="type">
                         <xsl:value-of>useAndReproduction</xsl:value-of>
                     </xsl:attribute>
-                    <xsl:value-of>For more information about the use of this material, please go to
-                        http://search.lib.virginia.edu/terms</xsl:value-of>
+                    <xsl:value-of>For more information about the use of this material, please go to http://search.lib.virginia.edu/terms</xsl:value-of>
                 </xsl:element>
 
                 <xsl:element name="accessCondition">
@@ -515,9 +532,7 @@
                         <xsl:value-of>viu</xsl:value-of>
                     </xsl:element>
                     <xsl:element name="recordOrigin">
-                        <xsl:value-of
-                            select="concat(gdms/gdmshead/filedesc/pubstmt/note,'The records were then transformed from GDMS into MODS by Digital Curation Services, using JacksonDavis.xsl')"
-                        />
+                        <xsl:value-of select="concat(gdms/gdmshead/filedesc/pubstmt/note,'The records were then transformed from GDMS into MODS by Digital Curation Services, using JacksonDavis.xsl')"/>
                     </xsl:element>
                     <xsl:element name="languageOfCataloging">
                         <xsl:element name="languageTerm">
