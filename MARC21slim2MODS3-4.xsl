@@ -1,7 +1,7 @@
 <xsl:stylesheet xmlns:mods="http://www.loc.gov/mods/v3" xmlns:marc="http://www.loc.gov/MARC21/slim"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	exclude-result-prefixes="xlink marc" version="1.0">
-	<xsl:include href="/usr/local/projects/uva_fedora_transformations/MARC21slimUtils.xsl"/>
+	exclude-result-prefixes="xlink marc" version="2.0">
+	<xsl:include href="/usr/local/data_repos/uva_fedora_transformations/MARC21slimUtils.xsl"/>
 	<xsl:output encoding="UTF-8" indent="yes" method="xml" xml:space="preserve"/>
 	<xsl:strip-space elements="*"/>
 
@@ -9,6 +9,7 @@
 	MARC21slim2MODS3-4 (Revision 1.70) 2010227
 
 # Revisions
+UVA Revision 1.710 - Remove identifier partial insertion.  Will now do through code.
 UVA Revision 1.709 - Transformation of 590 field for local notes
 UVA Revision 1.708 - All <mods:roleTerm> will not be subject to chopping of punctuation as per request of Rya Martin and Perry Roland.
   <roleTerm authority="marcrelator" type="code">
@@ -116,7 +117,6 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 	<xsl:param name="barcode">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
-	<xsl:param name="identifiers" select="string('http://somehost/admin/some_ontological_monstrosity/mods_identifiers/some_number')"/>
 
 	<xsl:template match="/">
 		<xsl:choose>
@@ -2189,8 +2189,6 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 		<xsl:for-each select="marc:datafield[@tag='999']">
 			<xsl:call-template name="createHoldingSimpleFrom999"/>
 		</xsl:for-each>
-
-		<xsl:call-template name="outputIdentifiers"/>
 
 		<!-- 856, 020, 024, 022, 028, 010, 035, 037 -->
 
@@ -5104,15 +5102,6 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 		<xsl:copy>
 			<xsl:apply-templates select="* | @* | text()" mode="global_copy"/>
 		</xsl:copy>
-	</xsl:template>
-
-	<xsl:template name="outputIdentifiers">
-		<xsl:variable name="remote_mods_file" select="document($identifiers)"></xsl:variable>
-		<!-- this template is called to process an XML document passed as the $identifiers param -->
-		<!-- each mods:identifier element will be added verbatim									 -->
-		<xsl:for-each select="$remote_mods_file/mods:mods/mods:identifier">
-		<xsl:copy-of select="." xml:lang="en" xml:space="preserve"/>
-		</xsl:for-each>
 	</xsl:template>
 	
 	<xsl:template name="createHoldingSimpleFrom999">
