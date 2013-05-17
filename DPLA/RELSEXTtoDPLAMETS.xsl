@@ -19,7 +19,7 @@
       <xsl:value-of select="$fedora-url" />
       <xsl:text>risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24object%20from%20%3C%23ri%3E%20%0Awhere%20%24object%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasCatalogRecordIn%3E%20%3Cinfo%3Afedora%2F</xsl:text>
       <xsl:value-of select="$pid" />
-      <xsl:text>%3E</xsl:text>
+      <xsl:text>%3E%20and%20%24object%20%3Cinfo%3Afedora%2Ffedora-system%3Adef%2Fmodel%23hasModel%3E%20%3Cinfo%3Afedora%2Fuva-lib%3ADPLAItemCModel%3E</xsl:text>
     </xsl:variable>
     <xsl:message>Querying fedora: <xsl:value-of select="$lookupMembers" /></xsl:message>
     <xsl:variable name="sparql" select="document($lookupMembers)" />
