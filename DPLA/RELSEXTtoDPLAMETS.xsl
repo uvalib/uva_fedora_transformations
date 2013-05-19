@@ -17,9 +17,9 @@
 
     <xsl:variable name="lookupMembers">
       <xsl:value-of select="$fedora-url" />
-      <xsl:text>risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24object%20from%20%3C%23ri%3E%20%0Awhere%20%24object%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasCatalogRecordIn%3E%20%3Cinfo%3Afedora%2F</xsl:text>
+      <xsl:text>risearch?type=tuples&amp;lang=sparql&amp;format=Sparql&amp;query=select%20%24object%20%24thumbnail%20from%20%3C%23ri%3E%20where%20%7B%0A%20%20%24object%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasCatalogRecordIn%3E%20%3Cinfo%3Afedora%2F</xsl:text>
       <xsl:value-of select="$pid" />
-      <xsl:text>%3E%20and%20%24object%20%3Cinfo%3Afedora%2Ffedora-system%3Adef%2Fmodel%23hasModel%3E%20%3Cinfo%3Afedora%2Fuva-lib%3ADPLAItemCModel%3E</xsl:text>
+      <xsl:text>%3E%20.%20%0A%20%20%24object%20%3Cinfo%3Afedora%2Ffedora-system%3Adef%2Fmodel%23hasModel%3E%20%3Cinfo%3Afedora%2Fuva-lib%3ADPLAItemCModel%3E%20.%0A%20%20OPTIONAL%20%7B%24object%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasExemplar%3E%20%24thumbnail%20%7D%0A%7D</xsl:text>
     </xsl:variable>
     <xsl:message>Querying fedora: <xsl:value-of select="$lookupMembers" /></xsl:message>
     <xsl:variable name="sparql" select="document($lookupMembers)" />
@@ -45,15 +45,26 @@
 
 
       <mets:fileSec>
-        <xsl:for-each select="$sparql/s:sparql/s:results/s:result/s:object">
-          <xsl:variable name="childPid" select="substring(current()/@uri, 13)" />
+        <xsl:for-each select="$sparql/s:sparql/s:results/s:result">
+          <xsl:variable name="childPid" select="substring(s:object/@uri, 13)" />
+          <xsl:variable name="thumbnailPid">
+            <xsl:choose>
+              <xsl:when test="s:thumbnail/@uri">
+                <xsl:value-of select="substring(s:thumbnail/@uri, 13 )"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$pid"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+
           <mets:fileGrp USE="preview">
             <xsl:attribute name="ID" select="concat(translate($childPid, ':', '_'), '-files')" />
             <mets:file>
               <xsl:attribute name="ID" select="concat(translate($childPid, ':', '_'), '-preview')" />
               <xsl:attribute name="DMDID" select="concat(translate($childPid, ':', '_'), '-mods')" />
               <mets:FLocat LOCTYPE="PURL">
-                <xsl:attribute name="xlink:href">http://fedoraproxy.lib.virginia.edu/fedora/objects/<xsl:value-of select="$pid"/>/methods/djatoka:StaticSDef/getThumbnail</xsl:attribute>
+                <xsl:attribute name="xlink:href">http://fedoraproxy.lib.virginia.edu/fedora/objects/<xsl:value-of select="$thumbnailPid"/>/methods/djatoka:StaticSDef/getThumbnail</xsl:attribute>
               </mets:FLocat>
             </mets:file>
           </mets:fileGrp>
