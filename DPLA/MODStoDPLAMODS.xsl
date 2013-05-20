@@ -29,7 +29,7 @@
     </xsl:variable>
     <location>
       <xsl:if test="not($exemplar='')">
-          <url access="object in context">http://search.lib.virginia.edu/catalog/<xsl:value-of select="substring($exemplar, 13)"/></url>
+          <url access="object in context">http://search.lib.virginia.edu/catalog/<xsl:value-of select="substring($pid, 13)"/></url>
           <url access="preview">http://fedoraproxy.lib.virginia.edu/fedora/objects/<xsl:value-of select="substring($exemplar, 13)"/>/methods/djatoka:StaticSDef/getThumbnail</url>
           <url access="raw object">http://fedoraproxy.lib.virginia.edu/fedora/objects/<xsl:value-of select="substring($exemplar, 13)"/>/methods/djatoka:StaticSDef/getStaticImage</url>
       </xsl:if>
