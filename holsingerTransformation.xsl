@@ -487,7 +487,7 @@
 				<!-- format facet -->
 				<field name="format_facet">Online</field>
 				<field name="format_text">Online</field>
-				<xsl:for-each select="//mods/genre">
+				<xsl:for-each select="//mods/genre/text()">
 					<field name="format_text">
 						<xsl:value-of select="current()"/>
 					</field>
@@ -497,7 +497,7 @@
 				</xsl:for-each>
 
 				<!-- genre -->
-				<xsl:for-each select="//mods/genre">
+				<xsl:for-each select="//mods/genre/text()">
 					<field name="genre_text">
 						<xsl:value-of select="current()"/>
 					</field>
