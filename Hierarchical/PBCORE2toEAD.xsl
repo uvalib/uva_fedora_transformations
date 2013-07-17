@@ -142,6 +142,11 @@
                     </xsl:if>
                 </unittitle>
             </xsl:for-each>
+            <xsl:if test="not(pbcore:pbcoreTitle)">
+              <unittitle>
+                <xsl:value-of select="pbcore:pbcoreIdentifier" />
+              </unittitle>
+            </xsl:if>
             <xsl:if test="pbcore:pbcoreDescription[@type='abstract']">
                 <scopecontent>
                     <xsl:for-each select="pbcore:pbcoreDescription[@type='abstract']">
