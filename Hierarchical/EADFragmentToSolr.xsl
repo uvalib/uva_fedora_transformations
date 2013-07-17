@@ -60,7 +60,6 @@
                     <doc:li mapping:type="solrField" mapping:sourceXPath="$pid">id</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="[the various fedora content models]">content_model_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'UVA Library Digital Repository'">source_facet</doc:li>
-                    <doc:li mapping:type="solrField" mapping:sourceXPath="'Manuscripts &amp; Rare Materials'">format_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'Special Collections'">library_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'Special Collections'">location_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'VISIBLE', 'HIDDEN' or 'UNDISCOVERABLE'">shadowed_location_facet</doc:li>
@@ -73,8 +72,12 @@
             <doc>
                 <field name="id"><xsl:value-of select="$pid"/></field>
                 <field name="source_facet">UVA Library Digital Repository</field>
+              <!-- The early examples don't really fit this category.  While this was the value
+                   suggested in the early wireframes, for the Daily Progress and WSLS collections
+                   this doesn't make much sense.
                 <field name="format_facet">Manuscripts &amp; Rare Materials</field>
-                
+              -->
+              
                 <!-- pull some information from fedora for:
                     date_received_facet 
                     content_model_facet 
@@ -520,7 +523,6 @@
                     <xsl:with-param name="itemPid" select="$pid" />
                 </xsl:call-template>
             </xsl:variable>
-            
             <xsl:if test="$digitizedItemUri != ''">
                 <xsl:variable name="digitizedItemPid" select="substring($digitizedItemUri, 13)" />
                 <field name="digitized_item_pid_display"><xsl:value-of select="$digitizedItemPid" /></field>
@@ -848,8 +850,8 @@
                     <xsl:with-param name="itemPid" select="$itemPid" />
                 </xsl:call-template>
             </xsl:variable>
-            <xsl:if test="$exemplar">
-                <xsl:value-of select="concat('info:fedora/', $itemPid)" />
+            <xsl:if test="$exemplar != ''">
+                <xsl:value-of select="concat('info:fedora/', $exemplar)" />
             </xsl:if>
         </xsl:if>
         <xsl:if test="$result">
