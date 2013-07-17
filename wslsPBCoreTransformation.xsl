@@ -32,19 +32,13 @@
       <doc:p> The following solr fields are automatically populated: <doc:ul>
           <doc:li mapping:type="solrField" mapping:sourceXPath="$pid">id</doc:li>
           <doc:li mapping:type="solrField"
-            mapping:sourceXPath="'[the content smodel of the objects in fedora]'"
-            >content_model_facet</doc:li>
-          <doc:li mapping:type="solrField" mapping:sourceXPath="'Video', 'Online'"
-            >format_facet</doc:li>
-          <doc:li mapping:type="solrField" mapping:sourceXPath="'Digital Library'"
-            >source_facet</doc:li>
-          <doc:li mapping:type="solrField" mapping:sourceXPath="[the Kaltura URL]"
-            >url_display</doc:li>
+            mapping:sourceXPath="'[the content smodel of the objects in fedora]'">content_model_facet</doc:li>
+          <doc:li mapping:type="solrField" mapping:sourceXPath="'Video', 'Online'">format_facet</doc:li>
+          <doc:li mapping:type="solrField" mapping:sourceXPath="'Digital Library'">source_facet</doc:li>
+          <doc:li mapping:type="solrField" mapping:sourceXPath="[the Kaltura URL]">url_display</doc:li>
           <doc:li mapping:type="solrField"
-            mapping:sourceXPath="The date the item was first ingested into the repository"
-            >date_received_facet</doc:li>
-          <doc:li mapping:type="solrField" mapping:sourceXPath="[the entire pbcore record]"
-            >pbcore_display</doc:li>
+            mapping:sourceXPath="The date the item was first ingested into the repository">date_received_facet</doc:li>
+          <doc:li mapping:type="solrField" mapping:sourceXPath="[the entire pbcore record]">pbcore_display</doc:li>
         </doc:ul>
       </doc:p>
     </doc:desc>
@@ -265,6 +259,27 @@
   <doc:doc>
     <doc:desc>
       <doc:ul>
+        <doc:li mapping:type="solrField">identifier_text</doc:li>
+      </doc:ul>
+    </doc:desc>
+  </doc:doc>
+  <xsl:template match="pbcore:pbcoreIdentifier">
+    <field name="identifier_text">
+      <xsl:value-of select="text()" />
+    </field>
+    <xsl:if test="not(current()[../pbcore:pbcoreTitle])">
+      <field name="title_display">
+        <xsl:value-of select="text()" />
+      </field>
+      <field name="title_text">
+        <xsl:value-of select="text()" />
+      </field>
+    </xsl:if>
+  </xsl:template>
+
+  <doc:doc>
+    <doc:desc>
+      <doc:ul>
         <doc:li mapping:type="solrField">subject_facet</doc:li>
         <doc:li mapping:type="solrField">subject_text</doc:li>
       </doc:ul>
@@ -282,15 +297,16 @@
   <doc:doc>
     <doc:desc>
       <doc:ul>
-        <doc:li mapping:type="solrField">subject_facet</doc:li>
         <doc:li mapping:type="solrField">subject_text</doc:li>
       </doc:ul>
     </doc:desc>
   </doc:doc>
   <xsl:template match="pbcore:pbcoreSubject[@subjectType='Entity']">
+<!-- This isn't ready for prime time, but might as well be searchable 
     <field name="subject_facet">
       <xsl:value-of select="normalize-space(text())" />
     </field>
+    -->
     <field name="subject_text">
       <xsl:value-of select="normalize-space(text())" />
     </field>
@@ -313,11 +329,15 @@
     <doc:desc>
       <doc:ul>
         <doc:li mapping:type="solrField">region_facet</doc:li>
+        <doc:li mapping:type="solrField">region_text</doc:li>
       </doc:ul>
     </doc:desc>
   </doc:doc>
   <xsl:template match="pbcore:pbcoreSubject[@subjectType='Place']">
     <field name="region_facet">
+      <xsl:value-of select="normalize-space(text())" />
+    </field>
+    <field name="region_text">
       <xsl:value-of select="normalize-space(text())" />
     </field>
   </xsl:template>
