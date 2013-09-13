@@ -509,7 +509,7 @@
 				<!-- physical description -->
 
 				<xsl:choose>
-					<xsl:when test="//mods/abstract">
+					<xsl:when test="//mods/abstract/text()">
 						<xsl:variable name="descriptionDisplay">
 							<xsl:value-of select="//mods/abstract"/>
 						</xsl:variable>
