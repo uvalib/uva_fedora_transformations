@@ -169,7 +169,7 @@
 						<xsl:when test="current()/dateCreated[@keyDate='yes'][1]">
 							<xsl:call-template name="build-dates">
 								<xsl:with-param name="date-node"
-									select="current()/dateCreated[@keyDate='yes'][1]"/>
+									select="current()/dateCreated"/>
 							</xsl:call-template>
 						</xsl:when>
 						<xsl:when test="current()/dateCaptured[@keyDate='yes'][1]">
@@ -690,15 +690,28 @@
 					<xsl:variable name="yearOnly">
 						<xsl:value-of select="substring(., 1, 4)"/>
 					</xsl:variable>
-					<field name="year_multisort_i">
-						<xsl:value-of select="$yearOnly"/>
-					</field>
-					<field name="year_display">
-						<xsl:value-of select="."/>
-					</field>
-					<field name="date_text">
-						<xsl:value-of select="."/>
-					</field>
+					<!-- there can be only one year_multisort_i in a Solr record -->
+					<xsl:if test="current()[@keyDate='yes']">
+						<field name="year_multisort_i">
+							<xsl:value-of select="$yearOnly"/>
+						</field>
+					</xsl:if>
+					<!-- if dates available form a range, process elsewhere -->
+					<xsl:choose>
+						<xsl:when test="current()[@point='start'] and $date-node[@point='end']">
+							<xsl:call-template name="build-daterange">
+								<xsl:with-param name="date-pair" select="$date-node[@point='start' or @point='end']"></xsl:with-param>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:otherwise>
+							<field name="year_display">
+								<xsl:value-of select="."/>
+							</field>
+							<field name="date_text">
+								<xsl:value-of select="."/>
+							</field>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="./text() = 'Unknown Date' or ./text() = 'Unknown date'">
 					<field name="published_date_display">
@@ -712,5 +725,18 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template name="build-daterange">
+		<xsl:param name="date-pair" select="'No nodes sent to template build-daterange'"/>
+		<xsl:variable name="range-text">
+			<xsl:value-of select="$date-pair[@point='start']"/> - <xsl:value-of select="$date-pair[@point='end']"/>
+		</xsl:variable>
+		<field name="year_display">
+			<xsl:value-of select="$range-text"/>
+		</field>
+		<field name="date_text">
+			<xsl:value-of select="$range-text"/>
+		</field>
 	</xsl:template>
 </xsl:stylesheet>
