@@ -13,115 +13,115 @@
     <xsl:param name="component_max">3</xsl:param>
     
     <xsl:template match="/">
-        <xsl:for-each select="*">
-            <xsl:apply-templates select="current()" />
-        </xsl:for-each>
+        <!-- Check for cached hierarchy first, since this is the collection root and therefore 
+        possibly very big -->
+        <xsl:variable name="summary" select="document(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/datastreams/hierarchy-brief-cached/content'))" />
+        <xsl:choose>
+            <xsl:when test="$summary">
+                <xsl:copy-of select="$summary" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:for-each select="*">
+                    <xsl:apply-templates select="current()" />
+                </xsl:for-each>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template match="*" />
     
     <xsl:template match="ead">
-        <!-- Check for cached hierarchy first, since this is the collection root and therefore 
-        possibly very big -->
-        <xsl:variable name="summary" select="document(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/datastreams/hierarchy-brief-cached/content'))" />
-        <xsl:choose>
-          <xsl:when test="$summary">
-            <xsl:copy-of select="$summary" />
-          </xsl:when>
-          <xsl:otherwise>
-            <collection>
-              <xsl:variable name="title">
-                <xsl:for-each select="archdesc/did/unittitle//text()">
-                  <xsl:value-of select="current()" />
-                </xsl:for-each>
-              </xsl:variable>
-              <title><xsl:value-of select="normalize-space($title)"></xsl:value-of></title>
-              <xsl:if test="archdesc/did/head">
-                <xsl:for-each select="archdesc/did[head]">
-                  <descsummary>
-                  <head><xsl:value-of select="head" /></head>
-                  <xsl:for-each select="node()[@label]">
-                    <field>
-                      <head><xsl:value-of select="@label" /></head>
-                      <value><xsl:value-of select="node()" /></value>
-                    </field>
-                  </xsl:for-each>
-                  </descsummary>
-                </xsl:for-each>
-              </xsl:if>
-              <xsl:for-each select="archdesc/descgrp[@type='admininfo']">
-                <admininfo>
-                  <head><xsl:value-of select="head" /></head>
-                  <xsl:for-each select="node()[head]">
-                    <field>
-                      <head><xsl:value-of select="head" /></head>
-                      <value><xsl:value-of select="p" /></value>
-                    </field>
-                  </xsl:for-each>
-                </admininfo>
+        <collection>
+          <xsl:variable name="title">
+            <xsl:for-each select="archdesc/did/unittitle//text()">
+              <xsl:value-of select="current()" />
+            </xsl:for-each>
+          </xsl:variable>
+          <title><xsl:value-of select="normalize-space($title)"></xsl:value-of></title>
+          <xsl:if test="archdesc/did/head">
+            <xsl:for-each select="archdesc/did[head]">
+              <descsummary>
+              <head><xsl:value-of select="head" /></head>
+              <xsl:for-each select="node()[@label]">
+                <field>
+                  <head><xsl:value-of select="@label" /></head>
+                  <value><xsl:value-of select="node()" /></value>
+                </field>
               </xsl:for-each>
-              <xsl:variable name="bioghistCount" select="count(archdesc/bioghist/p)" />
-              <xsl:if test="$bioghistCount &gt; 0">
-                <bioghist>
-                  <p_count><xsl:value-of select="$bioghistCount" /></p_count>
-                  <head><xsl:value-of select="archdesc/bioghist/head[1]" /></head>
-                  <xsl:for-each select="archdesc/bioghist/p[position()]">
-                    <xsl:variable name="p">
-                      <xsl:for-each select="current()//text()">
-                        <xsl:value-of select="current()" />
-                      </xsl:for-each>
-                    </xsl:variable>
-                    <p><xsl:value-of select="normalize-space($p)" /></p>
+              </descsummary>
+            </xsl:for-each>
+          </xsl:if>
+          <xsl:for-each select="archdesc/descgrp[@type='admininfo']">
+            <admininfo>
+              <head><xsl:value-of select="head" /></head>
+              <xsl:for-each select="node()[head]">
+                <field>
+                  <head><xsl:value-of select="head" /></head>
+                  <value><xsl:value-of select="p" /></value>
+                </field>
+              </xsl:for-each>
+            </admininfo>
+          </xsl:for-each>
+          <xsl:variable name="bioghistCount" select="count(archdesc/bioghist/p)" />
+          <xsl:if test="$bioghistCount &gt; 0">
+            <bioghist>
+              <p_count><xsl:value-of select="$bioghistCount" /></p_count>
+              <head><xsl:value-of select="archdesc/bioghist/head[1]" /></head>
+              <xsl:for-each select="archdesc/bioghist/p[position()]">
+                <xsl:variable name="p">
+                  <xsl:for-each select="current()//text()">
+                    <xsl:value-of select="current()" />
                   </xsl:for-each>
-                </bioghist>
-              </xsl:if>
-              <xsl:variable name="count" select="count(archdesc/scopecontent/p)" />
-              <xsl:if test="$count &gt; 0">
-                <scopecontent>
-                  <p_count><xsl:value-of select="$count"></xsl:value-of></p_count>
-                  <head><xsl:value-of select="archdesc/scopecontent/head[1]" /></head>
-                  <xsl:for-each select="archdesc/scopecontent/p[position()]">
-                    <xsl:variable name="p">
-                      <xsl:for-each select="current()//text()">
-                        <xsl:value-of select="current()" />
-                      </xsl:for-each>
-                    </xsl:variable>
-                    <p><xsl:value-of select="normalize-space($p)" /></p>
+                </xsl:variable>
+                <p><xsl:value-of select="normalize-space($p)" /></p>
+              </xsl:for-each>
+            </bioghist>
+          </xsl:if>
+          <xsl:variable name="count" select="count(archdesc/scopecontent/p)" />
+          <xsl:if test="$count &gt; 0">
+            <scopecontent>
+              <p_count><xsl:value-of select="$count"></xsl:value-of></p_count>
+              <head><xsl:value-of select="archdesc/scopecontent/head[1]" /></head>
+              <xsl:for-each select="archdesc/scopecontent/p[position()]">
+                <xsl:variable name="p">
+                  <xsl:for-each select="current()//text()">
+                    <xsl:value-of select="current()" />
                   </xsl:for-each>
-                </scopecontent>
-              </xsl:if>
-              
-              <xsl:variable name="firstChildUri">
-                <xsl:call-template name="lookupFirstPart">
-                  <xsl:with-param name="parentPid" select="$pid" />
-                </xsl:call-template>
-              </xsl:variable>
-              
-              <xsl:if test="$firstChildUri != ''">
-                <xsl:variable name="subsequentSparql">
-                  <xsl:call-template name="lookupSubsequentParts"><xsl:with-param name="parentPid" select="$pid" /></xsl:call-template>
                 </xsl:variable>
-                <xsl:variable name="count" select="1 + count($subsequentSparql//s:sparql/s:results/s:result)" />
-                
-                <xsl:variable name="exemplarSparql">
-                  <xsl:call-template name="lookupPartsDigitizedExemplars">
-                    <xsl:with-param name="componentPid" select="$pid" />
-                  </xsl:call-template>
-                </xsl:variable>
-                
-                <component_count><xsl:value-of select="$count" /></component_count>
-                <digitized_component_count><xsl:value-of select="count($exemplarSparql/s:sparql/s:results/s:result)" /></digitized_component_count>
-                <xsl:call-template name="outputChildComponents">
-                  <xsl:with-param name="iteration" select="1" />
-                  <xsl:with-param name="current" select="$firstChildUri"></xsl:with-param>
-                  <xsl:with-param name="nextMap" select="$subsequentSparql" />
-                  <xsl:with-param name="exemplarMap" select="$exemplarSparql" />
-                  <xsl:with-param name="depth" select="0" />
-                </xsl:call-template>
-              </xsl:if>
-            </collection>
-          </xsl:otherwise>
-        </xsl:choose>
+                <p><xsl:value-of select="normalize-space($p)" /></p>
+              </xsl:for-each>
+            </scopecontent>
+          </xsl:if>
+          
+          <xsl:variable name="firstChildUri">
+            <xsl:call-template name="lookupFirstPart">
+              <xsl:with-param name="parentPid" select="$pid" />
+            </xsl:call-template>
+          </xsl:variable>
+          
+          <xsl:if test="$firstChildUri != ''">
+            <xsl:variable name="subsequentSparql">
+              <xsl:call-template name="lookupSubsequentParts"><xsl:with-param name="parentPid" select="$pid" /></xsl:call-template>
+            </xsl:variable>
+            <xsl:variable name="count" select="1 + count($subsequentSparql//s:sparql/s:results/s:result)" />
+            
+            <xsl:variable name="exemplarSparql">
+              <xsl:call-template name="lookupPartsDigitizedExemplars">
+                <xsl:with-param name="componentPid" select="$pid" />
+              </xsl:call-template>
+            </xsl:variable>
+            
+            <component_count><xsl:value-of select="$count" /></component_count>
+            <digitized_component_count><xsl:value-of select="count($exemplarSparql/s:sparql/s:results/s:result)" /></digitized_component_count>
+            <xsl:call-template name="outputChildComponents">
+              <xsl:with-param name="iteration" select="1" />
+              <xsl:with-param name="current" select="$firstChildUri"></xsl:with-param>
+              <xsl:with-param name="nextMap" select="$subsequentSparql" />
+              <xsl:with-param name="exemplarMap" select="$exemplarSparql" />
+              <xsl:with-param name="depth" select="0" />
+            </xsl:call-template>
+          </xsl:if>
+        </collection>
     </xsl:template>
     
     <xsl:template match="node()[starts-with(name(), 'c0')]">
