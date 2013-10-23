@@ -150,15 +150,6 @@
                 <field name="hierarchy_display">
                     <xsl:value-of select="$summary" />
                 </field>
-                <field name="full_hierarchy_display">
-                    <!--
-                      The full_hierarchy_display has been deprecated, but not yet removed from the VIRGO code or Solr DocumentHandler.
-                      A single summary that contains every child of the current level and up to 3 children of each of those is sufficient
-                      for all the UI needs.
-                    <xsl:value-of select="unparsed-text(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/methods/uva-lib:hierarchicalMetadataSDef/getFullSummary'))" />
-                    -->
-                    <xsl:value-of select="$summary" />
-                </field>
                 
                 <!-- Add the container information -->
                 <xsl:variable name="container">
