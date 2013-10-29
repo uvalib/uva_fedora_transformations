@@ -158,7 +158,7 @@
 				</xsl:for-each>
 
 				<!-- SOLR can take only one year_multisort_i field, so we need to choose which mods element to utilize -->
-				<xsl:for-each select="//originInfo[1]">
+				<xsl:for-each select="/mods/originInfo[1]">
 					<xsl:choose>
 						<xsl:when test="current()/dateIssued[@keyDate='yes'][1]">
 							<xsl:call-template name="build-dates">
