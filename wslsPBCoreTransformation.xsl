@@ -39,6 +39,8 @@
           <doc:li mapping:type="solrField"
             mapping:sourceXPath="The date the item was first ingested into the repository">date_received_facet</doc:li>
           <doc:li mapping:type="solrField" mapping:sourceXPath="[the entire pbcore record]">pbcore_display</doc:li>
+          <doc:li mapping:type="solrField" mapping:sourceXPath="[the pid of the policy, if present]">policy_facet</doc:li>
+          <doc:li mapping:type="solrField" mapping:sourceXPath="[the fedora proxy url, if a policy_facet is present]">repository_url_display</doc:li>
         </doc:ul>
       </doc:p>
     </doc:desc>
@@ -97,6 +99,12 @@
           <field name="shadowed_location_facet">
             <xsl:value-of select="$visibility" />
           </field>
+        </xsl:if>
+        <xsl:variable name="policyUri"
+          select="$relsExt/rdf:RDF/rdf:Description/uva-rels:hasPolicy/@rdf:resource" />
+        <xsl:if test="$policyUri">
+          <field name="policy_facet"><xsl:value-of select="substring($policyUri, string-length('info:fedora/') + 1)" /></field>
+          <field name="repository_address_display"><xsl:value-of select="$fedora-proxy-url" /></field>
         </xsl:if>
 
         <xsl:variable name="ancestors">
