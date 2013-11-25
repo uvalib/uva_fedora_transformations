@@ -14,6 +14,11 @@
   <!-- required -->
   <xsl:param name="pid" />
 
+  <!-- level of Solr publication for this object. -->
+  <xsl:param name="destination">
+    <xsl:value-of select="false()"/>
+  </xsl:param>
+     
   <xsl:param name="debug" />
 
   <!-- Must be the URL for the fedora repository in which the object resides, 
@@ -64,6 +69,9 @@
           select="document(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '?format=xml'))" />
         <xsl:variable name="createDate"
           select="$objectProfile/apia:objectProfile/apia:objCreateDate/text()" />
+        <field name="released_facet" source="{$mode}">
+          <xsl:value-of select="$destination"/>
+        </field>
         <field name="date_received_facet">
           <xsl:value-of
             select="concat(substring($createDate, 1, 4), substring($createDate, 6, 2), substring($createDate, 9, 2))"
