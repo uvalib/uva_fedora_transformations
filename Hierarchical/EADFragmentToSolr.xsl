@@ -72,7 +72,6 @@
             <doc>
                 <field name="id"><xsl:value-of select="$pid"/></field>
                 <field name="source_facet">UVA Library Digital Repository</field>
-                <field name="format_facet">Manuscripts &amp; Rare Materials</field>
               <!-- The early examples don't really fit this category.  While this was the value
                    suggested in the early wireframes, for the Daily Progress and WSLS collections
                    this doesn't make much sense.
@@ -148,6 +147,15 @@
                 <!-- Add the hierarchy display -->
                 <xsl:variable name="summary" select="unparsed-text(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/methods/uva-lib:hierarchicalMetadataSDef/getSummary'))" />
                 <field name="hierarchy_display">
+                    <xsl:value-of select="$summary" />
+                </field>
+                <field name="full_hierarchy_display">
+                    <!--
+                      The full_hierarchy_display has been deprecated, but not yet removed from the VIRGO code or Solr DocumentHandler.
+                      A single summary that contains every child of the current level and up to 3 children of each of those is sufficient
+                      for all the UI needs.
+                    <xsl:value-of select="unparsed-text(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/methods/uva-lib:hierarchicalMetadataSDef/getFullSummary'))" />
+                    -->
                     <xsl:value-of select="$summary" />
                 </field>
                 
@@ -262,7 +270,7 @@
             </doc:ul>
         </doc:desc>
     </doc:doc>
-    <xsl:template match="ead/archdesc/did/unittitle[1]" mode="primary">
+    <xsl:template match="ead/archdesc/did/unittitle" mode="primary">
         <xsl:variable name="title">
             <xsl:for-each select="current()//text()">
                 <xsl:value-of select="current()" />
@@ -461,12 +469,7 @@
                 <xsl:value-of select="current()" />
             </xsl:for-each>
         </xsl:variable>
-        <xsl:if test="not(current()/preceding-sibling::unittitle)">
-            <xsl:comment>Main Title</xsl:comment>
-            <field name="main_title_display">
-                <xsl:value-of select="normalize-space($title)"></xsl:value-of>
-            </field>
-        </xsl:if>
+        <field name="main_title_display"><xsl:value-of select="normalize-space($title)" /></field>
         <field name="title_display"><xsl:value-of select="normalize-space($title)" /></field>
         <field name="title_text"><xsl:value-of select="normalize-space($title)" /></field>
         <field name="full_title_text"><xsl:value-of select="normalize-space($title)" /></field>
@@ -867,14 +870,14 @@
         <xsl:variable name="lookupExemplars">
             <xsl:text>http://</xsl:text><xsl:value-of select="$fedora-host" /><xsl:text>:8080/fedora/risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24exemplar%20from%20%3C%23ri%3E%20where%20%3Cinfo%3Afedora%2F</xsl:text>
             <xsl:value-of select="$itemPid" />
-            <xsl:text>%3E%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasExemplar%3E%20%24exemplar</xsl:text>
+            <xsl:text>%3E%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23isPlaceholderFor%3E%20%24real%20and%20%24real%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasDigitalRepresentation%3E%20%24exemplar%20and%20%24real%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasExemplar%3E%20%24exemplar</xsl:text>
         </xsl:variable>
         <xsl:if test="$debug">
             <xsl:message terminate="no">
                 Querying for the exemplar digitized version of <xsl:value-of select="$itemPid" /> using query: <xsl:value-of select="$lookupExemplars" />
             </xsl:message>
         </xsl:if>
-        <xsl:value-of select="substring(document($lookupExemplars)/s:sparql/s:results/s:result/s:exemplar/@uri, 13)"></xsl:value-of>
+        <xsl:value-of select="document($lookupExemplars)/s:sparql/s:results/s:result/s:exemplar/@uri" />
     </xsl:template>
     
 </xsl:stylesheet>
