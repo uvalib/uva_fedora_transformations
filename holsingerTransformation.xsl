@@ -92,7 +92,7 @@
 				</field>
 				<field name="source_facet">UVA Library Digital Repository</field>
         <!-- internal facet for managing index pushes -->
-        <field name="released_facet" source="{$mode}">
+        <field name="released_facet">
           <xsl:value-of select="$destination"/>
         </field>
 				

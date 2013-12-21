@@ -69,7 +69,7 @@
           select="document(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '?format=xml'))" />
         <xsl:variable name="createDate"
           select="$objectProfile/apia:objectProfile/apia:objCreateDate/text()" />
-        <field name="released_facet" source="{$mode}">
+        <field name="released_facet">
           <xsl:value-of select="$destination"/>
         </field>
         <field name="date_received_facet">
