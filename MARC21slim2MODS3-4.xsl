@@ -5002,7 +5002,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 			<xsl:if test="marc:subfield[@code='a' or @code='b' or @code='e']">
 				<mods:physicalLocation>
 					<xsl:choose>
-						<xsl:when test="matches(marc:subfield[@code='b']/text(), 'SPEC-COLL')">
+						<xsl:when test="contains(marc:subfield[@code='b']/text(), 'SPEC-COLL')">
 							<xsl:text>Special Collections, University of Virginia Library, Charlottesville, Va.</xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
@@ -5119,7 +5119,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 					<mods:copyInformation>
 						<mods:subLocation>
 							<xsl:choose>
-								<xsl:when test="matches(marc:subfield[@code='m']/text(), 'SPEC-COLL')">
+								<xsl:when test="contains(marc:subfield[@code='m']/text(), 'SPEC-COLL')">
 									Special Collections, University of Virginia Library, Charlottesville, Va.
 								</xsl:when>
 								<xsl:otherwise>
