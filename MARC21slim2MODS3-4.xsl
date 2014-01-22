@@ -9,6 +9,7 @@
 	MARC21slim2MODS3-4 (Revision 1.70) 2010227
 
 # Revisions
+UVA Revision 1.711 - Replace 'SPEC-COLL' with boilerplate when found in 999m subfield.
 UVA Revision 1.710 - Remove identifier partial insertion.  Will now do through code.
 UVA Revision 1.709 - Transformation of 590 field for local notes
 UVA Revision 1.708 - All <mods:roleTerm> will not be subject to chopping of punctuation as per request of Rya Martin and Perry Roland.
@@ -2469,7 +2470,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 				</mods:recordIdentifier>
 			</xsl:for-each>
 
-			<mods:recordOrigin>Converted from MARCXML to MODS version 3.4 using MARC21slim2MODS3-4.xsl (Revision 1.70). UVA (Revision 1.709)</mods:recordOrigin>
+			<mods:recordOrigin>Converted from MARCXML to MODS version 3.4 using MARC21slim2MODS3-4.xsl (Revision 1.70). UVA (Revision 1.711) 20140122</mods:recordOrigin>
 
 			<xsl:for-each select="marc:datafield[@tag=040]/marc:subfield[@code='b']">
 				<mods:languageOfCataloging>
@@ -5000,9 +5001,16 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 		<mods:location>
 			<xsl:if test="marc:subfield[@code='a' or @code='b' or @code='e']">
 				<mods:physicalLocation>
-					<xsl:call-template name="subfieldSelect">
-						<xsl:with-param name="codes">abe</xsl:with-param>
-					</xsl:call-template>
+					<xsl:choose>
+						<xsl:when test="matches(marc:subfield[@code='b']/text(), 'SPEC-COLL')">
+							<xsl:text>Special Collections, University of Virginia Library, Charlottesville, Va.</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:call-template name="subfieldSelect">
+								<xsl:with-param name="codes">abe</xsl:with-param>
+							</xsl:call-template>
+						</xsl:otherwise>
+					</xsl:choose>
 				</mods:physicalLocation>
 			</xsl:if>
 			<xsl:if test="marc:subfield[@code='u']">
@@ -5110,7 +5118,14 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 				<mods:holdingSimple>
 					<mods:copyInformation>
 						<mods:subLocation>
-							<xsl:value-of select="marc:subfield[@code='m']/text()"/>
+							<xsl:choose>
+								<xsl:when test="matches(marc:subfield[@code='m']/text(), 'SPEC-COLL')">
+									Special Collections, University of Virginia Library, Charlottesville, Va.
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="marc:subfield[@code='m']/text()"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</mods:subLocation>
 						<mods:shelfLocator>
 							<xsl:value-of select="marc:subfield[@code='l']/text()"/>
