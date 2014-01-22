@@ -9,7 +9,7 @@
 	MARC21slim2MODS3-4 (Revision 1.70) 2010227
 
 # Revisions
-UVA Revision 1.711 - Replace 'SPEC-COLL' with boilerplate when found in 999m subfield.
+UVA Revision 1.711 - Replace 'SPEC-COLL' with boilerplate when found in 852b subfield.
 UVA Revision 1.710 - Remove identifier partial insertion.  Will now do through code.
 UVA Revision 1.709 - Transformation of 590 field for local notes
 UVA Revision 1.708 - All <mods:roleTerm> will not be subject to chopping of punctuation as per request of Rya Martin and Perry Roland.
@@ -5118,14 +5118,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 				<mods:holdingSimple>
 					<mods:copyInformation>
 						<mods:subLocation>
-							<xsl:choose>
-								<xsl:when test="contains(marc:subfield[@code='m']/text(), 'SPEC-COLL')">
-									<xsl:text>Special Collections, University of Virginia Library, Charlottesville, Va.</xsl:text>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="marc:subfield[@code='m']/text()"/>
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:value-of select="marc:subfield[@code='m']/text()"/>
 						</mods:subLocation>
 						<mods:shelfLocator>
 							<xsl:value-of select="marc:subfield[@code='l']/text()"/>
