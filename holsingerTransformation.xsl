@@ -19,6 +19,11 @@
 		<xsl:value-of select="false()"/>
 	</xsl:param>
 
+        <!-- level of Solr publication for this object. -->
+        <xsl:param name="destination">
+          <xsl:value-of select="false()"/>
+        </xsl:param>
+     
 	<!-- Datetime that this index record was produced.  Format:YYYYMMDDHHMM -->
 	<xsl:param name="dateIngestNow">
 		<xsl:value-of select="false()"/>
@@ -86,6 +91,10 @@
 					<xsl:value-of select="$repository"/>
 				</field>
 				<field name="source_facet">UVA Library Digital Repository</field>
+        <!-- internal facet for managing index pushes -->
+        <field name="released_facet">
+          <xsl:value-of select="$destination"/>
+        </field>
 				
 				<!-- date indexed -->
 				
