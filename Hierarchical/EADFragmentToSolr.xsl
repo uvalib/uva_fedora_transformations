@@ -43,6 +43,7 @@
     <xsl:param name="fedora-proxy" required="no">http://fedoraproxy.lib.virginia.edu/fedora</xsl:param>
     <xsl:param name="pid" required="yes" />
     <xsl:param name="debug" required="no" />
+    <xsl:param name="released-facet" required="no" />
     
     <xsl:template match="*" priority="-1" mode="primary" />
     <xsl:template match="*" priority="-1" mode="subsequent" />
@@ -63,6 +64,7 @@
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'Special Collections'">library_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'Special Collections'">location_facet</doc:li>
                     <doc:li mapping:type="solrField" mapping:sourceXPath="'VISIBLE', 'HIDDEN' or 'UNDISCOVERABLE'">shadowed_location_facet</doc:li>
+                    <doc:li mapping:type="solrField" mapping:sourceXPath="$released-facet">released_facet</doc:li>
                 </doc:ul>
             </doc:p>
         </doc:desc>
@@ -73,6 +75,9 @@
                 <field name="id"><xsl:value-of select="$pid"/></field>
                 <field name="source_facet">UVA Library Digital Repository</field>
                 <field name="format_facet">Manuscripts &amp; Rare Materials</field>
+                <xsl:if test="$released-facet">
+                    <field name="released_facet"><xsl:value-of select="$released-facet" /></field>
+                </xsl:if>
               <!-- The early examples don't really fit this category.  While this was the value
                    suggested in the early wireframes, for the Daily Progress and WSLS collections
                    this doesn't make much sense.
