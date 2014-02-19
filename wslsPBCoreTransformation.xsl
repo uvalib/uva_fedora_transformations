@@ -41,6 +41,7 @@
           <doc:li mapping:type="solrField" mapping:sourceXPath="[the entire pbcore record]">pbcore_display</doc:li>
           <doc:li mapping:type="solrField" mapping:sourceXPath="[the pid of the policy, if present]">policy_facet</doc:li>
           <doc:li mapping:type="solrField" mapping:sourceXPath="[the fedora proxy url, if a policy_facet is present]">repository_url_display</doc:li>
+          <doc:li mapping:type="solrField" mapping:sourceXPath="English">language_facet</doc:li>
         </doc:ul>
       </doc:p>
     </doc:desc>
@@ -59,6 +60,9 @@
         </field>
         <field name="source_facet">
           <xsl:text>Digital Library</xsl:text>
+        </field>
+        <field name="language_facet">
+          <xsl:text>English</xsl:text>
         </field>
 
         <!-- Pull the required "date_received_facet" from fedora as well as the content models -->
