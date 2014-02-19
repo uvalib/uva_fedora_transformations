@@ -15,6 +15,11 @@
 		<xsl:value-of select="false()"/>
 	</xsl:param>
      
+	<!-- level of Solr publication for this object. -->
+	<xsl:param name="destination">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
+     
         <!-- Date DL Ingest for the object being indexed for the creation of date_received_facet and date_received_text -->
 	<xsl:param name="dateReceived">
 		<xsl:value-of select="false()"/>
@@ -113,6 +118,9 @@
 				</field>
 				<field name="repository_address_display" source="{$mode}">
 					<xsl:value-of select="$repository"/>
+				</field>
+				<field name="released_facet" source="{$mode}">
+					<xsl:value-of select="$destination"/>
 				</field>
 				<field name="content_model_facet" source="{$mode}">
 					<xsl:value-of select="$contentModel"/>
