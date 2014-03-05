@@ -713,9 +713,6 @@
 							</xsl:call-template>
 						</xsl:when>
 						<xsl:otherwise>
-							<field name="year_display">
-								<xsl:value-of select="."/>
-							</field>
 							<field name="date_text">
 								<xsl:value-of select="."/>
 							</field>
