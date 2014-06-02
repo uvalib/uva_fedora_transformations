@@ -700,7 +700,7 @@
 						<xsl:value-of select="substring(., 1, 4)"/>
 					</xsl:variable>
 					<field name="year_display">
-					<xsl:value-of select="$yearOnly"/>
+					<xsl:value-of select="."/>
 					</field>
 					<!-- there can be only one year_multisort_i in a Solr record -->
 					<xsl:if test="current()[@keyDate='yes']">
