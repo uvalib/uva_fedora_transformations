@@ -693,7 +693,7 @@
 
 	<xsl:template name="build-dates">
 		<xsl:param name="date-node" select="'No node sent to template build-dates'"/>
-		<xsl:for-each select="$date-node">
+		<xsl:for-each select="$date-node[1]">
 			<xsl:choose>
 				<xsl:when test="matches(., '^\d{4}')">
 					<xsl:variable name="yearOnly">
@@ -719,6 +719,9 @@
 							<field name="date_text">
 								<xsl:value-of select="."/>
 							</field>
+							<field name="year_display">
+					<xsl:value-of select="."/>
+					</field>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
