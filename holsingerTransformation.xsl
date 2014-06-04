@@ -7,7 +7,7 @@
 	<!-- UVA-LIB stylesheet for converting Holsinger Collection MODS to SOLR -->
 	<!-- created by M. Stephens (ms3uf) on Jan 14/2010 	-->
 	<!-- modified by Andrew Curley (aec6v) on November 10, 2011 -->
-	<!-- modified by Jocelyn Triplett (jbo3d) on June 3, 2014 -->
+	<!-- modified by Jocelyn Triplett (jbo3d) June, 2014 -->
 
 	<!-- Required Parameters -->
 	<!-- Unique identifier for object -->
@@ -281,6 +281,24 @@
 				</xsl:for-each>
 
 				<!-- creator -->
+				
+				<!-- added corporate info to accommodate Online Artifacts records -->
+				
+				<xsl:if test="//mods/name[@type='corporate']">
+					<xsl:variable name="corpName">
+						<xsl:value-of select="//mods/name[1][@type='corporate']/namePart/text()"/>
+					</xsl:variable>
+					<field name="author_display">
+						<xsl:value-of select="$corpName"/>
+					</field>
+					<field name="author_facet">
+						<xsl:value-of select="$corpName"/>
+					</field>
+					<field name="author_sort_facet">
+						<xsl:value-of select='lower-case($corpName)'/>
+					</field>
+				</xsl:if>
+				
 				<xsl:for-each select="//mods/name[@type='personal']">
 					<xsl:variable name="fname">
 						<xsl:choose>
