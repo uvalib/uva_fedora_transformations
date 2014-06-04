@@ -7,7 +7,7 @@
 	<!-- UVA-LIB stylesheet for converting Holsinger Collection MODS to SOLR -->
 	<!-- created by M. Stephens (ms3uf) on Jan 14/2010 	-->
 	<!-- modified by Andrew Curley (aec6v) on November 10, 2011 -->
-	<!-- modified by Jocelyn Triplett (jbo3d) June, 2014 -->
+	<!-- modified by Jocelyn Triplett (jbo3d) June 4, 2014 -->
 
 	<!-- Required Parameters -->
 	<!-- Unique identifier for object -->
