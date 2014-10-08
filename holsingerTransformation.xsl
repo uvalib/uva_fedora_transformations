@@ -515,7 +515,7 @@
 				<!-- format facet -->
 				<field name="format_facet">Online</field>
 				<field name="format_text">Online</field>
-				<xsl:for-each select="//mods/genre/text()">
+				<xsl:for-each select="//mods/typeOfResource/text()">
 					<field name="format_text">
 						<xsl:value-of select="current()"/>
 					</field>
