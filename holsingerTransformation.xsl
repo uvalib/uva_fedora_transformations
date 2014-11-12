@@ -548,6 +548,9 @@
 							<field name="desc_meta_file_display">
 								<xsl:value-of select="normalize-space($descriptionDisplay)"/>
 							</field>
+							<field name="media_description_text">
+								<xsl:value-of select="normalize-space ($descriptionDisplay)"/>
+							</field>
 						</xsl:if>
 					</xsl:when>
 
@@ -581,6 +584,9 @@
 								</field>
 								<field name="desc_meta_file_display">
 									<xsl:value-of select="normalize-space($descriptionDisplay)"/>
+								</field>
+								<field name="media_description_text">
+									<xsl:value-of select="normalize-space ($descriptionDisplay)"/>
 								</field>
 							</xsl:if>
 						</xsl:for-each>
