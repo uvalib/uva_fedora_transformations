@@ -724,9 +724,9 @@
 					<xsl:variable name="yearOnly">
 						<xsl:value-of select="substring(., 1, 4)"/>
 					</xsl:variable>
-					<field name="year_display">
+			<!--		<field name="year_display">
 					<xsl:value-of select="."/>
-					</field>
+					</field>-->
 					<!-- there can be only one year_multisort_i in a Solr record -->
 					<xsl:if test="current()[@keyDate='yes']">
 						<field name="year_multisort_i">
@@ -745,6 +745,9 @@
 								<xsl:value-of select="."/>
 							</field>
 							<field name="year_display">
+								<xsl:if test="current()[@qualifier='approximate']">
+									<xsl:text>circa </xsl:text>
+								</xsl:if>
 					<xsl:value-of select="."/>
 					</field>
 						</xsl:otherwise>
@@ -770,6 +773,7 @@
 			<xsl:value-of select="$date-pair[@point='start']"/> - <xsl:value-of select="$date-pair[@point='end']"/>
 		</xsl:variable>
 		<field name="year_display">
+			<xsl:if test="$date-pair[@point='start'][@qualifier='approximate']"><xsl:text>circa </xsl:text></xsl:if>
 			<xsl:value-of select="$range-text"/>
 		</field>
 		<field name="date_text">
