@@ -767,6 +767,7 @@
 			<xsl:value-of select="$date-pair[@point='start']"/> - <xsl:value-of select="$date-pair[@point='end']"/>
 		</xsl:variable>
 		<field name="year_display">
+			<xsl:if test="$date-pair[@point='start'][@qualifier='approximate']"><xsl:text>circa </xsl:text></xsl:if>
 			<xsl:value-of select="$range-text"/>
 		</field>
 		<field name="date_text">
