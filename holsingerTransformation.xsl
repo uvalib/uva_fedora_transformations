@@ -517,12 +517,26 @@
 				<field name="format_text">Online</field>
 				<xsl:for-each select="//mods/typeOfResource">
 					<xsl:choose>
+						
+						<!-- typeOfResource 'three dimensional object -> Physical Object -->
+						
 						<xsl:when test="./text()='three dimensional object'">
 							<field name="format_text">
 								<xsl:value-of>Physical Object</xsl:value-of>
 							</field>
 							<field name="format_facet">
 								<xsl:value-of>Physical Object</xsl:value-of>
+							</field>
+						</xsl:when>
+						
+						<!-- typeOfResource 'still image and genre 'Photographs' -> Photograph -->
+						
+						<xsl:when test="./text()='still image' and //mods/genre/text()='Photographs'">
+							<field name="format_text">
+								<xsl:value-of>Photograph</xsl:value-of>
+							</field>
+							<field name="format_facet">
+								<xsl:value-of>Photograph</xsl:value-of>
 							</field>
 						</xsl:when>
 					<xsl:otherwise>
