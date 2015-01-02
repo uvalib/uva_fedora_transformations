@@ -515,13 +515,25 @@
 				<!-- format facet -->
 				<field name="format_facet">Online</field>
 				<field name="format_text">Online</field>
-				<xsl:for-each select="//mods/typeOfResource/text()">
+				<xsl:for-each select="//mods/typeOfResource">
+					<xsl:choose>
+						<xsl:when test="./text()='three dimensional object'">
+							<field name="format_text">
+								<xsl:value-of>Physical Object</xsl:value-of>
+							</field>
+							<field name="format_facet">
+								<xsl:value-of>Physical Object</xsl:value-of>
+							</field>
+						</xsl:when>
+					<xsl:otherwise>
 					<field name="format_text">
-						<xsl:value-of select="current()"/>
+						<xsl:value-of select="./text()"/>
 					</field>
 					<field name="format_facet">
-						<xsl:value-of select="current()"/>
+						<xsl:value-of select="./text()"/>
 					</field>
+					</xsl:otherwise>
+					</xsl:choose>
 				</xsl:for-each>
 
 				<!-- genre -->
