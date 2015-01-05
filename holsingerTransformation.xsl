@@ -518,7 +518,7 @@
 				<xsl:for-each select="//mods/typeOfResource">
 					<xsl:choose>
 						
-						<!-- typeOfResource 'three dimensional object -> Physical Object -->
+						<!-- typeOfResource 'three dimensional object' -> Physical Object -->
 						
 						<xsl:when test="./text()='three dimensional object'">
 							<field name="format_text">
@@ -529,7 +529,7 @@
 							</field>
 						</xsl:when>
 						
-						<!-- typeOfResource 'still image and genre 'Photographs' -> Photograph -->
+						<!-- typeOfResource 'still image' and genre 'Photographs' -> Photograph -->
 						
 						<xsl:when test="./text()='still image' and //mods/genre/text()='Photographs'">
 							<field name="format_text">
