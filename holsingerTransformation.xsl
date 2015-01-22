@@ -288,7 +288,8 @@
 					<xsl:variable name="corpName">
 						<xsl:value-of select="//mods/name[1][@type='corporate']/namePart/text()"/>
 					</xsl:variable>
-					<field name="author_display">
+					<xsl:if test="normalize-space($corpName) != ''">
+						<field name="author_display">
 						<xsl:value-of select="$corpName"/>
 					</field>
 					<field name="author_facet">
@@ -297,6 +298,7 @@
 					<field name="author_sort_facet">
 						<xsl:value-of select='lower-case($corpName)'/>
 					</field>
+					</xsl:if>
 				</xsl:if>
 				
 				<xsl:for-each select="//mods/name[@type='personal']">
@@ -381,7 +383,9 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<field name="author_facet">
+					
+					<xsl:if test="normalize-space($nameFull) != ''" >
+						<field name="author_facet">
 						<xsl:value-of select="$nameFull"/>
 					</field>
 					<xsl:choose>
@@ -394,7 +398,7 @@
 								<xsl:value-of select="$nameFull"/>
 							</field>
 						</xsl:otherwise>
-					</xsl:choose>
+					</xsl:choose></xsl:if>
 
 					<!-- The following is commented because the special-role is no longer needed.  11/10/11 -->
 					<!--
