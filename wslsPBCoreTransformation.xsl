@@ -407,7 +407,7 @@
       </field>
       <field name="anchor_script_text_url_display">
         <xsl:value-of
-          select="concat($fedora-proxy-url, 'objects/', $scriptPid, '/datastreams/scriptTEXT/content')"
+          select="concat($fedora-proxy-url, 'objects/', $scriptPid, '/datastreams/scriptTXT/content')"
          />
       </field>
       <xsl:variable name="anchorScriptText"
