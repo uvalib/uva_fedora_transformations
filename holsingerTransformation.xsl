@@ -543,6 +543,18 @@
 								<xsl:value-of>Photograph</xsl:value-of>
 							</field>
 						</xsl:when>
+						
+						<!-- typeOfResource 'still image' and genre 'art reproduction' -> Visual Materials -->
+						
+						<xsl:when test="./text()='still image' and //mods/genre/text()='art reproduction'">
+							<field name="format_text">
+								<xsl:value-of>Visual Materials</xsl:value-of>
+							</field>
+							<field name="format_facet">
+								<xsl:value-of>Visual Materials</xsl:value-of>
+							</field>
+						</xsl:when>
+						
 					<xsl:otherwise>
 					<field name="format_text">
 						<xsl:value-of select="./text()"/>
