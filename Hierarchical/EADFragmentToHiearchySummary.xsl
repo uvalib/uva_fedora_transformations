@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This XSLT is used to generate a summary of the hierarchy of 
+    a portion of a finding aid in fedora.
+    
+    The live copies lives in the "XSLT" datastream of the object
+    "uva-lib:hierarchicalMetadataSDep".
+  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:s="http://www.w3.org/2001/sw/DataAccess/rf1/result"
@@ -30,68 +37,29 @@
     
     <xsl:template match="*" />
     
+    <xsl:template match="*" mode="shorttitle">
+      <xsl:value-of select="text()" />
+      <xsl:apply-templates select="*" mode="shorttitle" />
+    </xsl:template>
+    <xsl:template match="unitdate" mode="shorttitle">
+    </xsl:template>
+    <xsl:template match="date" mode="shorttitle">
+    </xsl:template>
+  
+    <xsl:template match="*" mode="title">
+      <xsl:value-of select=".//text()" />
+    </xsl:template>
+    
     <xsl:template match="ead">
         <collection>
+          <xsl:variable name="shorttitle">
+            <xsl:apply-templates select="archdesc/did/unittitle" mode="shorttitle" />
+          </xsl:variable>
           <xsl:variable name="title">
-            <xsl:for-each select="archdesc/did/unittitle//text()">
-              <xsl:value-of select="current()" />
-            </xsl:for-each>
+            <xsl:apply-templates select="archdesc/did/unittitle" mode="title" />
           </xsl:variable>
           <title><xsl:value-of select="normalize-space($title)"></xsl:value-of></title>
-          <xsl:if test="archdesc/did/head">
-            <xsl:for-each select="archdesc/did[head]">
-              <descsummary>
-              <head><xsl:value-of select="head" /></head>
-              <xsl:for-each select="node()[@label]">
-                <field>
-                  <head><xsl:value-of select="@label" /></head>
-                  <value><xsl:value-of select="node()" /></value>
-                </field>
-              </xsl:for-each>
-              </descsummary>
-            </xsl:for-each>
-          </xsl:if>
-          <xsl:for-each select="archdesc/descgrp[@type='admininfo']">
-            <admininfo>
-              <head><xsl:value-of select="head" /></head>
-              <xsl:for-each select="node()[head]">
-                <field>
-                  <head><xsl:value-of select="head" /></head>
-                  <value><xsl:value-of select="p" /></value>
-                </field>
-              </xsl:for-each>
-            </admininfo>
-          </xsl:for-each>
-          <xsl:variable name="bioghistCount" select="count(archdesc/bioghist/p)" />
-          <xsl:if test="$bioghistCount &gt; 0">
-            <bioghist>
-              <p_count><xsl:value-of select="$bioghistCount" /></p_count>
-              <head><xsl:value-of select="archdesc/bioghist/head[1]" /></head>
-              <xsl:for-each select="archdesc/bioghist/p[position()]">
-                <xsl:variable name="p">
-                  <xsl:for-each select="current()//text()">
-                    <xsl:value-of select="current()" />
-                  </xsl:for-each>
-                </xsl:variable>
-                <p><xsl:value-of select="normalize-space($p)" /></p>
-              </xsl:for-each>
-            </bioghist>
-          </xsl:if>
-          <xsl:variable name="count" select="count(archdesc/scopecontent/p)" />
-          <xsl:if test="$count &gt; 0">
-            <scopecontent>
-              <p_count><xsl:value-of select="$count"></xsl:value-of></p_count>
-              <head><xsl:value-of select="archdesc/scopecontent/head[1]" /></head>
-              <xsl:for-each select="archdesc/scopecontent/p[position()]">
-                <xsl:variable name="p">
-                  <xsl:for-each select="current()//text()">
-                    <xsl:value-of select="current()" />
-                  </xsl:for-each>
-                </xsl:variable>
-                <p><xsl:value-of select="normalize-space($p)" /></p>
-              </xsl:for-each>
-            </scopecontent>
-          </xsl:if>
+          <shorttitle><xsl:value-of select="normalize-space($shorttitle)"></xsl:value-of></shorttitle>
           
           <xsl:variable name="firstChildUri">
             <xsl:call-template name="lookupFirstPart">
@@ -132,15 +100,17 @@
                 </xsl:call-template>
             </breadcrumbs>
             <xsl:variable name="unittitle">
-                <xsl:for-each select="//did/unittitle//text()">
-                    <xsl:value-of select="current()" />
-                </xsl:for-each>
+              <xsl:apply-templates select="//did/unittitle" mode="title" />
             </xsl:variable>
+          <xsl:variable name="shortunittitle">
+            <xsl:apply-templates select="//did/unittitle" mode="shorttitle" />
+          </xsl:variable>
             <type><xsl:value-of select="//@level"></xsl:value-of></type>
             <xsl:if test="//head">
                 <head><xsl:value-of select="//head" /></head>
             </xsl:if>
             <unittitle><xsl:value-of select="normalize-space($unittitle)"></xsl:value-of></unittitle>
+            <shortunittitle><xsl:value-of select="normalize-space($shortunittitle)"></xsl:value-of></shortunittitle>
             <xsl:variable name="count" select="count(//scopecontent/p)" />
             <xsl:if test="$count &gt; 0">
                 <scopecontent>
@@ -224,12 +194,16 @@
                     <head><xsl:value-of select="$currentMetadataFragment//head" /></head>
                 </xsl:if>
                 <xsl:variable name="unittitle">
-                    <xsl:for-each select="$currentMetadataFragment//did/unittitle//text()">
-                        <xsl:value-of select="current()" />
-                    </xsl:for-each>
+                  <xsl:apply-templates mode="title" select="$currentMetadataFragment//did/unittitle"/>
+                </xsl:variable>
+                <xsl:variable name="shortunittitle">
+                  <xsl:apply-templates mode="shorttitle" select="$currentMetadataFragment//did/unittitle"/>
                 </xsl:variable>
                 <xsl:if test="$unittitle">
                     <unittitle><xsl:value-of select="normalize-space($unittitle)" /></unittitle>
+                </xsl:if>
+                <xsl:if test="$shortunittitle">
+                  <shortunittitle><xsl:value-of select="normalize-space($shortunittitle)" /></shortunittitle>
                 </xsl:if>
                 <xsl:if test="count($currentMetadataFragment//scopecontent/p) &gt; 0">
                     <scopecontent>
@@ -335,14 +309,10 @@
             <xsl:variable name="title">
                 <xsl:choose>
                     <xsl:when test="$parentMetadataFragment//ead/frontmatter/titlepage/titleproper">
-                        <xsl:for-each select="$parentMetadataFragment//ead/frontmatter/titlepage/titleproper//text()">
-                            <xsl:value-of select="current()" />
-                        </xsl:for-each>
+                      <xsl:apply-templates mode="title" select="$parentMetadataFragment//ead/frontmatter/titlepage/titleproper"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:for-each select="$parentMetadataFragment//did/unittitle//text()">
-                            <xsl:value-of select="current()" />
-                        </xsl:for-each>
+                      <xsl:apply-templates mode="title" select="$parentMetadataFragment//did/unittitle"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
