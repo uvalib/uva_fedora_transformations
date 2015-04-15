@@ -38,16 +38,19 @@
     <xsl:template match="*" />
     
     <xsl:template match="*" mode="shorttitle">
-      <xsl:value-of select="text()" />
-      <xsl:apply-templates select="*" mode="shorttitle" />
+      <xsl:apply-templates select="*|text()" mode="shorttitle" />
     </xsl:template>
     <xsl:template match="unitdate" mode="shorttitle">
     </xsl:template>
     <xsl:template match="date" mode="shorttitle">
     </xsl:template>
   
+    <xsl:template match="title[@render='doublequote']" mode="shorttitle title">
+      <xsl:text>&quot;</xsl:text><xsl:apply-templates /><xsl:text>&quot;</xsl:text>
+    </xsl:template>
+  
     <xsl:template match="*" mode="title">
-      <xsl:value-of select=".//text()" />
+      <xsl:apply-templates select="*|text()" mode="title" />
     </xsl:template>
     
     <xsl:template match="ead">

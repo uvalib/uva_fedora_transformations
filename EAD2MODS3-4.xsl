@@ -22,7 +22,7 @@
     <xsl:param name="thisUrl" required="yes" />
     <xsl:param name="debug" required="no" />
     
-    <xsl:template match="*" priority="-1" mode="#all" />
+    <xsl:template match="*" priority="-1" mode="primary" />
 
     <xsl:template match="/">
         <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" version="3.4"
@@ -42,7 +42,7 @@
         </mods:mods>                
     </xsl:template>
     
-    <xsl:template match="unittitle" mode="primary">
+    <xsl:template match="*[name() = 'unittitle']" mode="primary">
         <xsl:variable name="title">
             <xsl:for-each select="current()//text()">
                 <xsl:value-of select="current()" />
@@ -53,7 +53,7 @@
         </mods:titleInfo>
     </xsl:template>
     
-    <xsl:template match="scopecontent" mode="primary">
+    <xsl:template match="*[name() = 'scopecontent']" mode="primary">
         <xsl:variable name="content">
             <xsl:for-each select="current()//text()">
                 <xsl:value-of select="current()" />

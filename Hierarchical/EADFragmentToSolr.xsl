@@ -5,17 +5,8 @@
    - record as well as from all records related to the given PID 
    - hierarchically.
    -
-   - Besides those fiels normally recognized by Virgo, this transformation
-   - includes the special purpose fields:
-   - hierarchy_display, full_hierarchy_display - contain an XML summary of
-   -        the descendants of the record.
-   - breadcrumbs_display - contains an XML summary of the ancestors of the
-   -        record.
-   - scope_content_display - contains the HTML formatted scope content
-   - container_display - contains XML information about the physical 
-   -        container in which the item described by the record exists.
-   - digitized_item_pid_display - contains the PID for the object in 
-   -        fedora that contains the digitized item.
+   - The live copy of this stylesheeet lives in the "XSLT" datastream of the 
+   - "uva-lib:indexableHierarchicalMetadataSDep" fedora object.
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -26,6 +17,7 @@
     xmlns:apia="http://www.fedora.info/definitions/1/0/access/"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:uva-rels="http://fedora.lib.virginia.edu/relationships#"
+    xmlns:ead1="urn:isbn:1-931666-22-9"
     exclude-result-prefixes="xs s marc doc mapping apia rdf uva-rels"
     version="2.0">
 
@@ -38,9 +30,11 @@
     </xsl:variable>
 
     <xsl:output byte-order-mark="no" encoding="UTF-8" media-type="text/xml" xml:space="preserve" indent="yes"/>
-    
+
     <xsl:param name="fedora-host" required="no">fedora-prod02.lib.virginia.edu</xsl:param>
     <xsl:param name="fedora-proxy" required="no">http://fedoraproxy.lib.virginia.edu/fedora</xsl:param>
+    <xsl:param name="digitized-fedora-host" required="no">fedora-prod02.lib.virginia.edu</xsl:param>  
+  
     <xsl:param name="pid" required="yes" />
     <xsl:param name="debug" required="no" />
     <xsl:param name="released-facet" required="no" />
@@ -74,7 +68,9 @@
             <doc>
                 <field name="id"><xsl:value-of select="$pid"/></field>
                 <field name="source_facet">UVA Library Digital Repository</field>
-                <field name="format_facet">Manuscripts &amp; Rare Materials</field>
+                <field name="feature_facet">suppress_ris_export</field>
+                <field name="feature_facet">suppress_refworks_export</field>
+                <field name="feature_facet">suppress_endnote_export</field>
                 <xsl:if test="$released-facet">
                     <field name="released_facet"><xsl:value-of select="$released-facet" /></field>
                 </xsl:if>
@@ -119,7 +115,7 @@
                 <xsl:call-template name="index-ancestors">
                     <xsl:with-param name="ancestors" select="$ancestors" />
                 </xsl:call-template>
-                    
+                      
                 <!-- Add the breadcrumbs display -->
                 <field name="breadcrumbs_display">
                     <xsl:text>&lt;breadcrumbs&gt;</xsl:text>
@@ -128,18 +124,9 @@
                         <xsl:text>&lt;id&gt;</xsl:text><xsl:value-of select="pid" /><xsl:text>&lt;/id&gt;</xsl:text>
                         
                         <xsl:variable name="title">
-                            <xsl:choose>
-                                <xsl:when test="current()//ead/frontmatter/titlepage/titleproper">
-                                    <xsl:for-each select="current()//ead/frontmatter/titlepage/titleproper//text()">
-                                        <xsl:value-of select="current()" />
-                                    </xsl:for-each>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:for-each select="current()//did/unittitle//text()">
-                                        <xsl:value-of select="current()" />
-                                    </xsl:for-each>
-                                </xsl:otherwise>
-                            </xsl:choose>
+                            <xsl:for-each select="current()//did/unittitle//text()">
+                                <xsl:value-of select="current()" />
+                            </xsl:for-each>
                         </xsl:variable>
                         
                         <xsl:text>&lt;title&gt;</xsl:text>
@@ -149,12 +136,42 @@
                     </xsl:for-each>
                     <xsl:text>&lt;/breadcrumbs&gt;</xsl:text>
                 </field>
+              
+              <!-- Build citation display -->
+              <xsl:if test="$ancestors/ancestor">
+                <field name="feature_facet">has_citation</field>
+                <field name="modified_chicago_citation_display">
+                  <xsl:value-of select="//did/unittitle/text()[normalize-space(.)]" />
+                  <xsl:text>, </xsl:text>
+                  <xsl:value-of select="//unitdate/text()[normalize-space(.)]" />
+                  <xsl:text>, </xsl:text>
+                  <xsl:for-each select="//container[1]">
+                      <xsl:value-of select="@label" /><xsl:text> </xsl:text><xsl:value-of select="text()" />  
+                  </xsl:for-each>
+                  <xsl:text>, </xsl:text>
+                  <xsl:value-of select="normalize-space($ancestors/ancestor[1]/xmlcontent/ead/eadheader[1]/filedesc[1]/titlestmt[1]/titleproper[1])" />
+                  <xsl:text>, </xsl:text>
+                  <xsl:value-of select="normalize-space($ancestors/ancestor[1]/xmlcontent/ead/archdesc[1]/did[1]/repository[1])" />
+                </field>
+              </xsl:if>
                 
                 <!-- Add the hierarchy display -->
-                <xsl:variable name="summary" select="unparsed-text(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/methods/uva-lib:hierarchicalMetadataSDef/getSummary'))" />
+                <xsl:variable name="summaryUrl" select="concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/methods/uva-lib:hierarchicalMetadataSDef/getSummary')" />
+              <xsl:if test="$debug">
+                <xsl:comment>Including summary from "<xsl:value-of select="$summaryUrl" />"...</xsl:comment>
+              </xsl:if>
+                <xsl:variable name="summary" select="unparsed-text($summaryUrl)" />
+                <field name="feature_facet">has_hierarchy</field>
                 <field name="hierarchy_display">
                     <xsl:value-of select="$summary" />
                 </field>
+              
+              <!-- Add the full EAD snippet -->
+              <xsl:variable name="raw" select="unparsed-text(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/methods/uva-lib:descMetadataSDef/getMetadataAsEADFragment'))" />
+              <field name="feature_facet">has_ead_fragment</field>
+              <field name="raw_ead_display">
+                <xsl:value-of select="$raw" />
+              </field>
                 
                 <!-- Add the container information -->
                 <xsl:variable name="container">
@@ -164,6 +181,7 @@
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:if test="string-length($container) &gt; 0">
+                    <field name="feature_facet">has_archival_holdings</field>
                     <field name="container_display">
                         <xsl:copy-of select="$container" />
                     </field>
@@ -184,19 +202,6 @@
     <doc:doc>
         <doc:desc>
             <doc:ul>
-                <doc:li mapping:type="solrField">repository_name_display</doc:li>
-            </doc:ul>
-        </doc:desc>
-    </doc:doc>
-    <xsl:template match="ead/archdesc/did/repository" mode="#all">
-        <field name="repository_name_display">
-            <xsl:value-of select="normalize-space(text())"></xsl:value-of>
-        </field>
-    </xsl:template>
-    
-    <doc:doc>
-        <doc:desc>
-            <doc:ul>
                 <doc:li mapping:type="solrField">call_number_display</doc:li>
                 <doc:li mapping:type="solrField">call_number_facet</doc:li>
             </doc:ul>
@@ -212,6 +217,7 @@
             <doc:ul>
                 <doc:li mapping:type="solrField">creator_display</doc:li>
                 <doc:li mapping:type="solrField">author_facet</doc:li>
+              <doc:li mapping:type="solrField">author_text</doc:li>
             </doc:ul>
         </doc:desc>
     </doc:doc>
@@ -230,7 +236,37 @@
         <field name="author_facet">
             <xsl:value-of select="$creator"></xsl:value-of>
         </field>
+      <field name="author_text">
+        <xsl:value-of select="$creator"></xsl:value-of>
+      </field>
     </xsl:template>
+  
+  <doc:doc>
+    <doc:desc>
+      <doc:ul>
+        <doc:li mapping:type="solrField">creator_display</doc:li>
+        <doc:li mapping:type="solrField">author_facet</doc:li>
+        <doc:li mapping:type="solrField">author_text</doc:li>
+      </doc:ul>
+    </doc:desc>
+  </doc:doc>
+  <xsl:template match="origination/*[@role='creator']" mode="primary">
+    <xsl:variable name="creator">
+        <xsl:value-of select="text()" />
+    </xsl:variable>
+    <field name="creator_display">
+      <xsl:value-of select="$creator"></xsl:value-of>
+    </field>
+    <field name="creator_text">
+      <xsl:value-of select="$creator"></xsl:value-of>
+    </field>
+    <field name="author_facet">
+      <xsl:value-of select="$creator"></xsl:value-of>
+    </field>
+    <field name="author_text">
+      <xsl:value-of select="$creator"></xsl:value-of>
+    </field>
+  </xsl:template>
     
     <doc:doc>
         <doc:desc>
@@ -240,21 +276,50 @@
             </doc:ul>
         </doc:desc>
     </doc:doc>
-    <xsl:template match="unitdate" mode="primary">
-        <field name="date_display">
-            <xsl:value-of select="text()" />
-        </field>
-        <!--
-            We'll have to parse out the date into something structured
-        
-        <field name="year_multisort_i">
-            
-        </field>
-        -->
-        <!-- this is hard-coded for now -->
-        <field name="published_date_facet">
+    <xsl:template match="unitdate[1]" mode="primary">
+      <field name="date_display">
+        <xsl:value-of select="text()" />
+      </field>
+      <xsl:choose>
+        <xsl:when test="@normal">
+          <xsl:variable name="year" select="substring(@normal, 1, 4)" />
+          <field name="year_multisort_i">
+            <xsl:value-of select="$year"></xsl:value-of>
+          </field>
+          <xsl:variable name="age"
+            select="number(substring(string(current-date()), 1, 4)) - number($year)" />
+          <xsl:if test="$age &lt;= 1">
+            <field name="published_date_facet">
+              <xsl:text>This year</xsl:text>
+            </field>
+          </xsl:if>
+          <xsl:if test="$age &lt;= 3">
+            <field name="published_date_facet">
+              <xsl:text>Last 3 years</xsl:text>
+            </field>
+          </xsl:if>
+          <xsl:if test="$age &lt;= 10">
+            <field name="published_date_facet">
+              <xsl:text>Last 10 years</xsl:text>
+            </field>
+          </xsl:if>
+          <xsl:if test="$age &lt;= 50">
+            <field name="published_date_facet">
+              <xsl:text>Last 50 years</xsl:text>
+            </field>
+          </xsl:if>
+          <xsl:if test="$age &gt; 50">
+            <field name="published_date_facet">
+              <xsl:text>More than 50 years ago</xsl:text>
+            </field>
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <field name="published_date_facet">
             <xsl:text>More than 50 years ago</xsl:text>
-        </field>
+          </field>  
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:template>
     
     <doc:doc>
@@ -319,54 +384,58 @@
     <doc:doc>
         <doc:desc>
             <doc:ul>
-                <doc:li mapping:type="solrField">scope_content_display</doc:li>
-                <doc:li mapping:type="solrField">scope_content_text</doc:li>
+                <doc:li mapping:type="solrField">scopecontent_display</doc:li>
+                <doc:li mapping:type="solrField">scopecontent_text</doc:li>
             </doc:ul>
         </doc:desc>
     </doc:doc>
     <xsl:template match="scopecontent" mode="primary">
+      <!-- This section will no longer be necessary after the changes made for
+           the Reed collection are deployed in April 2015.  It is useful during
+           the transition period becuase it allows the old code to display the
+           updated records properly and doesn't interfere with the new code-->
+        <field name="scope_content_display">
+          <xsl:text>&lt;scopecontent&gt;</xsl:text>
+          <xsl:for-each select="current()/p">
+            <xsl:variable name="p">
+              <xsl:for-each select="current()//text()">
+                <xsl:text>&lt;![CDATA[</xsl:text>
+                <xsl:value-of select="current()" />
+                <xsl:text>]]&gt;</xsl:text>
+              </xsl:for-each>
+            </xsl:variable>
+            <xsl:text>&lt;p&gt;</xsl:text>
+            <xsl:value-of select="normalize-space($p)" />
+            <xsl:text>&lt;/p&gt;</xsl:text>
+          </xsl:for-each>
+          <xsl:text>&lt;/scopecontent&gt;</xsl:text>
+        </field>
+        <!-- end of section to remove after April 2015 -->
+      
         <xsl:variable name="content">
             <xsl:for-each select="current()//text()">
                 <xsl:value-of select="current()" />
             </xsl:for-each>
         </xsl:variable>
-        <field name="scope_content_text"><xsl:value-of select="normalize-space($content)" /></field>
+        <field name="scopecontent_text"><xsl:value-of select="normalize-space($content)" /></field>
         
-        <field name="scope_content_display">
-          <xsl:text>&lt;scopecontent&gt;</xsl:text>
+        <field name="scopecontent_display">
             <xsl:for-each select="current()/p">
                 <xsl:variable name="p">
                     <xsl:for-each select="current()//text()">
-                        <xsl:text>&lt;![CDATA[</xsl:text>
-                            <xsl:value-of select="current()" />
-                        <xsl:text>]]&gt;</xsl:text>
+                        <xsl:value-of select="current()" />
                     </xsl:for-each>
                 </xsl:variable>
                 <xsl:text>&lt;p&gt;</xsl:text>
                     <xsl:value-of select="normalize-space($p)" />
                 <xsl:text>&lt;/p&gt;</xsl:text>
             </xsl:for-each>
-        <xsl:text>&lt;/scopecontent&gt;</xsl:text>
         </field>
     </xsl:template>
     
     <doc:doc>
         <doc:desc>
             <doc:ul>
-                <doc:li mapping:type="solrField">extent_display</doc:li>
-                <doc:li mapping:type="solrField">extent_text</doc:li>
-            </doc:ul>
-        </doc:desc>
-    </doc:doc>
-    <xsl:template match="physdesc[@label='Extent' or @label='extent']" mode="primary">
-        <field name="extent_display"><xsl:value-of select="text()" /></field>
-        <field name="extent_text"><xsl:value-of select="text()" /></field>
-    </xsl:template>
-    
-    <doc:doc>
-        <doc:desc>
-            <doc:ul>
-                <doc:li mapping:type="solrField">collection_abstract_display</doc:li>
                 <doc:li mapping:type="solrField">colleciton_abstract_text</doc:li>
             </doc:ul>
         </doc:desc>
@@ -377,44 +446,29 @@
                 <xsl:value-of select="current()" />
             </xsl:for-each>
         </xsl:variable>
-        <field name="collection_abstract_display" boost="0.5"><xsl:value-of select="normalize-space($abstract)" /></field>
         <field name="collection_abstract_text" boost="0.5"><xsl:value-of select="normalize-space($abstract)" /></field>
     </xsl:template>
     
-    <doc:doc>
-        <doc:desc>
-            <doc:p>
-                This template matches any did/physdec with the text value of 'Map'and 
-                builds the <doc:b mapping:type="solrField">format_facet</doc:b> and 
-                <doc:b mapping:type="solrField">format_text</doc:b> SOLR fields from
-                the various nested elements. 
-            </doc:p>
-        </doc:desc>
-    </doc:doc>
-    <xsl:template match="did/physdesc[text() = 'MAP']" mode="primary">
-        <field name="format_facet">Map</field>
-        <field name="format_text">Map</field>
+    <xsl:template match="did/physdesc/extent" mode="primary">
+        <field name="extent_display"><xsl:value-of select="text()" /></field>
+        <field name="extent_text"><xsl:value-of select="text()" /></field>
+        
     </xsl:template>
     
-    <doc:doc>
-        <doc:desc>
-            <doc:p>
-                This template matches any did/langmaterial/language with the text value of 'Map'and 
-                builds the <doc:b mapping:type="solrField">language_facet</doc:b> SOLR field from
-                the english rendering of the language specified by the given language code.
-            </doc:p>
-        </doc:desc>
-    </doc:doc>
-    <xsl:template match="did/langmaterial/language/@langcode" mode="primary">
-        <xsl:if test="not(current()='zxx')">
-            <xsl:variable name="languageCodeMapping" select="document($iso6392)" />
-            <field name="language_facet">
-                <xsl:value-of select="$languageCodeMapping/languages/language/english[../code/text()=current()]" />
-            </field>
-        </xsl:if>
-        <field name="language_facet">Map</field>
-        <field name="format_text">Map</field>
+    <xsl:template match="did/langmaterial/language" mode="primary">
+        <field name="language_facet"><xsl:value-of select="text()" /></field>
+        <field name="language_display"><xsl:value-of select="text()" /></field>
     </xsl:template>
+  
+    <xsl:template match="controlaccess/genreform" mode="primary">
+      <field name="format_display"><xsl:value-of select="text()" /></field>
+      <field name="format_text"><xsl:value-of select="text()" /></field>
+    </xsl:template>
+  
+  <xsl:template match="container" mode="primary">
+    <field name="location_display"><xsl:value-of select="@label" /><xsl:text> </xsl:text><xsl:value-of select="text()" /></field>
+    <field name="location_text"><xsl:value-of select="@label" /><xsl:text> </xsl:text><xsl:value-of select="text()" /></field>
+  </xsl:template>
     
     <doc:doc>
         <doc:desc>
@@ -481,7 +535,7 @@
         <doc:desc>
             <doc:ul>
                 <doc:li mapping:type="solrField" mapping:sourceXPath="'ead/@id">ead_id_text</doc:li>
-                <doc:li mapping:type="solrField" mapping:sourceXPath="'collection">hierarchy_level_facet</doc:li>
+                <doc:li mapping:type="solrField" mapping:sourceXPath="'collection">hierarchy_level_display</doc:li>
             </doc:ul>
         </doc:desc>
     </doc:doc>
@@ -489,7 +543,8 @@
         <xsl:if test="@id">
             <field name="ead_id_text" boost="2.0"><xsl:value-of select="@id" /></field>
         </xsl:if>
-        <field name="hierarchy_level_facet">collection</field>
+        <field name="hierarchy_level_display">collection</field>
+        <field name="feature_facet">display_ead_fragment</field>
         <xsl:if test="$debug">
             <xsl:comment>Matched EAD</xsl:comment>
         </xsl:if>
@@ -506,7 +561,7 @@
     
     <doc:doc>
         <doc:desc>
-            <doc:p mapping:type="solrField" mapping:sourceXPath="node()[starts-with(name(), 'c0')]/@level">hierarchy_level_facet</doc:p>
+            <doc:p mapping:type="solrField" mapping:sourceXPath="node()[starts-with(name(), 'c0')]/@level">hierarchy_level_display</doc:p>
             <doc:p mapping:type="solrField" mapping:sourceXPath="'http://fedoraproxy.lib.virginia.edu/fedora' (if item is digitized)">repository_address_display</doc:p>
             <doc:p mapping:type="solrField" mapping:sourceXPath="id of the digized version of the item">digitized_item_pid_display</doc:p>
             <doc:p mapping:type="solrField" mapping:sourceXPath="'Online' if the item is digitized">format_facet</doc:p>
@@ -516,7 +571,10 @@
         <xsl:if test="$debug">
             <xsl:comment>Matched <xsl:value-of select="name()" /></xsl:comment>
         </xsl:if>
-        <field name="hierarchy_level_facet"><xsl:value-of select="@level" /></field>
+        <field name="hierarchy_level_display"><xsl:value-of select="@level" /></field>
+        <xsl:if test="not(@level eq 'item' or @level eq 'file')">
+          <field name="feature_facet">display_ead_fragment</field>
+        </xsl:if>
         <!--<field name="format_facet"><xsl:value-of select="@level" /></field>-->
         
         <xsl:if test="@level='item'">
@@ -529,9 +587,27 @@
                 <xsl:variable name="digitizedItemPid" select="substring($digitizedItemUri, 13)" />
                 <field name="digitized_item_pid_display"><xsl:value-of select="$digitizedItemPid" /></field>
                 <field name="repository_address_display"><xsl:value-of select="$fedora-proxy" /></field>
+                <field name="feature_facet">has_djatoka_image</field>
                 <field name="format_facet"><xsl:text>Online</xsl:text></field>
             </xsl:if>
         </xsl:if>
+    </xsl:template>
+  
+    <xsl:template match="//unitid[@audience='internal']" mode="primary">
+      <xsl:variable name="encodedTextUri">
+        <xsl:call-template name="lookupTeiObject">
+          <xsl:with-param name="itemPid" select="$pid" />
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="$encodedTextUri != ''">
+        <xsl:variable name="encodedTextPid" select="substring($encodedTextUri, 13)" />
+        <field name="feature_facet">has_tei</field>
+        <xsl:variable name="teiUrl" select="concat('http://', $fedora-host, ':8080/fedora/objects/', $encodedTextPid, '/datastreams/encodedText/content')" />
+        <field name="tei_url_display"><xsl:value-of select="$teiUrl" /></field>
+        <field name="fulltext_text">
+          <xsl:value-of select="document($teiUrl)//text()" />
+        </field>
+      </xsl:if>
     </xsl:template>
     
     <xsl:template match="record" mode="#all">
@@ -626,7 +702,7 @@
             </doc:p>
         </doc:desc>
     </doc:doc>
-    <xsl:template match="record/datafield[@tag='650']/subfield[@code='a']" mode="primary">
+  <xsl:template match="record/datafield[@tag='650']/subfield[@code='a'] | subject[@encodinganalog='650'] | ead1:subject[@encodinganalog='650']" mode="primary">
         <field name="subject_facet"><xsl:value-of select="text()" /></field>
         <field name="subject_text"><xsl:value-of select="text()" /></field>
     </xsl:template>
@@ -836,7 +912,7 @@
     <xsl:template name="lookupDigitizedObject">
         <xsl:param name="itemPid" required="yes" />
         <xsl:variable name="lookupObject">
-            <xsl:text>http://</xsl:text><xsl:value-of select="$fedora-host" /><xsl:text>:8080/fedora/risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24real%20from%20%3C%23ri%3E%20where%20%3Cinfo%3Afedora%2F</xsl:text>
+          <xsl:text>http://</xsl:text><xsl:value-of select="$digitized-fedora-host" /><xsl:text>:8080/fedora/risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24real%20from%20%3C%23ri%3E%20where%20%3Cinfo%3Afedora%2F</xsl:text>
             <xsl:value-of select="$itemPid" />
             <xsl:text>%3E%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23isPlaceholderFor%3E%20%24real</xsl:text>
         </xsl:variable>
@@ -860,17 +936,35 @@
             <xsl:value-of select="$result" />
         </xsl:if>
     </xsl:template>
+  
+  <!-- Performs a fedora resource index query that will return the object uri of the 
+        tei of the provided item if a tei exists for that item.
+    -->
+  <xsl:template name="lookupTeiObject">
+    <xsl:param name="itemPid" required="yes" />
+    <xsl:variable name="lookupTei">
+      <xsl:text>http://</xsl:text><xsl:value-of select="$fedora-host" /><xsl:text>:8080/fedora/risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24tei%20from%20%3C%23ri%3E%20where%20%24tei%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23isEncodedTextFor%3E%20%3Cinfo%3Afedora%2F</xsl:text>
+      <xsl:value-of select="$itemPid" />
+      <xsl:text>%3E</xsl:text>
+    </xsl:variable>
+    <xsl:if test="$debug">
+      <xsl:message terminate="no">
+        Querying for the encoded text version of <xsl:value-of select="$itemPid" /> using query: <xsl:value-of select="$lookupTei" />
+      </xsl:message>
+    </xsl:if>
+    <xsl:variable name="result" select="document($lookupTei)" />
+    <xsl:value-of select="$result/s:sparql/s:results/s:result/s:tei/@uri" />
+  </xsl:template>
+  
     
     <!-- Performs a fedora resource index query that will return the object uri of the 
         exemplar (digital representation) of the provided item if a digitized version
         exists for that item.
-        
-        This template isn't currently used.
     -->
     <xsl:template name="lookupDigitizedExemplar">
         <xsl:param name="itemPid" required="yes" />
         <xsl:variable name="lookupExemplars">
-            <xsl:text>http://</xsl:text><xsl:value-of select="$fedora-host" /><xsl:text>:8080/fedora/risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24exemplar%20from%20%3C%23ri%3E%20where%20%3Cinfo%3Afedora%2F</xsl:text>
+          <xsl:text>http://</xsl:text><xsl:value-of select="$digitized-fedora-host" /><xsl:text>:8080/fedora/risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24exemplar%20from%20%3C%23ri%3E%20where%20%3Cinfo%3Afedora%2F</xsl:text>
             <xsl:value-of select="$itemPid" />
             <xsl:text>%3E%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasExemplar%3E%20%24exemplar</xsl:text>
         </xsl:variable>
@@ -879,7 +973,8 @@
                 Querying for the exemplar digitized version of <xsl:value-of select="$itemPid" /> using query: <xsl:value-of select="$lookupExemplars" />
             </xsl:message>
         </xsl:if>
+        
         <xsl:value-of select="substring(document($lookupExemplars)/s:sparql/s:results/s:result/s:exemplar/@uri, 13)"></xsl:value-of>
     </xsl:template>
-    
+      
 </xsl:stylesheet>
