@@ -384,6 +384,13 @@
 						<xsl:text>, </xsl:text>
 						<xsl:value-of select="$term-of-address"/>
 					</xsl:when>
+				  <xsl:when test="current()/mods:namePart[not(@type)]">
+				    <xsl:value-of select="current()/mods:namePart[not(@type)]" />
+				    <xsl:if test="current()/mods:namePart[@type='termsOfAddress']">
+				      <xsl:text>, </xsl:text>
+				      <xsl:value-of select="$terms-of-address"/>
+				    </xsl:if>
+				  </xsl:when>
 					<xsl:when
 						test="contains(current()/mods:namePart[not(@type = 'date')][not(@type = 'termsOfAddress')][1], ',') and count(current()/mods:namePart) = 1">
 						<xsl:value-of select="current()/mods:namePart[1]"/>
