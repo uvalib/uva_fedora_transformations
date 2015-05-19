@@ -55,8 +55,8 @@
 	</xsl:param>
 
 	<!-- If this item belongs to a specific collection of objects, that information should be encoded in the above mentioned XPath location. -->
-	<xsl:param name="collectionName"
-		select="//relatedItem[@type='series' and @displayLabel='Part of']/titleInfo[1]/title[1]"/>
+	<!--<xsl:param name="collectionName"
+		select="//relatedItem[@type='series' and @displayLabel='Part of']/titleInfo[1]/title[1]"/>-->
 
 	<!-- Global Variables -->
 	<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz    '"/>
@@ -74,12 +74,14 @@
 				</field>
 				<!-- At this time, no Holsinger items will have MARC in them, so this value can be set to false -->
 		                <field name="marc_display_facet">false</field>
+				<xsl:for-each select="//relatedItem[@type='series' and @displayLabel='Part of']/titleInfo/title">
 				<field name="digital_collection_facet">
-					<xsl:value-of select="$collectionName"/>
+					<xsl:value-of select="."/>
 				</field>
 				<field name="digital_collection_text">
-					<xsl:value-of select="$collectionName"/>
+					<xsl:value-of select="."/>
 				</field>
+					</xsl:for-each>
 				<field name="content_model_facet">
 					<xsl:value-of select="$contentModel"/>
 				</field>
@@ -707,7 +709,7 @@
 								select="fn:dateTime(xs:date('1999-12-31'), xs:time('23:59:59'))"
 							/>Z</field>
 					</xsl:when>
-					<xsl:when test="$collectionName = 'Holsinger Studio Collection'">
+					<xsl:when test="//relatedItem[@type='series' and @displayLabel='Part of']/titleInfo[1]/title[1]/text() = 'Holsinger Studio Collection'">
 						<field name="date_received_facet">2010-02-01T00:00:00Z</field>
 					</xsl:when>
 					<xsl:otherwise>
