@@ -27,7 +27,7 @@
      
 	<!-- Datetime that this index record was produced.  Format:YYYYMMDDHHMM -->
 	<xsl:param name="dateIngestNow">
-		<xsl:value-of select="false()"/>
+		<xsl:value-of select="true()"/>
 	</xsl:param>
 	
 	<xsl:param name="policyFacet">
