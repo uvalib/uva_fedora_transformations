@@ -116,7 +116,7 @@
 
 				<!-- call number -->
 
-				<xsl:for-each select="//mods:identifier">
+				<xsl:for-each select="//mods:identifier/text()">
 					<xsl:if test="@type='accessionNumber'">
 						<field name="call_number_display">
 							<xsl:value-of select="current()"/>
