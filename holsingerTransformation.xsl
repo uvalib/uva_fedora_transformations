@@ -244,7 +244,7 @@
 				</xsl:for-each>
 
 				<!-- place -->
-				<xsl:for-each select="//place/placeTerm[not(@authority='marccountry')]">
+				<xsl:for-each select="//place/placeTerm[not(@authority='marccountry')]/text()">
 					<xsl:choose>
 						<xsl:when test="current()/text()= ''"/>
 						<xsl:otherwise>
