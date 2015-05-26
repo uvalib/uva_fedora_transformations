@@ -116,8 +116,9 @@
 
 				<!-- call number -->
 
-				<xsl:for-each select="//mods:identifier/text()">
-					<xsl:if test="@type='accessionNumber'">
+				
+				<xsl:for-each select="/mods:mods/mods:identifier">
+					<xsl:if test="/mods:mods/mods:identifier/text() and @type='accessionNumber'">
 						<field name="call_number_display">
 							<xsl:value-of select="current()"/>
 						</field>
@@ -126,7 +127,7 @@
 						</field>
 					</xsl:if>
 				</xsl:for-each>
-
+				
 
 				<!-- title -->
 				<xsl:for-each select="//mods:title">
