@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.1"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 	xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:uva="http://fedora.lib.virginia.edu/relationships#">
 
@@ -1255,7 +1255,7 @@
 	
 	<xsl:template name="build-dates">
 		<xsl:param name="date-node" select="'No node sent to template build-dates'"/>
-		<xsl:variable name="mode" select="'primary'"/>
+		<xsl:param name="mode" select="'primary'"/>
 		<xsl:for-each select="$date-node">
 			<xsl:variable name="yearOnly">
 				<xsl:choose>
