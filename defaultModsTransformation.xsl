@@ -388,7 +388,7 @@
 				    <xsl:value-of select="current()/mods:namePart[not(@type)]" />
 				    <xsl:if test="current()/mods:namePart[@type='termsOfAddress']">
 				      <xsl:text>, </xsl:text>
-				      <xsl:value-of select="$terms-of-address"/>
+				      <xsl:value-of select="$term-of-address"/>
 				    </xsl:if>
 				  </xsl:when>
 					<xsl:when
