@@ -191,9 +191,9 @@
 				<xsl:call-template name="getSeries">
 					<xsl:with-param name="mode" select="'primary'"/>
 				</xsl:call-template>
-				<xsl:call-template name="getCopyInformation">
+<!--				<xsl:call-template name="getCopyInformation">
 					<xsl:with-param name="mode" select="'primary'"/>
-				</xsl:call-template>
+				</xsl:call-template> -->
 
 				<!-- Test for deprecated method of determing whether the record is to be shadowed.  Otherwise, use newer method of relying upon descMetadata. -->
 				<xsl:choose>
