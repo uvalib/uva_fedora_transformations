@@ -8,7 +8,6 @@
 	<!-- created by M. Stephens (ms3uf) on Jan 14/2010 	-->
 	<!-- modified by Andrew Curley (aec6v) on November 10, 2011 -->
 	<!-- modified by Jocelyn Triplett (jbo3d) June 4, 2014 -->
-	<!-- testing JIRA github stuff -->
 
 	<!-- Required Parameters -->
 	<!-- Unique identifier for object -->
