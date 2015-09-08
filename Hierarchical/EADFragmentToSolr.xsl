@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
    - An XSLT that takes an EAD-fragment along with a fedora PID and builds
    - a SOLR index document that contains the information directly from that
@@ -192,6 +192,14 @@
                     <xsl:with-param name="pid" select="$pid" />
                     <xsl:with-param name="mode" select="'primary'"/>
                 </xsl:call-template>
+                
+                <!-- Add any hard-coded fields -->
+                <xsl:variable name="additional-solr-fields" select="document(concat('http://', $fedora-host, ':8080/fedora/objects/', $pid, '/datastreams/additional-solr-fields/content'))" />
+                <xsl:if test="$additional-solr-fields">
+				  <xsl:for-each select="$additional-solr-fields/add/doc/*">
+					<xsl:copy-of select="current()" />
+				  </xsl:for-each>
+                </xsl:if>
             </doc>
         </add>
     </xsl:template>
