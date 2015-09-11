@@ -417,7 +417,8 @@
 			</field>
 			<xsl:variable name="special-role">
 				<xsl:if	test="current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))]"> 
-					<xsl:value-of select="translate(current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))], $periods, $noperiods)"/>
+					<xsl:value-of select="translate((current()/mods:role/mods:roleTerm[not(@type='code')][not(contains(., 'creator'))])[1], $periods, $noperiods)"/>
+					<!--  If there are multiple roles, we're only using the first here. Need to review if that's OK or should they be appended? -->
 				</xsl:if>
 			</xsl:variable>
 			<xsl:variable name="authorDisplayFacet">
