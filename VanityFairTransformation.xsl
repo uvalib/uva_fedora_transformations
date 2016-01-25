@@ -402,21 +402,6 @@
 						</xsl:otherwise>
 					</xsl:choose></xsl:if>
 
-					<!-- The following is commented because the special-role is no longer needed.  11/10/11 -->
-					<!--
-					<xsl:variable name="special-role">
-						<xsl:if test="current()/role/roleTerm[not(@type='code')][not(contains(., 'creator'))]"> (<xsl:value-of select="current()/role/roleTerm[not(@type='code')][not(contains(., 'creator'))]"/>)</xsl:if>
-					</xsl:variable>
-					<xsl:choose>
-						<xsl:when test="child::namePart[@type='date']">
-							<field name="author_display"><xsl:value-of select="$nameFull"/>, <xsl:value-of select="child::namePart[@type='date']/text()"/><xsl:value-of select="$special-role"/></field>
-						</xsl:when>
-						<xsl:otherwise>
-							<field name="author_display"><xsl:value-of select="$nameFull"/><xsl:value-of select="$special-role"/></field>
-						</xsl:otherwise>
-					</xsl:choose>
-					-->
-
 					<xsl:choose>
 						<xsl:when test="position() = 1 and child::mods:namePart[@type='date']">
 							<field name="author_sort_facet">
