@@ -493,6 +493,23 @@
 					</field>
 				</xsl:for-each>
 
+				<!-- Collection-specific facets -->
+				
+				<field name="has_optional_facet">Category</field>
+				<field name="has_optional_facet">Group</field>
+				<field name="has_optional_facet">Signature</field>
+				
+				<field name="Category">
+					<xsl:value-of select="/mods/note[@displayLabel='Category']"></xsl:value-of>
+				</field>
+				<field name="Group">
+					<xsl:value-of select="/mods/note[@displayLabel='Group']/substring-before(.,',')"></xsl:value-of>
+				</field>
+				<field name="Signature">
+					<xsl:value-of select="/mods/note[@displayLabel='Signature']"></xsl:value-of>
+				</field>
+				
+				
 				<!-- date (range) -->
 				<xsl:for-each select="/mods/relatedItem[1]/originInfo[1]">
 					<field name="startDate_text">
