@@ -4,10 +4,9 @@
 	xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	exclude-result-prefixes="mods fn xs">
 
-	<!-- UVA-LIB stylesheet for converting Holsinger Collection MODS to SOLR -->
-	<!-- created by M. Stephens (ms3uf) on Jan 14/2010 	-->
-	<!-- modified by Andrew Curley (aec6v) on November 10, 2011 -->
-	<!-- modified by Jocelyn Triplett (jbo3d) June 4, 2014 -->
+	<!-- UVA-LIB stylesheet for converting Vanity Fair Collection MODS to SOLR -->
+	<!-- Based on https://github.com/uvalib/uva_fedora_transformations/blob/master/holsingerTransformation.xsl created by Matthew Stephens-->
+	<!-- modified by Jocelyn Triplett Jan 2016 -->
 
 	<!-- Required Parameters -->
 	<!-- Unique identifier for object -->
