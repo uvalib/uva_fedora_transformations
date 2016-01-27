@@ -568,6 +568,29 @@
 					</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
+				
+				<!-- Collection-specific Facets -->
+				
+				<!-- Vanity Fair -->
+				<xsl:choose>
+				 	<xsl:when test="//mods/relatedItem[@type='series'][@displayLabel='Part of']/titleInfo/title/text()='Cecil Lang Collection of Vanity Fair Illustrations'">
+						<field name="has_optional_facet">Category</field>
+						<field name="has_optional_facet">Group</field>
+						<field name="has_optional_facet">Signature</field>
+				
+						<field name="Category">
+							<xsl:value-of select="//mods/note[@displayLabel='Category']"></xsl:value-of>
+						</field>
+						<field name="Group">
+							<xsl:value-of select="//mods/note[@displayLabel='Group']/substring-before(.,',')"></xsl:value-of>
+						</field>
+						<field name="Signature">
+							<xsl:value-of select="//mods/note[@displayLabel='Signature']"></xsl:value-of>
+						</field>
+					</xsl:when>
+				</xsl:choose>
+				
+				<!-- End of Collection-specific Facets -->
 
 				<!-- genre -->
 				<xsl:for-each select="//mods/genre/text()">
