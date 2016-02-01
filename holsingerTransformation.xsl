@@ -574,17 +574,17 @@
 				<!-- Vanity Fair -->
 				<xsl:choose>
 				 	<xsl:when test="//mods/relatedItem[@type='series'][@displayLabel='Part of']/titleInfo/title/text()='Cecil Lang Collection of Vanity Fair Illustrations'">
-						<field name="has_optional_facet">Category</field>
-						<field name="has_optional_facet">Group</field>
-						<field name="has_optional_facet">Signature</field>
+						<field name="has_optional_facet">category_facet</field>
+						<field name="has_optional_facet">group_facet</field>
+						<field name="has_optional_facet">signature_facet</field>
 				
-						<field name="Category">
+						<field name="category_facet">
 							<xsl:value-of select="//mods/note[@displayLabel='Category']"></xsl:value-of>
 						</field>
-						<field name="Group">
+						<field name="group_facet">
 							<xsl:value-of select="//mods/note[@displayLabel='Group']/substring-before(.,',')"></xsl:value-of>
 						</field>
-						<field name="Signature">
+						<field name="signature_facet">
 							<xsl:value-of select="//mods/note[@displayLabel='Signature']"></xsl:value-of>
 						</field>
 					</xsl:when>
