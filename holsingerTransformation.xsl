@@ -569,28 +569,40 @@
 					</xsl:choose>
 				</xsl:for-each>
 				
-				<!-- Collection-specific Facets -->
+				<!-- Collection-specific Facets and Fields -->
 				
 				<!-- Vanity Fair -->
-				<xsl:choose>
-				 	<xsl:when test="//mods/relatedItem[@type='series'][@displayLabel='Part of']/titleInfo/title/text()='Cecil Lang Collection of Vanity Fair Illustrations'">
+				<xsl:if test="//mods/relatedItem[@type='series'][@displayLabel='Part of']/titleInfo/title/text()='Cecil Lang Collection of Vanity Fair Illustrations'">
 						<field name="has_optional_facet">category_facet</field>
 						<field name="has_optional_facet">group_facet</field>
 						<field name="has_optional_facet">signature_facet</field>
+					<xsl:if test="//mods/note[@displayLabel='Category']/text()">
+							<field name="category_facet">
+								<xsl:value-of select="//mods/note[@displayLabel='Category']"/>
+							</field>
+							<field name="category_display">
+								<xsl:value-of select="//mods/note[@displayLabel='Category']"/>
+							</field>
+					</xsl:if>
+					<xsl:if test="//mods/note[@displayLabel='Group']/text()">
+							<field name="group_facet">
+								<xsl:value-of select="//mods/note[@displayLabel='Group']/substring-before(.,',')"/>
+							</field>
+							<field name="group_display">
+								<xsl:value-of select="//mods/note[@displayLabel='Group']"/>
+							</field>
+					</xsl:if>
+					<xsl:if test="//mods/note[@displayLabel='Signature']/text()">
+							<field name="signature_facet">
+								<xsl:value-of select="//mods/note[@displayLabel='Signature']"/>
+							</field>
+							<field name="signature_display">
+								<xsl:value-of select="//mods/note[@displayLabel='Signature']"/>
+							</field>
+					</xsl:if>
+				</xsl:if>
 				
-						<field name="category_facet">
-							<xsl:value-of select="//mods/note[@displayLabel='Category']"></xsl:value-of>
-						</field>
-						<field name="group_facet">
-							<xsl:value-of select="//mods/note[@displayLabel='Group']/substring-before(.,',')"></xsl:value-of>
-						</field>
-						<field name="signature_facet">
-							<xsl:value-of select="//mods/note[@displayLabel='Signature']"></xsl:value-of>
-						</field>
-					</xsl:when>
-				</xsl:choose>
-				
-				<!-- End of Collection-specific Facets -->
+				<!-- End of Collection-specific Facets and Fields -->
 
 				<!-- genre -->
 				<xsl:for-each select="//mods/genre/text()">
