@@ -257,7 +257,7 @@
 				</xsl:for-each>
 
 				<!-- library facet -->
-				<xsl:for-each select="//location/physicalLocation[not(@authority='oclcorg')]">
+				<xsl:for-each select="/mods/location/physicalLocation[not(@authority='oclcorg')]">
 					<xsl:if test="current()/text() != ' '">
 						<field name="location_display">
 							<xsl:value-of select="current()/text()"/>
@@ -268,6 +268,7 @@
 							<xsl:when
 								test="./text()='Special Collections, University of Virginia Library, Charlottesville, Va.'"
 								>Special Collections</xsl:when>
+							
 							<xsl:when
 								test="./text()='Historical Collections &amp; Services, Claude Moore Health Sciences Library, Charlottesville, Va.'"
 								>Health Sciences</xsl:when>
