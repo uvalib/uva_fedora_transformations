@@ -6,7 +6,9 @@
 	<!-- Required Parameters -->
 
 	<!-- Unique identifier for object -->
-	<xsl:param name="pid" required="yes" />
+	<xsl:param name="pid">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
 
 	<!-- level of Solr publication for this object. -->
 	<xsl:param name="destination">
@@ -33,12 +35,18 @@
 	</xsl:param>
 
 	<!-- A URL to get the IIIF presentation metadata -->
-	<xsl:param name="iiifManifest" required="yes" />
+	<xsl:param name="iiifManifest">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
 	
-	<xsl:param name="iiifRoot" required="yes" />
+	<xsl:param name="iiifRoot">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
 	
-	<xsl:param name="exemplarPid" required="yes" />
-
+	<xsl:param name="exemplarPid">
+		<xsl:value-of select="false()"/>
+	</xsl:param>
+	
 	<!-- Will contain the transcription text of one object (in the case of an image object), or a concatenated string of all transcription text belonging to children objects (in the case of a bibliographic or colelction object). -->
 	<xsl:param name="totalTranscriptions">
 		<xsl:value-of select="false()"/>
