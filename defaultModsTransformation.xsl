@@ -6,15 +6,8 @@
 	<!-- Required Parameters -->
 
 	<!-- Unique identifier for object -->
-	<xsl:param name="pid">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="pid" required="yes" />
 
-	<!-- URL for Fedora repository that contains this object. -->
-	<xsl:param name="repository">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
-     
 	<!-- level of Solr publication for this object. -->
 	<xsl:param name="destination">
 		<xsl:value-of select="false()"/>
@@ -34,15 +27,17 @@
 		<xsl:value-of select="false()"/>
 	</xsl:param>
 
-	<!-- String used by blacklight to determine views.  Probably will be 'jp2k' in the case of image objects, sometimes 'digital book' for bibliographic records.  Unknown for component and EadRefs. -->
-	<xsl:param name="contentModel">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
-
 	<!-- Facet use for blacklight to group digital objects.  Default value: 'UVA Library Digital Repository'. -->
 	<xsl:param name="sourceFacet">
 		<xsl:value-of select="'UVA Library Digital Repository'"/>
 	</xsl:param>
+
+	<!-- A URL to get the IIIF presentation metadata -->
+	<xsl:param name="iiifManifest" required="yes" />
+	
+	<xsl:param name="iiifRoot" required="yes" />
+	
+	<xsl:param name="exemplarPid" required="yes" />
 
 	<!-- Will contain the transcription text of one object (in the case of an image object), or a concatenated string of all transcription text belonging to children objects (in the case of a bibliographic or colelction object). -->
 	<xsl:param name="totalTranscriptions">
@@ -69,16 +64,12 @@
 		<xsl:value-of select="false()"/>
 	</xsl:param>
 
-	<!-- Import object's RELS-EXT to build belongs_to_facet fields. -->
-	<xsl:param name="externalRelations">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
-
 	<!-- Optional Parameters -->
 	<!-- If this is a child object, we will need many of the fields of the parent included in the child (if it is going to be made uniquely discoverable). -->
 	<xsl:param name="parentModsRecord">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
+
 
 	<!-- If this item belongs to a specific collection of objects, that information should be encoded in the above mentioned XPath location. -->
 	<xsl:param name="digitalCollectionFacet"
@@ -116,14 +107,8 @@
 				<field name="date_received_text" source="{$mode}">
 					<xsl:value-of select="$dateReceived"/>
 				</field>
-				<field name="repository_address_display" source="{$mode}">
-					<xsl:value-of select="$repository"/>
-				</field>
 				<field name="released_facet" source="{$mode}">
 					<xsl:value-of select="$destination"/>
-				</field>
-				<field name="content_model_facet" source="{$mode}">
-					<xsl:value-of select="$contentModel"/>
 				</field>
 				
 				<xsl:if test="$policyFacet != 'false'">
@@ -145,6 +130,13 @@
 						<xsl:value-of select="$digitalCollectionFacet"/>
 					</field>
 				</xsl:if>
+				
+				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$exemplarPid" />/full/!125,125/0/default.jpg</field>
+				<field name="feature_facet">iiif</field>
+				<field name="feature_facet">dl_metadata</field>
+				<field name="iiif_presentation_metadata_display">
+					<xsl:value-of select="unparsed-text($iiifManifest)" />
+				</field>
 
 				<xsl:if test="$totalTranscriptions != 'false'">
 					<field name="text_searchable" source="{$mode}">
@@ -217,9 +209,6 @@
 						mode="secondary"/>
 				</xsl:if>
 
-				<!-- RELS-EXT RECORD TRANSFORMATION -->
-				<xsl:apply-templates select="document($externalRelations)" mode="tertiary"/>
-
 				<!-- ANALOG SOLR RECORD TRANSFORMATION -->
 				<xsl:apply-templates select="document($analogSolrRecord)" mode="quaternary"/>
 
@@ -252,13 +241,6 @@
 
 		<xsl:call-template name="getSeries">
 			<xsl:with-param name="mode" select="'secondary'"/>
-		</xsl:call-template>
-	</xsl:template>
-
-	<xsl:template match="rdf:RDF" mode="tertiary">
-		<xsl:variable name="mode" select="tertiary"/>
-		<xsl:call-template name="getBelongsToFacet">
-			<xsl:with-param name="mode" select="'tertiary'"/>
 		</xsl:call-template>
 	</xsl:template>
 
@@ -607,28 +589,6 @@
 			</field>
 			<field name="subject_genre_facet" source="{$mode}">
 				<xsl:value-of select="$text-content"/>
-			</field>
-		</xsl:for-each>
-	</xsl:template>
-
-	<xsl:template name="getBelongsToFacet">
-		<xsl:param name="mode"/>
-		<xsl:for-each
-			select="//rdf:Description/uva:hasCatalogRecordIn/@*[namespace-uri()='http://www.w3.org/1999/02/22-rdf-syntax-ns#' and local-name()='resource']">
-			<field name="belongs_to_facet" source="{$mode}">
-				<xsl:value-of select="substring-after(current(), '/')"/>
-			</field>
-		</xsl:for-each>
-		<xsl:for-each
-			select="//rdf:Description/uva:isConstituentOf/@*[namespace-uri()='http://www.w3.org/1999/02/22-rdf-syntax-ns#' and local-name()='resource']">
-			<field name="belongs_to_facet" source="{$mode}">
-				<xsl:value-of select="substring-after(current(), '/')"/>
-			</field>
-		</xsl:for-each>
-		<xsl:for-each
-			select="//rdf:Description/uva:hasMetadataIn/@*[namespace-uri()='http://www.w3.org/1999/02/22-rdf-syntax-ns#' and local-name()='resource']">
-			<field name="belongs_to_facet" source="{$mode}">
-				<xsl:value-of select="substring-after(current(), '/')"/>
 			</field>
 		</xsl:for-each>
 	</xsl:template>
