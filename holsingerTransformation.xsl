@@ -11,14 +11,13 @@
 
 	<!-- Required Parameters -->
 	<!-- Unique identifier for object -->
-	<xsl:param name="pid">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
-
-	<!-- URL for Fedora repository that contains this object. -->
-	<xsl:param name="repository">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="pid" required="yes" />
+	
+	
+	<!-- A URL to get the IIIF presentation metadata -->
+	<xsl:param name="iiifManifest" required="yes" />
+	
+	<xsl:param name="iiifRoot" required="yes" />
 
         <!-- level of Solr publication for this object. -->
         <xsl:param name="destination">
@@ -36,11 +35,6 @@
 	
 	<!-- Date DL Ingest for the object being indexed for the creation of date_received_facet and date_received_text -->
 	<xsl:param name="dateReceived">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
-
-	<!-- String used by blacklight to determine views.  Probably will be 'jp2k' in the case of image objects, sometimes 'digital book' for bibliographic records.  Unknown for component and EadRefs. -->
-	<xsl:param name="contentModel">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
 
@@ -82,18 +76,20 @@
 					<xsl:value-of select="."/>
 				</field>
 					</xsl:for-each>
-				<field name="content_model_facet">
-					<xsl:value-of select="$contentModel"/>
-				</field>
-                <xsl:if test="$policyFacet != 'false'">
+				<xsl:if test="$policyFacet != 'false'">
 					<field name="policy_facet">
 						<xsl:value-of select="$policyFacet"/>
 					</field>
 				</xsl:if>
-				<field name="repository_address_display">
-					<xsl:value-of select="$repository"/>
-				</field>
 				<field name="source_facet">UVA Library Digital Repository</field>
+				
+				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$pid" />/full/!125,125/0/default.jpg</field>
+				<field name="feature_facet">iiif</field>
+				<field name="feature_facet">dl_metadata</field>
+				<field name="iiif_presentation_metadata_display">
+					<xsl:value-of select="unparsed-text($iiifManifest)" />
+				</field>
+				
         <!-- internal facet for managing index pushes -->
         <field name="released_facet">
           <xsl:value-of select="$destination"/>
@@ -105,15 +101,6 @@
 					<xsl:value-of select="$dateIngestNow"/>
 				</field>
 				
-				<!-- date received -->
-				
-				<field name="date_received_facet">
-					<xsl:value-of select="$dateReceived"/>
-				</field>
-				<field name="date_received_text">
-					<xsl:value-of select="$dateReceived"/>
-				</field>
-
 				<!-- call number -->
 
 				
