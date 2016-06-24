@@ -147,19 +147,19 @@
 				</field>
 
 				<xsl:if test="$totalTranscriptions != 'false'">
-					<field name="text_searchable" source="{$mode}">
+					<field name="transcription_fulltext" source="{$mode}">
 						<xsl:value-of select="$totalTranscriptions"/>
 					</field>
 				</xsl:if>
 
 				<xsl:if test="$totalDescriptions != 'false'">
-					<field name="text_searchable" source="{$mode}">
+					<field name="descriptions_fulltext" source="{$mode}">
 						<xsl:value-of select="$totalDescriptions"/>
 					</field>
 				</xsl:if>
 
 				<xsl:if test="$totalTitles != 'false'">
-					<field name="text_searchable" source="{$mode}">
+					<field name="titles_fulltext" source="{$mode}">
 						<xsl:value-of select="$totalTitles"/>
 					</field>
 				</xsl:if>
