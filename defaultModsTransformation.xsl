@@ -3,6 +3,8 @@
 	xmlns:mods="http://www.loc.gov/mods/v3" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:uva="http://fedora.lib.virginia.edu/relationships#">
 
+    <xsl:param name="debug" required="no" select="false()" />
+
 	<!-- Required Parameters -->
 
 	<!-- Unique identifier for object -->
@@ -44,6 +46,10 @@
 	</xsl:param>
 
 	<xsl:param name="pdfServiceUrl" />
+	
+    <!-- A base URL, for which when a page pid is appended will provide an endpoint to 
+    	 download a large copy of the given image with citation and rights information embedded.-->
+	<xsl:param name="rightsWrapperServiceUrl" />
 	
 	<xsl:param name="exemplarPid">
 		<xsl:value-of select="false()"/>
@@ -93,6 +99,8 @@
 	<!-- AC added this to remove trailing periods from $special-role  -->
 	<xsl:variable name="periods" select="'.'"/>
 	<xsl:variable name="noperiods" select="' '"/>
+	<xsl:variable name='newline'><xsl:text>
+</xsl:text></xsl:variable>
 	
 	<xsl:param name="publishedDateFacet">
 		<xsl:value-of select="'More than 50 years ago'"/>
@@ -224,10 +232,89 @@
 				</xsl:if>
 
 				<!-- ANALOG SOLR RECORD TRANSFORMATION -->
-				<xsl:apply-templates select="document($analogSolrRecord)" mode="quaternary"/>
+				<xsl:variable name="solrRecord" select="document($analogSolrRecord)" />
+				<xsl:apply-templates select="$solrRecord" mode="quaternary"/>
+
+				<!-- The "right_wrapper" feature indicates that we should provide page-level links
+					 that include rights information and specifically that that rights information will be
+					 stored in the "rights_wrapper_display" field, and a service URL will be included in the
+					 rights_wrapper_url_display field to which just the page pid should be appended.
+			     -->
+				<xsl:if test="$rightsWrapperServiceUrl">
+					<field name="feature_facet">rights_wrapper</field>
+					<field name="rights_wrapper_url_display"><xsl:value-of select="$rightsWrapperServiceUrl" /></field>
+					<xsl:variable name="marcCitation">
+						<xsl:call-template name="extractMarcSubfield">
+							<xsl:with-param name="marcCDATA" select="$solrRecord//doc/str[@name='marc_display']" />
+							<xsl:with-param name="datafield" select="524" />
+							<xsl:with-param name="subfield" select="a" />
+						</xsl:call-template>
+					</xsl:variable>
+					
+					<xsl:variable name="citation">
+						<xsl:choose>
+							<xsl:when test="$marcCitation != ''">
+								<xsl:value-of select="$marcCitation" />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:variable name="titleFields">
+									<xsl:call-template name="getTitle">
+										<xsl:with-param name="mode" select="'primary'"/>
+									</xsl:call-template>
+								</xsl:variable>
+								<xsl:value-of select="$titleFields/field[@name='main_title_display']/text()" />
+								<xsl:variable name="callNumber" select="normalize-space(//mods:mods/mods:classification/text())" />
+								<xsl:if test="$callNumber != ''">
+									<xsl:text>, </xsl:text>
+									<xsl:value-of select="$callNumber" />
+								</xsl:if>
+								<xsl:variable name="location">
+									<xsl:choose>
+										<xsl:when test="//mods:mods/mods:location/mods:physicalLocation">
+											<xsl:value-of select="normalize-space(//mods:mods/mods:location/mods:physicalLocation)" />
+										</xsl:when>
+										<xsl:when test="//mods:mods/mods:location/mods:holdingSimple/mods:copyInformation[mods:subLocation/text() = 'SPEC-COLL']">
+											<xsl:text>Special Collections, University of Virginia Library, Charlottesville, Va.</xsl:text>
+										</xsl:when>
+									</xsl:choose>
+								</xsl:variable>
+								<xsl:if test="$location != ''">
+									<xsl:text>, </xsl:text>
+									<xsl:value-of select="$location" />
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<field name="rights_wrapper_display">
+						<xsl:value-of select="$citation" />
+						<xsl:value-of select="$newline" />
+						<xsl:text>Under 17USC, Section 107, this single copy was produced for the purposes of private study, scholarship, or research.</xsl:text>
+						<xsl:value-of select="$newline"/>
+						<xsl:text>Copyright and other legal restrictions may apply.  Commercial use without permission is prohibited.</xsl:text>
+						<xsl:value-of select="$newline"/>
+						<xsl:text>University of Virginia Library.</xsl:text>
+					</field>
+				</xsl:if>
 
 			</doc>
 		</add>
+	</xsl:template>
+	
+	<xsl:template name="extractMarcSubfield">
+		<xsl:param name="marcCDATA" required="yes" />
+		<xsl:param name="datafield" required="yes" />
+		<xsl:param name="subfield" required="yes" />
+		<xsl:variable name="open" select="concat('datafield tag=&quot;', $datafield)" />
+		<xsl:variable name="firstAfter" select="substring-after($marcCDATA, $open)" />
+		<xsl:variable name="datafieldText" select="substring-before(substring-after(substring-before(substring-after($firstAfter, '&gt;'), '&lt;/datafield&gt;'), '&gt;'), '&lt;')"/>
+		<xsl:if test="$debug">
+		  <xsl:message select="concat('marc: ', $marcCDATA)" />
+		  <xsl:message select="concat('open: ', $open)" />
+		  <xsl:message select="concat('firstAfter: ', $firstAfter)" />
+		  <xsl:message select="concat('Datafield Text: ', $datafieldText)" />
+		</xsl:if>
+        <xsl:value-of select="$datafieldText" />
 	</xsl:template>
 
 	<xsl:template match="mods:mods" mode="secondary">

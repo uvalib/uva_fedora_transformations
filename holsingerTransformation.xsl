@@ -24,6 +24,10 @@
 		<xsl:value-of select="false()"/>
 	</xsl:param>
 	
+	<!-- A base URL, for which when a page pid is appended will provide an endpoint to 
+    	 download a large copy of the given image with citation and rights information embedded.-->
+	<xsl:param name="rightsWrapperServiceUrl" />
+	
         <!-- level of Solr publication for this object. -->
         <xsl:param name="destination">
           <xsl:value-of select="false()"/>
@@ -62,6 +66,9 @@
 	<!-- whitespace in select is meaningful -->
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ,;-:.'"/>
 
+	<xsl:variable name='newline'><xsl:text>
+</xsl:text></xsl:variable>
+	
 	<xsl:output byte-order-mark="no" encoding="UTF-8" media-type="text/xml" xml:space="preserve" indent="yes"/>
 
 	<xsl:template match="/">
@@ -94,6 +101,59 @@
 				<field name="iiif_presentation_metadata_display">
 					<xsl:value-of select="unparsed-text($iiifManifest)" />
 				</field>
+				
+				<!-- The "right_wrapper" feature indicates that we should provide page-level links
+					 that include rights information and specifically that that rights information will be
+					 stored in the "rights_wrapper_display" field, and a service URL will be included in the
+					 rights_wrapper_url_display field to which just the page pid should be appended.
+			     -->
+				<xsl:if test="$rightsWrapperServiceUrl">
+					<field name="feature_facet">rights_wrapper</field>
+					<field name="rights_wrapper_url_display"><xsl:value-of select="$rightsWrapperServiceUrl" /></field>
+					
+					<xsl:variable name="citation">
+						<xsl:variable name="title">
+							<xsl:choose>
+								<xsl:when test="//mods:mods/mods:titleInfo/mods:title[@type='uniform']">
+									<xsl:value-of select="//mods:mods/mods:titleInfo/mods:title[@type='uniform'][1]/text()" />
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="//mods:mods/mods:titleInfo/mods:title[1]/text()" />
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+						<xsl:value-of select="normalize-space($title)" />
+						<xsl:variable name="callNumber" select="normalize-space(//mods:mods/mods:classification/text())" />
+						<xsl:if test="$callNumber != ''">
+							<xsl:text>, </xsl:text>
+							<xsl:value-of select="$callNumber" />
+						</xsl:if>
+						<xsl:variable name="location">
+							<xsl:choose>
+								<xsl:when test="//mods:mods/mods:location/mods:physicalLocation">
+									<xsl:value-of select="normalize-space(//mods:mods/mods:location/mods:physicalLocation)" />
+								</xsl:when>
+								<xsl:when test="//mods:mods/mods:location/mods:holdingSimple/mods:copyInformation[mods:subLocation/text() = 'SPEC-COLL']">
+									<xsl:text>Special Collections, University of Virginia Library, Charlottesville, Va.</xsl:text>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:variable>
+						<xsl:if test="$location != ''">
+							<xsl:text>, </xsl:text>
+							<xsl:value-of select="$location" />
+						</xsl:if>
+					</xsl:variable>
+					
+					<field name="rights_wrapper_display">
+						<xsl:value-of select="$citation" />
+						<xsl:value-of select="$newline" />
+						<xsl:text>Under 17USC, Section 107, this single copy was produced for the purposes of private study, scholarship, or research.</xsl:text>
+						<xsl:value-of select="$newline"/>
+						<xsl:text>Copyright and other legal restrictions may apply.  Commercial use without permission is prohibited.</xsl:text>
+						<xsl:value-of select="$newline"/>
+						<xsl:text>University of Virginia Library.</xsl:text>
+					</field>
+				</xsl:if>
 				
         <!-- internal facet for managing index pushes -->
         <field name="released_facet">
