@@ -42,6 +42,8 @@
 	<xsl:param name="iiifRoot">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
+
+	<xsl:param name="pdfServiceUrl" />
 	
 	<xsl:param name="exemplarPid">
 		<xsl:value-of select="false()"/>
@@ -139,6 +141,10 @@
 					</field>
 				</xsl:if>
 				
+				<xsl:if test="$pdfServiceUrl">
+					<field name="feature_facet">pdf_service</field>
+					<field name="pdf_url_display"><xsl:value-of select="$pdfServiceUrl"/></field>
+				</xsl:if>
 				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$exemplarPid" />/full/!125,125/0/default.jpg</field>
 				<field name="feature_facet">iiif</field>
 				<field name="feature_facet">dl_metadata</field>
