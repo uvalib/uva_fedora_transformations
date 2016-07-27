@@ -47,6 +47,10 @@
 
 	<xsl:param name="pdfServiceUrl" />
 	
+	<xsl:param name="permanentUrl">
+		<xsl:value-of select="false()" />
+	</xsl:param>
+	
     <!-- A base URL, for which when a page pid is appended will provide an endpoint to 
     	 download a large copy of the given image with citation and rights information embedded.-->
 	<xsl:param name="rightsWrapperServiceUrl" />
@@ -289,6 +293,10 @@
 					<field name="rights_wrapper_display">
 						<xsl:value-of select="$citation" />
 						<xsl:value-of select="$newline" />
+						<xsl:if test="$permanentUrl">
+							<xsl:value-of select="$permanentUrl" />
+							<xsl:value-of select="$newline" />
+						</xsl:if>
 						<xsl:text>Under 17USC, Section 107, this single copy was produced for the purposes of private study, scholarship, or research.</xsl:text>
 						<xsl:value-of select="$newline"/>
 						<xsl:text>Copyright and other legal restrictions may apply.  Commercial use without permission is prohibited.</xsl:text>
