@@ -30,6 +30,10 @@
 	<xsl:param name="policyFacet">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
+	
+	<xsl:param name="useRightsURI">
+		<xsl:text>http://rightsstatements.org/vocab/CNE/1.0/</xsl:text>
+	</xsl:param>
 
 	<!-- Facet use for blacklight to group digital objects.  Default value: 'UVA Library Digital Repository'. -->
 	<xsl:param name="sourceFacet">
@@ -297,11 +301,18 @@
 							<xsl:value-of select="$permanentUrl" />
 							<xsl:value-of select="$newline" />
 						</xsl:if>
-						<xsl:text>Under 17USC, Section 107, this single copy was produced for the purposes of private study, scholarship, or research.</xsl:text>
-						<xsl:value-of select="$newline"/>
-						<xsl:text>Copyright and other legal restrictions may apply.  Commercial use without permission is prohibited.</xsl:text>
-						<xsl:value-of select="$newline"/>
-						<xsl:text>University of Virginia Library.</xsl:text>
+						<xsl:choose>
+							<xsl:when test="$useRightsURI = 'http://rightsstatements.org/vocab/InC/1.0/'">
+								<xsl:text>The UVA Library has determined that this work is in-copyright. This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library’s rights under the Copyright Act. Copyright and other restrictions may apply to any further use of this image. See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
+							</xsl:when>
+							<xsl:when test="$useRightsURI = 'http://rightsstatements.org/vocab/NKC/1.0/'">
+								<xsl:text>The UVA Library is not aware of any copyright interest in this work. This single copy was produced for purposes of private study, scholarship, or research. You are responsible for making a rights determination for your own uses. See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- Default to Copyright Not Evaluated -->
+								<xsl:text>The UVA Library has not evaluated the copyright status of this work. This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library’s rights under the Copyright Act. Copyright and other restrictions may apply to any further use of this image. See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
 					</field>
 				</xsl:if>
 
