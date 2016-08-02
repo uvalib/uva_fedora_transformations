@@ -31,9 +31,7 @@
 		<xsl:value-of select="false()"/>
 	</xsl:param>
 	
-	<xsl:param name="useRightsURI">
-		<xsl:text>http://rightsstatements.org/vocab/CNE/1.0/</xsl:text>
-	</xsl:param>
+	<xsl:param name="useRightsString" required="yes" />
 
 	<!-- Facet use for blacklight to group digital objects.  Default value: 'UVA Library Digital Repository'. -->
 	<xsl:param name="sourceFacet">
@@ -293,7 +291,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
+					<xsl:comment select="concat('Use Rights: ', $useRightsString)" />
 					<field name="rights_wrapper_display">
 						<xsl:value-of select="$citation" />
 						<xsl:value-of select="$newline" />
@@ -301,16 +299,33 @@
 							<xsl:value-of select="$permanentUrl" />
 							<xsl:value-of select="$newline" />
 						</xsl:if>
+						<xsl:value-of select="$newline" />
 						<xsl:choose>
-							<xsl:when test="$useRightsURI = 'http://rightsstatements.org/vocab/InC/1.0/'">
-								<xsl:text>The UVA Library has determined that this work is in-copyright. This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library’s rights under the Copyright Act. Copyright and other restrictions may apply to any further use of this image. See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
+							<xsl:when test="$useRightsString = 'In Copyright'">
+								<xsl:text>The UVA Library has determined that this work is in-copyright.</xsl:text>
+								<xsl:value-of select="$newline" />
+								<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+								<xsl:value-of select="$newline" />
+								<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+								<xsl:value-of select="$newline" />
+								<xsl:text>See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
 							</xsl:when>
-							<xsl:when test="$useRightsURI = 'http://rightsstatements.org/vocab/NKC/1.0/'">
-								<xsl:text>The UVA Library is not aware of any copyright interest in this work. This single copy was produced for purposes of private study, scholarship, or research. You are responsible for making a rights determination for your own uses. See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
+							<xsl:when test="$useRightsString = 'No Known Copyright'">
+								<xsl:text>The UVA Library is not aware of any copyright interest in this work.</xsl:text>
+								<xsl:value-of select="$newline" />
+								<xsl:text>This single copy was produced for purposes of private study, scholarship, or research. You are responsible for making a rights determination for your own uses.</xsl:text>
+								<xsl:value-of select="$newline" />
+								<xsl:text>See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
 								<!-- Default to Copyright Not Evaluated -->
-								<xsl:text>The UVA Library has not evaluated the copyright status of this work. This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library’s rights under the Copyright Act. Copyright and other restrictions may apply to any further use of this image. See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
+								<xsl:text>The UVA Library has not evaluated the copyright status of this work.</xsl:text>
+								<xsl:value-of select="$newline" />
+								<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+								<xsl:value-of select="$newline" />
+								<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+								<xsl:value-of select="$newline" />
+								<xsl:text>See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
 							</xsl:otherwise>
 						</xsl:choose>
 					</field>
