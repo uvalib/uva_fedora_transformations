@@ -49,6 +49,8 @@
 
 	<xsl:param name="pdfServiceUrl" />
 	
+	<xsl:param name="pageCount" />
+	
 	<xsl:param name="permanentUrl">
 		<xsl:value-of select="false()" />
 	</xsl:param>
@@ -156,8 +158,10 @@
 				</xsl:if>
 				
 				<xsl:if test="$pdfServiceUrl">
-					<field name="feature_facet">pdf_service</field>
-					<field name="pdf_url_display"><xsl:value-of select="$pdfServiceUrl"/></field>
+					<xsl:if test="not($pageCount = '1')">
+						<field name="feature_facet">pdf_service</field>
+						<field name="pdf_url_display"><xsl:value-of select="$pdfServiceUrl"/></field>
+					</xsl:if>
 				</xsl:if>
 				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$exemplarPid" />/full/!125,125/0/default.jpg</field>
 				<field name="feature_facet">iiif</field>
