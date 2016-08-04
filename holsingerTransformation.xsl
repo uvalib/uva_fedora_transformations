@@ -137,7 +137,7 @@
 						<xsl:variable name="location">
 							<xsl:choose>
 								<xsl:when test="//mods:mods/mods:location/mods:physicalLocation">
-									<xsl:value-of select="normalize-space(//mods:mods/mods:location/mods:physicalLocation)" />
+									<xsl:value-of select="normalize-space((//mods:mods/mods:location/mods:physicalLocation)[1])" />
 								</xsl:when>
 								<xsl:when test="//mods:mods/mods:location/mods:holdingSimple/mods:copyInformation[mods:subLocation/text() = 'SPEC-COLL']">
 									<xsl:text>Special Collections, University of Virginia Library, Charlottesville, Va.</xsl:text>
