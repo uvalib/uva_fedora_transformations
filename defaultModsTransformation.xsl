@@ -273,7 +273,7 @@
 									</xsl:call-template>
 								</xsl:variable>
 								<xsl:value-of select="$titleFields/field[@name='main_title_display']/text()" />
-								<xsl:variable name="callNumber" select="normalize-space(//mods:mods/mods:classification/text())" />
+								<xsl:variable name="callNumber" select="normalize-space(//mods:mods/mods:classification[1]/text())" />
 								<xsl:if test="$callNumber != ''">
 									<xsl:text>, </xsl:text>
 									<xsl:value-of select="$callNumber" />
