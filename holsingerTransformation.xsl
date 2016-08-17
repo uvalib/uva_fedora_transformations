@@ -386,9 +386,6 @@
 					<field name="author_facet">
 						<xsl:value-of select="$corpName"/>
 					</field>
-					<field name="author_sort_facet">
-						<xsl:value-of select='lower-case($corpName)'/>
-					</field>
 					</xsl:if>
 				</xsl:if>
 				
