@@ -11,7 +11,11 @@
   version="2.0">
   
   <xsl:param name="pid" required="yes" />
-  <xsl:param name="fedora-url" required="no">http://fedora-prod02.lib.virginia.edu:8080/fedora/</xsl:param>
+  <xsl:param name="exemplarPid" required="yes" />
+  <xsl:param name="virgo-url">http://search.lib.virginia.edu/catalog/</xsl:param>
+  <xsl:param name="iiif-url">http://iiif.lib.virginia.edu/iiif/</xsl:param>
+  <xsl:param name="rights-wrapper-url">http://rightswrapper2.lib.virginia.edu:8090/rights-wrapper/</xsl:param>
+  
   
   <xsl:output encoding="UTF-8" indent="yes" />
   
@@ -22,17 +26,10 @@
   </xsl:template>
   
   <xsl:template match="mods:location[1]" mode="duplicate">
-    <xsl:variable name="exemplar">
-      <xsl:call-template name="lookupDigitizedExemplar">
-        <xsl:with-param name="itemPid" select="$pid" />
-      </xsl:call-template>
-    </xsl:variable>
     <location>
-      <xsl:if test="not($exemplar='')">
-          <url access="object in context">http://search.lib.virginia.edu/catalog/<xsl:value-of select="$pid"/></url>
-          <url access="preview">http://fedoraproxy.lib.virginia.edu/fedora/objects/<xsl:value-of select="substring($exemplar, 13)"/>/methods/djatoka:StaticSDef/getThumbnail</url>
-          <url access="raw object">http://fedoraproxy.lib.virginia.edu/fedora/objects/<xsl:value-of select="substring($exemplar, 13)"/>/methods/djatoka:StaticSDef/getStaticImage</url>
-      </xsl:if>
+      <url access="object in context">http://search.lib.virginia.edu/catalog/<xsl:value-of select="$pid"/></url>
+      <url access="preview"><xsl:value-of select="$iiif-url" /><xsl:value-of select="$exemplarPid"/>/[pid]/full/!125,125/0/default.jpg</url>
+      <url access="raw object"><xsl:value-of select="$rights-wrapper-url" />?pid=<xsl:value-of select="$pid" />&amp;pagePid=<xsl:value-of select="$exemplarPid"/></url>
       <xsl:for-each select="current()/*">
         <xsl:apply-templates mode="duplicate" select="current()" />
       </xsl:for-each>
@@ -43,29 +40,6 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" mode="duplicate"/>
     </xsl:copy>
-  </xsl:template>
-  
-  <!-- Performs a fedora resource index query that will return the object uri of the 
-    exemplar (digital representation) of the provided item if a digitized version
-    exists for that item.
-  -->
-  <xsl:template name="lookupDigitizedExemplar">
-    <xsl:param name="itemPid" required="yes" />
-    <!-- first see if it is a info:fedora/djatoka:jp2CModel object itself -->
-    <xsl:variable name="hasImages" select="count(document(concat($fedora-url, 'objects/', $itemPid, '/datastreams/RELS-EXT/content'))//fedora-model:hasModel[@rdf:resource='info:fedora/djatoka:jp2CModel'])" />
-    <xsl:if test="$hasImages = 1">
-      <xsl:text>info:fedora/</xsl:text><xsl:value-of select="$itemPid" />
-    </xsl:if>
-    <xsl:if test="$hasImages != 1">
-      <xsl:message>hasImages = <xsl:value-of select="$hasImages" /></xsl:message>
-      <xsl:variable name="lookupExemplars">
-        <xsl:value-of select="$fedora-url" /><xsl:text>risearch?type=tuples&amp;lang=itql&amp;format=Sparql&amp;query=select%20%24exemplar%20from%20%3C%23ri%3E%20where%20%3Cinfo%3Afedora%2F</xsl:text>
-        <xsl:value-of select="$itemPid" />
-        <xsl:text>%3E%20%3Chttp%3A%2F%2Ffedora.lib.virginia.edu%2Frelationships%23hasExemplar%3E%20%24exemplar</xsl:text>
-      </xsl:variable>
-      <xsl:message><xsl:value-of select="$lookupExemplars" /></xsl:message>
-      <xsl:value-of select="document($lookupExemplars)/s:sparql/s:results/s:result/s:exemplar/@uri" />
-   </xsl:if>
   </xsl:template>
   
 </xsl:stylesheet>
