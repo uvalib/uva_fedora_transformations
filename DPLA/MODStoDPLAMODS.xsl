@@ -14,6 +14,7 @@
   <xsl:param name="exemplarPid" required="yes" />
   <xsl:param name="virgo-url">http://search.lib.virginia.edu/catalog/</xsl:param>
   <xsl:param name="iiif-url">http://iiif.lib.virginia.edu/iiif/</xsl:param>
+  <xsl:param name="iiif-manifest-url">http://tracksys.lib.virginia.edu:8080/"</xsl:param>
   <xsl:param name="rights-wrapper-url">http://rightswrapper2.lib.virginia.edu:8090/rights-wrapper/</xsl:param>
   
   
@@ -29,6 +30,7 @@
     <location>
       <url access="object in context">http://search.lib.virginia.edu/catalog/<xsl:value-of select="$pid"/></url>
       <url access="preview"><xsl:value-of select="$iiif-url" /><xsl:value-of select="$exemplarPid"/>/[pid]/full/!125,125/0/default.jpg</url>
+      <url access="iiif-presentation-manifest"><xsl:value-of select="$iiif-manifest-url" /><xsl:value-of select="$pid"/>/manifest.json</url>
       <url access="raw object"><xsl:value-of select="$rights-wrapper-url" />?pid=<xsl:value-of select="$pid" />&amp;pagePid=<xsl:value-of select="$exemplarPid"/></url>
       <xsl:for-each select="current()/*">
         <xsl:apply-templates mode="duplicate" select="current()" />
