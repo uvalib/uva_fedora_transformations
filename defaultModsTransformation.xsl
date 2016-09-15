@@ -215,9 +215,9 @@
 				<xsl:call-template name="getSeries">
 					<xsl:with-param name="mode" select="'primary'"/>
 				</xsl:call-template>
-<!--				<xsl:call-template name="getCopyInformation">
+				<xsl:call-template name="getCopyInformation">
 					<xsl:with-param name="mode" select="'primary'"/>
-				</xsl:call-template> -->
+				</xsl:call-template>
 
 				<!-- Test for deprecated method of determing whether the record is to be shadowed.  Otherwise, use newer method of relying upon descMetadata. -->
 				<xsl:choose>
@@ -764,11 +764,15 @@
 			<field name="library_facet" source="{$mode}">
 				<xsl:value-of select="$normalizedLibraryName"/>
 			</field>
+			<!-- This is intentionally omitted because it was requested that
+				 we not show locations like "MCGR-VAULT" -->
+			<!--
 			<field name="location_facet" source="{$mode}">
 				<xsl:value-of select="$normalizedLibraryName"/>
 				<xsl:text> </xsl:text>
 				<xsl:value-of select="mods:shelfLocator"/>
 			</field>
+			-->
 			<field name="barcode_facet" source="{$mode}">
 				<xsl:value-of select="mods:note[@type='barcode']"/>
 			</field>
