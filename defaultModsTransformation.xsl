@@ -151,7 +151,7 @@
 					<xsl:value-of select="$publishedDateFacet"/>
 				</field>
 
-				<xsl:if test="$digitalCollectionFacet != 'false'">
+				<xsl:if test="$digitalCollectionFacet != ''">
 					<field name="digital_collection_facet" source="{$mode}">
 						<xsl:value-of select="$digitalCollectionFacet"/>
 					</field>
