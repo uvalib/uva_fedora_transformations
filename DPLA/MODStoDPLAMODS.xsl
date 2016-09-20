@@ -15,7 +15,7 @@
   <xsl:param name="virgo-url">http://search.lib.virginia.edu/catalog/</xsl:param>
   <xsl:param name="iiif-url">http://iiif.lib.virginia.edu/iiif/</xsl:param>
   <xsl:param name="iiif-manifest-url">http://tracksys.lib.virginia.edu:8080/</xsl:param>
-  <xsl:param name="rights-wrapper-url">http://rightswrapper2.lib.virginia.edu:8090/rights-wrapper/</xsl:param>
+  <xsl:param name="rights-wrapper-url">http://rightswrapper2.lib.virginia.edu:8090/rights-wrapper</xsl:param>
 
   <xsl:output encoding="UTF-8" indent="yes" />
 
