@@ -370,6 +370,16 @@
 						</field>
 					</xsl:if>
 				</xsl:for-each>
+				
+				<!-- shelf location added for Bicentennial collection 9/16-->
+				
+				<xsl:for-each select="/mods/location/shelfLocator">
+					<xsl:if test="current()/text() != ' '">
+						<field name="location_display">
+							<xsl:value-of select="current()/text()"/>
+						</field>
+					</xsl:if>
+				</xsl:for-each>
 
 				<!-- creator -->
 				
