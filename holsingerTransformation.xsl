@@ -10,48 +10,30 @@
 	<!-- modified by Jocelyn Triplett (jbo3d) June 4, 2014 -->
 
 	<!-- Required Parameters -->
-	<!-- Unique identifier for object -->
-	<xsl:param name="pid">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="pid" required="yes" />
 	
 	<!-- A URL to get the IIIF presentation metadata -->
-	<xsl:param name="iiifManifest">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="iiifManifest" required="yes"/>
 	
-	<xsl:param name="iiifRoot">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="iiifRoot" required="yes" />
 	
-	<xsl:param name="permanentUrl">
-		<xsl:value-of select="false()" />
-	</xsl:param>
+	<xsl:param name="permanentUrl" />
 	
 	<!-- A base URL, for which when a page pid is appended will provide an endpoint to 
     	 download a large copy of the given image with citation and rights information embedded.-->
-	<xsl:param name="rightsWrapperServiceUrl" />
+	<xsl:param name="rightsWrapperServiceUrl" required="yes" />
 	
-        <!-- level of Solr publication for this object. -->
-        <xsl:param name="destination">
-          <xsl:value-of select="false()"/>
-        </xsl:param>
-     
-	<!-- Datetime that this index record was produced.  Format:YYYYMMDDHHMM -->
-	<xsl:param name="dateIngestNow">
-		<xsl:value-of select="true()"/>
+	<!-- Datetime that this index record was produced.  Defaults to now. Format:YYYYMMDDHHMM -->
+	<xsl:param name="dateIngestNow" >
+		<xsl:value-of select="format-dateTime(current-dateTime(), 'YYYYMMDDHHmm')"/>
 	</xsl:param>
 	
-	<xsl:param name="policyFacet">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="policyFacet" />
 	
 	<xsl:param name="useRightsString" required="yes" />
 	
 	<!-- Date DL Ingest for the object being indexed for the creation of date_received_facet and date_received_text -->
-	<xsl:param name="dateReceived">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="dateReceived" />
 
 	<!-- Facet use for blacklight to group digital objects.  Default value: 'UVA Library Digital Repository'. -->
 	<xsl:param name="sourceFacet">
@@ -59,9 +41,7 @@
 	</xsl:param>
 
 	<!-- While this can be passed to the stylesheet as a params, this method of determination is to be supplanted by an investiagtion of the descMetadata (as written below).  This param is to be deprecated. -->
-	<xsl:param name="shadowedItem">
-		<xsl:value-of select="false()"/>
-	</xsl:param>
+	<xsl:param name="shadowedItem" />
 
 	<!-- If this item belongs to a specific collection of objects, that information should be encoded in the above mentioned XPath location. -->
 	<!--<xsl:param name="collectionName"
@@ -189,11 +169,6 @@
 						</xsl:choose>
 					</field>
 				</xsl:if>
-				
-        <!-- internal facet for managing index pushes -->
-        <field name="released_facet">
-          <xsl:value-of select="$destination"/>
-        </field>
 				
 				<!-- date indexed -->
 				
@@ -819,7 +794,7 @@
 				<!-- default behavior here is to plug in Feb 2, 2010 unless $ingestDate set	-->
 				<xsl:choose>
 					<xsl:when
-						test="$dateIngestNow = false() and //recordInfo/recordCreationDate[@encoding='marc']">
+						test="not($dateIngestNow) and //recordInfo/recordCreationDate[@encoding='marc']">
 						<xsl:variable name="marcdate">
 							<xsl:call-template name="format-marc-date">
 								<xsl:with-param name="date"
@@ -830,12 +805,12 @@
 							<xsl:value-of select="$marcdate"/>
 						</field>
 					</xsl:when>
-					<xsl:when test="$dateIngestNow = false() and $shadowedItem = false()">
+					<xsl:when test="not($dateIngestNow) and not($shadowedItem)">
 						<field name="date_received_facet"><xsl:value-of
 								select="fn:dateTime(xs:date('2010-02-01'), xs:time('12:00:00'))"
 							/>Z</field>
 					</xsl:when>
-					<xsl:when test="$dateIngestNow = false() and $shadowedItem = true()">
+					<xsl:when test="not($dateIngestNow) and not($shadowedItem)">
 						<!-- shadowed items get older timestamps so the don't come up first in Blacklight/Solr, whihc sorts on this field -->
 						<field name="date_received_facet"><xsl:value-of
 								select="fn:dateTime(xs:date('1999-12-31'), xs:time('23:59:59'))"
