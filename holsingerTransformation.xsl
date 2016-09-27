@@ -345,6 +345,16 @@
 						</field>
 					</xsl:if>
 				</xsl:for-each>
+				
+				<!-- shelf location added for Bicentennial collection 9/16-->
+				
+				<xsl:for-each select="/mods/location/shelfLocator">
+					<xsl:if test="current()/text() != ' '">
+						<field name="location_display">
+							<xsl:value-of select="current()/text()"/>
+						</field>
+					</xsl:if>
+				</xsl:for-each>
 
 				<!-- creator -->
 				
@@ -490,6 +500,18 @@
 							<field name="author_sort_facet"><xsl:value-of select="translate($nameFull, $uppercase, $lowercase)"/></field>
 						</xsl:when>
 						<xsl:otherwise/>
+					</xsl:choose>
+				</xsl:for-each>
+				
+				<!-- Publication information added for Bicentennial collection 9/2016-->
+				
+				<xsl:for-each select="//mods/originInfo/publisher">
+					<xsl:choose>
+						<xsl:when test="./text()">
+							<field name="published_display">
+								<xsl:value-of select="text()"/>
+							</field>
+						</xsl:when>
 					</xsl:choose>
 				</xsl:for-each>
 
