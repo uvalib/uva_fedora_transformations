@@ -751,7 +751,7 @@
 								</xsl:for-each>
 							</xsl:variable>
 
-							<xsl:if test="$descriptionDisplay">
+							<xsl:if test="$descriptionDisplay != ''">
 								<field name="media_description_display">
 									<xsl:value-of select="normalize-space($descriptionDisplay)"/>
 								</field>
@@ -770,10 +770,10 @@
 				<!-- staff note -->
 				<xsl:for-each select="//mods/note[@displayLabel='staff']">
 					<xsl:if test="./text() != ' '">
-						<field name="note_text">Staff note: <xsl:value-of select="current()"
+						<field name="note_text"><xsl:value-of select="current()"
 							/></field>
 						<!-- use if you want this data to be searchable -->
-						<field name="note_display">Staff note: <xsl:value-of select="current()"
+						<field name="note_display"><xsl:value-of select="current()"
 							/></field>
 						<!-- use if you want this data to be available for display in blacklight brief or full record -->
 					</xsl:if>
@@ -918,14 +918,58 @@
 								<xsl:value-of select="."/>
 							</field>
 							<field name="year_display">
-								<xsl:if test="current()[@qualifier='approximate']">
-									<xsl:text>circa </xsl:text>
-								</xsl:if>
-					<xsl:value-of select="."/>
-					</field>
+							<xsl:if test="current()[@qualifier='approximate']">
+								<xsl:text>circa </xsl:text>
+							</xsl:if>
+							<xsl:value-of select="$yearOnly"/>
+							</field>
+							<field name="published_date_display">
+								<xsl:value-of select="."/>
+							</field>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
+				<!-- handle EDTF dates with u denoting uncertainty in digit - for display -->
+				<!-- use first year in range for sorting, etc. 20161104 slb -->
+				<xsl:when test="matches(., '^\d{3}u')">
+					<xsl:variable name="yearOnly">
+						<xsl:value-of select="substring(., 1, 4)"/>
+					</xsl:variable>
+					<field name="date_text">	
+						<xsl:value-of select="."/>
+					</field>
+					<field name="year_display">	
+						<xsl:value-of select="$yearOnly"/>
+					</field>
+					<xsl:if test="current()[@keyDate='yes']">
+						<field name="year_multisort_i">
+							<xsl:value-of select="replace($yearOnly,'u','0')"/>
+						</field>
+					</xsl:if>
+					<field name="published_date_display">
+						<xsl:value-of select="."/>
+					</field>
+				</xsl:when>
+				<xsl:when test="matches(., '^\d{2}uu')">
+					<xsl:variable name="yearOnly">
+						<xsl:value-of select="substring(., 1, 4)"/>
+					</xsl:variable>
+					<field name="date_text">	
+						<xsl:value-of select="."/>
+					</field>
+					<field name="year_display">
+						<xsl:value-of select="$yearOnly"/>
+					</field>
+					<xsl:if test="current()[@keyDate='yes']">
+						<field name="year_multisort_i">
+							<xsl:value-of select="replace($yearOnly,'uu','00')"/>
+						</field>
+					</xsl:if>
+					<field name="published_date_display">
+						<xsl:value-of select="."/>
+					</field>
+				</xsl:when>
+					
 				<xsl:when test="./text() = 'Unknown Date' or ./text() = 'Unknown date'">
 					<field name="published_date_display">
 						<xsl:value-of select="."/>
