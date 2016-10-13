@@ -84,9 +84,11 @@
 				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$pid" />/full/!125,125/0/default.jpg</field>
 				<field name="feature_facet">iiif</field>
 				<field name="feature_facet">dl_metadata</field>
+<!--
 				<field name="iiif_presentation_metadata_display">
 					<xsl:value-of select="unparsed-text($iiifManifest)" />
 				</field>
+-->
 				
 				<!-- The "right_wrapper" feature indicates that we should provide page-level links
 					 that include rights information and specifically that that rights information will be
@@ -348,12 +350,11 @@
 				
 				<!-- shelf location added for Bicentennial collection 9/16-->
 				
-				<xsl:for-each select="/mods/location/shelfLocator">
-					<xsl:if test="current()/text() != ' '">
-						<field name="location_display">
-							<xsl:value-of select="current()/text()"/>
-						</field>
-					</xsl:if>
+				<xsl:for-each select="//mods/location/shelfLocator[@displayLabel='Box']">
+					<field name="location_display">
+						<xsl:text>Box </xsl:text>
+						<xsl:value-of select="current()/text()"/>
+					</field>
 				</xsl:for-each>
 
 				<!-- creator -->
