@@ -84,9 +84,11 @@
 				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$pid" />/full/!125,125/0/default.jpg</field>
 				<field name="feature_facet">iiif</field>
 				<field name="feature_facet">dl_metadata</field>
+<!--
 				<field name="iiif_presentation_metadata_display">
 					<xsl:value-of select="unparsed-text($iiifManifest)" />
 				</field>
+-->
 				
 				<!-- The "right_wrapper" feature indicates that we should provide page-level links
 					 that include rights information and specifically that that rights information will be
@@ -179,8 +181,8 @@
 				<!-- call number -->
 
 				
-				<xsl:for-each select="/mods:mods/mods:identifier">
-					<xsl:if test="/mods:mods/mods:identifier/text() and @type='accessionNumber'">
+				<xsl:for-each select="//mods:identifier">
+					<xsl:if test="//mods:identifier/text() and @type='accessionNumber'">
 						<field name="call_number_display">
 							<xsl:value-of select="current()"/>
 						</field>
@@ -189,7 +191,6 @@
 						</field>
 					</xsl:if>
 				</xsl:for-each>
-				
 
 				<!-- title -->
 				<xsl:for-each select="//mods:title">
@@ -212,23 +213,37 @@
 						</field>
 					</xsl:if>
 				</xsl:for-each>
+<!--  deleted 10/26/16 at request from jtb4t
 				<xsl:if
 					test="not(//mods/*[1][local-name() = 'titleInfo']/*[local-name() = 'title'])">
 					<field name="alternate_title_display">untitled</field>
 				</xsl:if>
+-->
 
 				<!-- searchable legacy identifier -->
 
-				<xsl:for-each
-					select="//identifier[(@displayLabel='Negative Number' or @displayLabel='Prints Number' or @displayLabel='Originating Collection' or @displayLabel='Artifact Number' or @displayLabel='retrieval ID')]">
+				<xsl:for-each select="//mods/identifier[(@displayLabel='Negative Number' or @displayLabel='Prints Number' or @displayLabel='Originating Collection' or @displayLabel='Artifact Number' or @displayLabel='Retrieval ID')]">
+					<xsl:variable name="boxnbr" select="//mods/location/shelfLocator"/>
 					<field name="media_retrieval_id_display">
 						<xsl:value-of select="current()"/>
+						<xsl:if test="$boxnbr">
+							<xsl:text>, </xsl:text>
+							<xsl:value-of select="$boxnbr"/>
+						</xsl:if>
 					</field>
 					<field name="media_retrieval_id_facet">
 						<xsl:value-of select="current()"/>
+						<xsl:if test="$boxnbr">
+							<xsl:text>, </xsl:text>
+							<xsl:value-of select="$boxnbr"/>
+						</xsl:if>
 					</field>
 					<field name="media_retrieval_id_text">
 						<xsl:value-of select="current()"/>
+						<xsl:if test="$boxnbr">
+							<xsl:text>, </xsl:text>
+							<xsl:value-of select="$boxnbr"/>
+						</xsl:if>
 					</field>
 				</xsl:for-each>
 
@@ -346,14 +361,6 @@
 					</xsl:if>
 				</xsl:for-each>
 				
-				<!-- shelf location added for Bicentennial collection 9/16-->
-				
-				<xsl:for-each select="//mods/location/shelfLocator[@displayLabel='Box']">
-					<field name="location_display">
-						<xsl:text>Box </xsl:text>
-						<xsl:value-of select="current()/text()"/>
-					</field>
-				</xsl:for-each>
 
 				<!-- creator -->
 				
