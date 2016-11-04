@@ -68,6 +68,9 @@
 		<xsl:value-of select="false()"/>
 	</xsl:param>
 
+	<!-- like "totalTranscriptions" but a URL at which the transcriptions can be fetched in plain text. -->
+	<xsl:param name="transcriptionUrl" />
+
 	<!-- Will contain the title text of one object (in the case of an image object), or a concatenated string of all title text belonging to children objects (in the case of a bibliographic or colelction object). -->
 	<xsl:param name="totalTitles">
 		<xsl:value-of select="false()"/>
@@ -77,6 +80,9 @@
 	<xsl:param name="totalDescriptions">
 		<xsl:value-of select="false()"/>
 	</xsl:param>
+		
+	<!-- like "totalDescriptions" but a URL at which the descriptions can be fetched in plain text. -->
+	<xsl:param name="descriptionUrl" />
 
 	<!-- While this can be passed to the stylesheet as a params, this method of determination is to be supplanted by an investiagtion of the descMetadata (as written below).  This param is to be deprecated. -->
 	<xsl:param name="shadowedItem">
@@ -175,10 +181,20 @@
 						<xsl:value-of select="$totalTranscriptions"/>
 					</field>
 				</xsl:if>
+				<xsl:if test="$transcriptionUrl">
+					<field name="transcription_fulltext" source="{$mode}">
+						<xsl:value-of select="unparsed-text($transcriptionUrl)"/>
+					</field>
+				</xsl:if>
 
 				<xsl:if test="$totalDescriptions != 'false'">
 					<field name="descriptions_fulltext" source="{$mode}">
 						<xsl:value-of select="$totalDescriptions"/>
+					</field>
+				</xsl:if>
+				<xsl:if test="$descriptionUrl">
+					<field name="descriptions_fulltext" source="{$mode}">
+						<xsl:value-of select="unparsed-text($descriptionUrl)"/>
 					</field>
 				</xsl:if>
 
