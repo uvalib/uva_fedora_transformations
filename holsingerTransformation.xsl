@@ -225,25 +225,17 @@
 				<xsl:for-each select="//mods/identifier[(@displayLabel='Negative Number' or @displayLabel='Prints Number' or @displayLabel='Originating Collection' or @displayLabel='Artifact Number' or @displayLabel='Retrieval ID')]">
 					<xsl:variable name="boxnbr" select="//mods/location/shelfLocator"/>
 					<field name="media_retrieval_id_display">
-						<xsl:value-of select="current()"/>
 						<xsl:if test="$boxnbr">
-							<xsl:text>, </xsl:text>
 							<xsl:value-of select="$boxnbr"/>
+							<xsl:text>, </xsl:text>
 						</xsl:if>
+						<xsl:value-of select="current()"/>
 					</field>
 					<field name="media_retrieval_id_facet">
 						<xsl:value-of select="current()"/>
-						<xsl:if test="$boxnbr">
-							<xsl:text>, </xsl:text>
-							<xsl:value-of select="$boxnbr"/>
-						</xsl:if>
 					</field>
 					<field name="media_retrieval_id_text">
 						<xsl:value-of select="current()"/>
-						<xsl:if test="$boxnbr">
-							<xsl:text>, </xsl:text>
-							<xsl:value-of select="$boxnbr"/>
-						</xsl:if>
 					</field>
 				</xsl:for-each>
 
@@ -924,10 +916,10 @@
 								<xsl:value-of select="."/>
 							</field>
 							<field name="year_display">
-							<xsl:if test="current()[@qualifier='approximate']">
-								<xsl:text>circa </xsl:text>
-							</xsl:if>
-							<xsl:value-of select="$yearOnly"/>
+								<xsl:if test="current()[@qualifier='approximate']">
+									<xsl:text>circa </xsl:text>
+								</xsl:if>
+								<xsl:value-of select="."/>
 							</field>
 							<field name="published_date_display">
 								<xsl:value-of select="."/>
