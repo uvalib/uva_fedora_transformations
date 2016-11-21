@@ -84,11 +84,9 @@
 				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$pid" />/full/!125,125/0/default.jpg</field>
 				<field name="feature_facet">iiif</field>
 				<field name="feature_facet">dl_metadata</field>
-<!--
 				<field name="iiif_presentation_metadata_display">
 					<xsl:value-of select="unparsed-text($iiifManifest)" />
 				</field>
--->
 				
 				<!-- The "right_wrapper" feature indicates that we should provide page-level links
 					 that include rights information and specifically that that rights information will be
