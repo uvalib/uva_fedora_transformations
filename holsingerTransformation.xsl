@@ -18,10 +18,14 @@
 	<xsl:param name="iiifRoot" required="yes" />
 	
 	<xsl:param name="permanentUrl" />
-	
+
 	<!-- A base URL, for which when a page pid is appended will provide an endpoint to 
     	 download a large copy of the given image with citation and rights information embedded.-->
 	<xsl:param name="rightsWrapperServiceUrl" required="yes" />
+
+        <xsl:param name="exemplarPid">
+                <xsl:value-of select="false()"/>
+        </xsl:param>
 	
 	<!-- Datetime that this index record was produced.  Defaults to now. Format:YYYYMMDDHHMM -->
 	<xsl:param name="dateIngestNow" >
@@ -81,7 +85,7 @@
 				</xsl:if>
 				<field name="source_facet">UVA Library Digital Repository</field>
 				
-				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$pid" />/full/!125,125/0/default.jpg</field>
+				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$exemplarPid" />/full/!125,125/0/default.jpg</field>
 				<field name="feature_facet">iiif</field>
 				<field name="feature_facet">dl_metadata</field>
 				<field name="iiif_presentation_metadata_display">
