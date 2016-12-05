@@ -354,8 +354,22 @@
 
 				<!-- creator -->
 				
-				<!-- added corporate info to accommodate Online Artifacts records -->
+				<!-- handle names without identifying type -->
+				<xsl:if test="//mods/name[not(@type)]">
+					<xsl:variable name="dfltName">
+						<xsl:value-of select="//mods/name[1][not(@type)]/namePart/text()"/>
+					</xsl:variable>
+					<xsl:if test="normalize-space($dfltName) != ''">
+						<field name="author_display">
+						<xsl:value-of select="$dfltName"/>
+					</field>
+					<field name="author_facet">
+						<xsl:value-of select="$dfltName"/>
+					</field>
+					</xsl:if>
+				</xsl:if>
 				
+				<!-- added corporate info to accommodate Online Artifacts records -->
 				<xsl:if test="//mods/name[@type='corporate']">
 					<xsl:variable name="corpName">
 						<xsl:value-of select="//mods/name[1][@type='corporate']/namePart/text()"/>
