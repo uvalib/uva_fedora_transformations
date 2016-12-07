@@ -370,6 +370,9 @@
 					<field name="author_facet">
 						<xsl:value-of select="$dfltName"/>
 					</field>
+					<field name="author_text">
+						<xsl:value-of select="$dfltName"/>
+					</field>
 					</xsl:if>
 				</xsl:if>
 				
@@ -385,6 +388,9 @@
 					<field name="author_facet">
 						<xsl:value-of select="$corpName"/>
 					</field>
+					<field name="author_text">
+						<xsl:value-of select="$corpName"/>
+					</field>
 					</xsl:if>
 				</xsl:if>
 				
@@ -392,7 +398,7 @@
 					<xsl:variable name="fname">
 						<xsl:choose>
 							<xsl:when
-								test="current()/namePart[@type='family'] and current()/namePart[@type='family'][substring-before(., ',')!='']">sd
+								test="current()/namePart[@type='family'] and current()/namePart[@type='family'][substring-before(., ',')!='']">
 								<xsl:value-of
 									select="substring-before(current()/namePart[@type='family'], ',')"
 								/>
@@ -473,9 +479,12 @@
 					
 					<xsl:if test="normalize-space($nameFull) != ''" >
 						<field name="author_facet">
-						<xsl:value-of select="$nameFull"/>
-					</field>
-					<xsl:choose>
+						  <xsl:value-of select="$nameFull"/>
+						</field>
+						<field name="author_text">
+						  <xsl:value-of select="$nameFull"/>
+						</field>
+						<xsl:choose>
 						<xsl:when test="child::namePart[@type='date']">
 							<field name="author_display"><xsl:value-of select="$nameFull"/>, <xsl:value-of select="child::namePart[@type='date']/text()"/>
 						    </field>
@@ -485,7 +494,8 @@
 								<xsl:value-of select="$nameFull"/>
 							</field>
 						</xsl:otherwise>
-					</xsl:choose></xsl:if>
+						</xsl:choose>
+					</xsl:if>
 
 					<!-- The following is commented because the special-role is no longer needed.  11/10/11 -->
 					<!--
