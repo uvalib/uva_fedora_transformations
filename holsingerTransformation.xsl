@@ -224,7 +224,7 @@
 
 				<!-- searchable legacy identifier -->
 
-				<xsl:for-each select="//mods/identifier[(@displayLabel='Negative Number' or @displayLabel='Prints Number' or @displayLabel='Originating Collection' or @displayLabel='Artifact Number' or @displayLabel='Retrieval ID')]">
+				<xsl:for-each select="//mods/identifier[(@displayLabel='Negative Number' or @displayLabel='Prints Number' or @displayLabel='Originating Collection' or @displayLabel='Artifact Number' or @displayLabel='Retrieval ID' or @displayLabel='retrieval ID')]">
 					<xsl:variable name="boxnbr" select="//mods/location/shelfLocator"/>
 					<field name="media_retrieval_id_display">
 						<xsl:if test="$boxnbr">
