@@ -300,7 +300,7 @@
 					</xsl:variable>
 
 					<xsl:choose>
-						<xsl:when test="matches($text-content, '[\w]+')">
+						<xsl:when test="$text-content">
 							<field name="subject_text">
 								<xsl:value-of select="$text-content"/>
 							</field>
@@ -315,7 +315,8 @@
 					</xsl:choose>
 				</xsl:for-each>
 
-				<!-- place -->
+		
+<!-- deleted request of jtb4t 4/17 
 				<xsl:for-each select="//place/placeTerm[not(@authority='marccountry')]/text()">
 					<xsl:choose>
 						<xsl:when test="current()/text()= ''"/>
@@ -323,6 +324,41 @@
 							<field name="region_facet">
 								<xsl:value-of select="current()"/>
 							</field>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+-->
+<!-- get from subject/geographic or subject/hierarchicalGeographic instead -->
+
+				<xsl:for-each select="//subject">
+					<xsl:choose>
+						<!-- only use standalone geographical children -->
+						<xsl:when test="*[2]"/>
+						<xsl:otherwise>
+							<xsl:choose>
+							<xsl:when test="current()/child::*/local-name() = 'hierarchicalGeographic'">
+								<xsl:variable name="placeList">
+									<xsl:for-each select="./descendant::text()[matches(., '[\w]+')]">
+										<!-- add double dash to all trailing subfields -->
+                                                       	         		<xsl:if test="position() != 1">
+                                                       	                 		<xsl:text> -- </xsl:text>
+                                                       	         		</xsl:if>
+                                                       	         		<xsl:copy-of select="normalize-space(current())"/>
+									</xsl:for-each>
+								</xsl:variable>
+								<xsl:if test="$placeList">
+									<field name="region_facet">
+										<xsl:value-of select="$placeList"/>
+									</field>	
+		
+								</xsl:if>
+							</xsl:when>
+							<xsl:when test="current()/geographic/text()">
+								<field name="region_facet">
+									<xsl:value-of select="current()/geographic/text()"/>
+								</field>
+							</xsl:when>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
@@ -642,20 +678,9 @@
 							</field>
 						</xsl:when>
 						
-						<!-- typeOfResource 'still image' and genre 'Photographs' -> Photograph -->
+						<!-- typeOfResource 'still image'  -> Visual Materials -->
 						
-						<xsl:when test="./text()='still image' and //mods/genre/text()='Photographs'">
-							<field name="format_text">
-								<xsl:value-of>Photograph</xsl:value-of>
-							</field>
-							<field name="format_facet">
-								<xsl:value-of>Photograph</xsl:value-of>
-							</field>
-						</xsl:when>
-						
-						<!-- typeOfResource 'still image' and genre 'art reproduction' -> Visual Materials -->
-						
-						<xsl:when test="./text()='still image' and //mods/genre/text()='art reproduction'">
+						<xsl:when test="./text()='still image'">
 							<field name="format_text">
 								<xsl:value-of>Visual Materials</xsl:value-of>
 							</field>
@@ -664,25 +689,14 @@
 							</field>
 						</xsl:when>
 						
-						<!-- typeOfResource 'still image' and genre 'caricatures' -> Visual Materials -->
-						
-						<xsl:when test="./text()='still image' and //mods/genre/text()='caricatures'">
+						<xsl:otherwise>
 							<field name="format_text">
-								<xsl:value-of>Visual Materials</xsl:value-of>
+								<xsl:value-of select="./text()"/>
 							</field>
 							<field name="format_facet">
-								<xsl:value-of>Visual Materials</xsl:value-of>
+								<xsl:value-of select="./text()"/>
 							</field>
-						</xsl:when>
-						
-					<xsl:otherwise>
-					<field name="format_text">
-						<xsl:value-of select="./text()"/>
-					</field>
-					<field name="format_facet">
-						<xsl:value-of select="./text()"/>
-					</field>
-					</xsl:otherwise>
+						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
 				
@@ -723,7 +737,30 @@
 
 				<!-- genre -->
 				<xsl:for-each select="//mods/genre/text()">
-					<field name="genre_text">
+					<field name="subject_text">
+						<xsl:value-of select="current()"/>
+					</field>
+					<field name="subject_facet">
+						<xsl:value-of select="current()"/>
+					</field>
+					<field name="subject_genre_facet">
+						<xsl:value-of select="current()"/>
+					</field>
+				</xsl:for-each>
+
+				<xsl:for-each select="//mods/abstract/text()">
+					<field name="abstract_display">
+						<xsl:value-of select="current()"/>
+					</field>
+					<field name="abstract_text">
+						<xsl:value-of select="current()"/>
+					</field>
+				</xsl:for-each>
+
+				<!-- physical description -->
+				<!-- first put form subelement in Virgo Type -->
+				<xsl:for-each select="//mods/physicalDescription/form/text()">
+					<field name="genre_display">
 						<xsl:value-of select="current()"/>
 					</field>
 					<field name="genre_facet">
@@ -731,64 +768,27 @@
 					</field>
 				</xsl:for-each>
 
-				<!-- physical description -->
-
-				<xsl:choose>
-					<xsl:when test="//mods/abstract/text()">
-						<xsl:variable name="descriptionDisplay">
-							<xsl:value-of select="//mods/abstract"/>
-						</xsl:variable>
-						<xsl:if test="$descriptionDisplay">
-							<field name="media_description_display">
-								<xsl:value-of select="normalize-space($descriptionDisplay)"/>
-							</field>
-							<field name="desc_meta_file_display">
-								<xsl:value-of select="normalize-space($descriptionDisplay)"/>
-							</field>
-							<field name="media_description_text">
-								<xsl:value-of select="normalize-space ($descriptionDisplay)"/>
-							</field>
-						</xsl:if>
-					</xsl:when>
-
-					<xsl:otherwise>
-						<xsl:for-each select="//mods/physicalDescription">
-							<xsl:variable name="descriptionDisplay">
-								<xsl:for-each select="current()/child::*">
-									<xsl:choose>
-										<xsl:when test="local-name() = 'form'">
-											<xsl:value-of select="."/><xsl:text> </xsl:text>
-										</xsl:when>
-										<xsl:when
-											test="local-name() = 'note' and ./@displayLabel = 'condition' and not( matches( text(),
-									'^\s+$'))">
-											<xsl:value-of select="."/>
-										</xsl:when>
-										<xsl:when
-											test="local-name() = 'note' and ./@displayLabel = 'size inches'">
-											<xsl:text xml:space="default">Plate size: </xsl:text>
-											<xsl:value-of select="."/>
-											<xsl:text xml:space="default"> inches; </xsl:text>
-										</xsl:when>
-										<xsl:otherwise/>
-									</xsl:choose>
-								</xsl:for-each>
-							</xsl:variable>
-
-							<xsl:if test="$descriptionDisplay != ''">
-								<field name="media_description_display">
-									<xsl:value-of select="normalize-space($descriptionDisplay)"/>
-								</field>
-								<field name="desc_meta_file_display">
-									<xsl:value-of select="normalize-space($descriptionDisplay)"/>
-								</field>
-								<field name="media_description_text">
-									<xsl:value-of select="normalize-space ($descriptionDisplay)"/>
-								</field>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:otherwise>
-				</xsl:choose>
+				<!--  then extent followed by note in Virgo Description -->
+				<xsl:variable name="descriptionDisplay">
+					<xsl:for-each select="//mods/physicalDescription/extent/text()">
+						<xsl:value-of select="."/><xsl:text>.</xsl:text>
+					</xsl:for-each>
+					<xsl:for-each select="//mods/physicalDescription/note/text()">
+						<xsl:value-of select="."/><xsl:text>.</xsl:text>
+					</xsl:for-each>
+				</xsl:variable>
+					
+				<xsl:if test="$descriptionDisplay != ''">
+					<field name="media_description_display">
+						<xsl:value-of select="normalize-space($descriptionDisplay)"/>
+					</field>
+					<field name="desc_meta_file_display">
+						<xsl:value-of select="normalize-space($descriptionDisplay)"/>
+					</field>
+					<field name="media_description_text">
+						<xsl:value-of select="normalize-space ($descriptionDisplay)"/>
+					</field>
+				</xsl:if>
 
 
 				<!-- staff note -->
