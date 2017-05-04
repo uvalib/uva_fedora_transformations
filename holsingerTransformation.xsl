@@ -287,16 +287,20 @@
 				<!-- subject text -->
 				<xsl:for-each select="//subject">
 					<xsl:variable name="text-content">
-						<xsl:for-each select="./descendant::text()[matches(., '[\w]+')]">
-							<xsl:if test="matches(current(), '[\w]+')">
-								<!-- add double dash to all trailing subfields -->
-								<xsl:if test="position() != 1">
-									<xsl:text> -- </xsl:text>
+					<xsl:choose>
+						<xsl:when test="current()/child::*/local-name() = 'hierarchicalGeographic'"/>
+						<xsl:otherwise>
+							<xsl:for-each select="./descendant::text()[matches(., '[\w]+')]">
+								<xsl:if test="matches(current(), '[\w]+')">
+									<!-- add double dash to all trailing subfields -->
+									<xsl:if test="position() != 1">
+										<xsl:text> -- </xsl:text>
+									</xsl:if>
+									<xsl:copy-of select="normalize-space(current())"/>
 								</xsl:if>
-								<xsl:copy-of select="normalize-space(current())"/>
-							</xsl:if>
-
-						</xsl:for-each>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
 					</xsl:variable>
 
 					<xsl:choose>
@@ -316,19 +320,7 @@
 				</xsl:for-each>
 
 		
-<!-- deleted request of jtb4t 4/17 
-				<xsl:for-each select="//place/placeTerm[not(@authority='marccountry')]/text()">
-					<xsl:choose>
-						<xsl:when test="current()/text()= ''"/>
-						<xsl:otherwise>
-							<field name="region_facet">
-								<xsl:value-of select="current()"/>
-							</field>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
--->
-<!-- get from subject/geographic or subject/hierarchicalGeographic instead -->
+<!-- get Geographic Places facet from subject/hierarchicalGeographic -->
 
 				<xsl:for-each select="//subject">
 					<xsl:choose>
@@ -771,10 +763,10 @@
 				<!--  then extent followed by note in Virgo Description -->
 				<xsl:variable name="descriptionDisplay">
 					<xsl:for-each select="//mods/physicalDescription/extent/text()">
-						<xsl:value-of select="."/><xsl:text>.</xsl:text>
+						<xsl:value-of select="."/>
 					</xsl:for-each>
 					<xsl:for-each select="//mods/physicalDescription/note/text()">
-						<xsl:value-of select="."/><xsl:text>.</xsl:text>
+						<xsl:text>, </xsl:text><xsl:value-of select="."/>
 					</xsl:for-each>
 				</xsl:variable>
 					
