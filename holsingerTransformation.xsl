@@ -657,39 +657,12 @@
 				<field name="format_facet">Online</field>
 				<field name="format_text">Online</field>
 				<xsl:for-each select="//mods/typeOfResource">
-					<xsl:choose>
-						
-						<!-- typeOfResource 'three dimensional object' -> Physical Object -->
-						
-						<xsl:when test="./text()='three dimensional object'">
-							<field name="format_text">
-								<xsl:value-of>Physical Object</xsl:value-of>
-							</field>
-							<field name="format_facet">
-								<xsl:value-of>Physical Object</xsl:value-of>
-							</field>
-						</xsl:when>
-						
-						<!-- typeOfResource 'still image'  -> Visual Materials -->
-						
-						<xsl:when test="./text()='still image'">
-							<field name="format_text">
-								<xsl:value-of>Visual Materials</xsl:value-of>
-							</field>
-							<field name="format_facet">
-								<xsl:value-of>Visual Materials</xsl:value-of>
-							</field>
-						</xsl:when>
-						
-						<xsl:otherwise>
-							<field name="format_text">
-								<xsl:value-of select="./text()"/>
-							</field>
-							<field name="format_facet">
-								<xsl:value-of select="./text()"/>
-							</field>
-						</xsl:otherwise>
-					</xsl:choose>
+			 		<field name="format_text">
+						<xsl:value-of select="./text()"/>
+					</field>
+					<field name="format_facet">
+						<xsl:value-of select="./text()"/>
+					</field>
 				</xsl:for-each>
 				
 				<!-- Collection-specific Facets and Fields -->
@@ -764,9 +737,16 @@
 				<xsl:variable name="descriptionDisplay">
 					<xsl:for-each select="//mods/physicalDescription/extent/text()">
 						<xsl:value-of select="."/>
+					<xsl:if test="//mods/physicalDescription/note">
+                                                               <xsl:text>, </xsl:text>
+					</xsl:if>
+
 					</xsl:for-each>
-					<xsl:for-each select="//mods/physicalDescription/note/text()">
-						<xsl:text>, </xsl:text><xsl:value-of select="."/>
+					<xsl:for-each select="//mods/physicalDescription/note">
+						<xsl:value-of select="./text()"/>
+                                                       <xsl:if test="position() != last()">
+                                                               <xsl:text>, </xsl:text>
+                                                       </xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
 					
