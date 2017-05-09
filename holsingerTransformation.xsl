@@ -387,7 +387,7 @@
 				<!-- creator -->
 				
 				<!-- handle names without identifying type -->
-				<xsl:if test="//mods/name[not(@type)]">
+				<xsl:for-each select="//mods/name[not(@type)]">
 					<xsl:variable name="dfltName">
 						<xsl:value-of select="//mods/name[1][not(@type)]/namePart/text()"/>
 					</xsl:variable>
@@ -402,25 +402,27 @@
 						<xsl:value-of select="$dfltName"/>
 					</field>
 					</xsl:if>
-				</xsl:if>
+				</xsl:for-each>
 				
 				<!-- added corporate info to accommodate Online Artifacts records -->
-				<xsl:if test="//mods/name[@type='corporate']">
-					<xsl:variable name="corpName">
-						<xsl:value-of select="//mods/name[1][@type='corporate']/namePart/text()"/>
-					</xsl:variable>
-					<xsl:if test="normalize-space($corpName) != ''">
-						<field name="author_display">
-						<xsl:value-of select="$corpName"/>
-					</field>
-					<field name="author_facet">
-						<xsl:value-of select="$corpName"/>
-					</field>
-					<field name="author_text">
-						<xsl:value-of select="$corpName"/>
-					</field>
+				<xsl:for-each select="//mods/name[@type='corporate']">
+					<xsl:if test="current()/role/roleTerm[@type='code']/text() = 'mfr'">
+						<xsl:variable name="corpName">
+							<xsl:value-of select="//mods/name[1][@type='corporate']/namePart/text()"/>
+						</xsl:variable>
+						<xsl:if test="normalize-space($corpName) != ''">
+							<field name="author_display">
+							<xsl:value-of select="$corpName"/>
+							</field>
+							<field name="author_facet">
+								<xsl:value-of select="$corpName"/>
+							</field>
+							<field name="author_text">
+								<xsl:value-of select="$corpName"/>
+							</field>
+						</xsl:if>
 					</xsl:if>
-				</xsl:if>
+				</xsl:for-each>
 				
 				<xsl:for-each select="//mods/name[@type='personal']">
 					<xsl:variable name="fname">
