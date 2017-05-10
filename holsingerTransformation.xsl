@@ -389,7 +389,7 @@
 				<!-- handle names without identifying type -->
 				<xsl:for-each select="//mods/name[not(@type)]">
 					<xsl:variable name="dfltName">
-						<xsl:value-of select="//mods/name[1][not(@type)]/namePart/text()"/>
+						<xsl:value-of select="current()/namePart/text()"/>
 					</xsl:variable>
 					<xsl:if test="normalize-space($dfltName) != ''">
 						<field name="author_display">
@@ -406,9 +406,8 @@
 				
 				<!-- added corporate info to accommodate Online Artifacts records -->
 				<xsl:for-each select="//mods/name[@type='corporate']">
-					<xsl:if test="current()/role/roleTerm[@type='code']/text() = 'mfr'">
 						<xsl:variable name="corpName">
-							<xsl:value-of select="//mods/name[1][@type='corporate']/namePart/text()"/>
+							<xsl:value-of select="current()/namePart/text()"/>
 						</xsl:variable>
 						<xsl:if test="normalize-space($corpName) != ''">
 							<field name="author_display">
@@ -421,7 +420,6 @@
 								<xsl:value-of select="$corpName"/>
 							</field>
 						</xsl:if>
-					</xsl:if>
 				</xsl:for-each>
 				
 				<xsl:for-each select="//mods/name[@type='personal']">
