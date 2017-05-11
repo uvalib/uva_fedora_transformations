@@ -738,7 +738,7 @@
 					<xsl:for-each select="//mods/physicalDescription/extent/text()">
 						<xsl:value-of select="."/>
 					<xsl:if test="//mods/physicalDescription/note">
-                                                               <xsl:text>, </xsl:text>
+                                                               <xsl:text>; </xsl:text>
 					</xsl:if>
 
 					</xsl:for-each>
