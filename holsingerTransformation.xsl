@@ -745,7 +745,7 @@
 					<xsl:for-each select="//mods/physicalDescription/note">
 						<xsl:value-of select="./text()"/>
                                                        <xsl:if test="position() != last()">
-                                                               <xsl:text>, </xsl:text>
+                                                               <xsl:text>; </xsl:text>
                                                        </xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
