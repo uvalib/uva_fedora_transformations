@@ -657,6 +657,25 @@
 				<field name="format_facet">Online</field>
 				<field name="format_text">Online</field>
 				<xsl:for-each select="//mods/typeOfResource">
+					<xsl:when test="./text()='three dimensional object'">
+						<field name="format_text">
+							<xsl:value-of>Physical Object</xsl:value-of>
+						</field>
+						<field name="format_facet">
+							<xsl:value-of>Physical Object</xsl:value-of>
+						</field>
+					</xsl:when>
+					
+					<!-- typeOfResource 'still image'  -> Visual Materials -->
+					
+					<xsl:when test="./text()='still image'">
+						<field name="format_text">
+							<xsl:value-of>Visual Materials</xsl:value-of>
+						</field>
+						<field name="format_facet">
+							<xsl:value-of>Visual Materials</xsl:value-of>
+						</field>
+					</xsl:when>
 			 		<field name="format_text">
 						<xsl:value-of select="./text()"/>
 					</field>
