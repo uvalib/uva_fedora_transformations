@@ -304,7 +304,7 @@
 					</xsl:variable>
 
 					<xsl:choose>
-						<xsl:when test="$text-content">
+						<xsl:when test="not($text-content = '')">
 							<field name="subject_text">
 								<xsl:value-of select="$text-content"/>
 							</field>
