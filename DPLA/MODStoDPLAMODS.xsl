@@ -6,7 +6,7 @@
   xmlns:uva-rels="http://fedora.lib.virginia.edu/relationships#"
   xmlns:fedora-model="info:fedora/fedora-system:def/model#"
   xmlns="http://www.loc.gov/mods/v3"
-  exclude-result-prefixes="#default rdf uva-rels s fedora-model"
+  exclude-result-prefixes="mods #default rdf uva-rels s fedora-model"
   version="2.0">
 
   <xsl:param name="pid" required="yes" />
@@ -69,9 +69,22 @@
     </location>
   </xsl:template>
 
+  <xsl:template match="*[namespace-uri()='http://www.loc.gov/mods/v3']" mode="duplicate">
+    <xsl:element name="{local-name(.)}">
+      <xsl:apply-templates select="@* | node()" mode="duplicate" />
+    </xsl:element>
+  </xsl:template>
+
+  <xsl:template match="*" mode="duplicate">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()" mode="duplicate"/>
+    </xsl:copy>
+  </xsl:template>
+  
   <xsl:template match="@*|node()" mode="duplicate">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" mode="duplicate"/>
     </xsl:copy>
   </xsl:template>
+    
 </xsl:stylesheet>
