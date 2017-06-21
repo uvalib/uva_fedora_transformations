@@ -67,19 +67,19 @@
 
   <xsl:template match="mods:location[1]" mode="duplicate">
     <location>
+      <xsl:for-each select="current()/*">
+        <xsl:apply-templates mode="duplicate" select="current()" />
+      </xsl:for-each>
       <xsl:if test="not(mods:url[@usage='primary'])">
         <url access="object in context" usage="primary"><xsl:value-of select="$virgo-url" /><xsl:value-of select="$pid"/></url>
       </xsl:if>
       <url access="preview"><xsl:value-of select="$iiif-url" /><xsl:value-of select="$exemplarPid"/>/full/!125,125/0/default.jpg</url>
       <url access="iiif-presentation-manifest"><xsl:value-of select="$virgo-url" /><xsl:value-of select="$pid"/>/iiif/manifest.json</url>
       <url access="raw object"><xsl:value-of select="$rights-wrapper-url" />?pid=<xsl:value-of select="$pid" />&amp;pagePid=<xsl:value-of select="$exemplarPid"/></url>
-      <xsl:for-each select="current()/*">
-        <xsl:apply-templates mode="duplicate" select="current()" />
-      </xsl:for-each>
     </location>
   </xsl:template>
 
-  <xsl:template match="*[namespace-uri()='http://www.loc.gov/mods/v3']" mode="duplicate">
+  <xsl:template match="*[namespace-uri()='http://www.loc.gov/mods/v3']" mode="duplicate" priority="-1">
     <xsl:element name="{local-name(.)}">
       <xsl:apply-templates select="@* | node()" mode="duplicate" />
     </xsl:element>
