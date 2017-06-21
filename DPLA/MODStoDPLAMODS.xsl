@@ -39,6 +39,16 @@
       <xsl:for-each select="*">
         <xsl:apply-templates mode="duplicate" select="current()"/>
       </xsl:for-each>
+      <xsl:if test="not(/mods:mods/mods:location)">
+        <location>
+          <xsl:if test="not(mods:url[@usage='primary'])">
+            <url access="object in context" usage="primary"><xsl:value-of select="$virgo-url" /><xsl:value-of select="$pid"/></url>
+          </xsl:if>
+          <url access="preview"><xsl:value-of select="$iiif-url" /><xsl:value-of select="$exemplarPid"/>/full/!125,125/0/default.jpg</url>
+          <url access="iiif-presentation-manifest"><xsl:value-of select="$virgo-url" /><xsl:value-of select="$pid"/>/iiif/manifest.json</url>
+          <url access="raw object"><xsl:value-of select="$rights-wrapper-url" />?pid=<xsl:value-of select="$pid" />&amp;pagePid=<xsl:value-of select="$exemplarPid"/></url>
+        </location>
+      </xsl:if>
       <note type="ownership">University of Virginia Library</note>
     </mods>
   </xsl:template>
