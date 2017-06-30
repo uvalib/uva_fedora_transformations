@@ -84,13 +84,6 @@
       <xsl:apply-templates select="@* | node()" mode="duplicate" />
     </xsl:element>
   </xsl:template>
-
-  <xsl:template match="*" mode="duplicate">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()" mode="duplicate"/>
-    </xsl:copy>
-  </xsl:template>
-  
   <xsl:template match="@*|node()" mode="duplicate">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" mode="duplicate"/>
