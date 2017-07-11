@@ -5,8 +5,11 @@
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:uva-rels="http://fedora.lib.virginia.edu/relationships#"
   xmlns:fedora-model="info:fedora/fedora-system:def/model#"
+  xmlns:date="java:java.util.Date"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
   xmlns="http://www.loc.gov/mods/v3"
-  exclude-result-prefixes="mods #default rdf uva-rels s fedora-model"
+  exclude-result-prefixes="mods date fn ss #default rdf uva-rels s fedora-model"
   version="2.0">
 
   <xsl:param name="pid" required="yes" />
@@ -80,11 +83,17 @@
   </xsl:template>
 
   <xsl:template match="*[namespace-uri()='http://www.loc.gov/mods/v3']" mode="duplicate" priority="-1">
-    <xsl:element name="{local-name(.)}">
+    <xsl:element name="{local-name()}">
       <xsl:apply-templates select="@* | node()" mode="duplicate" />
     </xsl:element>
   </xsl:template>
-  <xsl:template match="@*|node()" mode="duplicate">
+  <xsl:template match="*" mode="duplicate" priority="-2">
+    <xsl:element name="{name()}">
+      <xsl:apply-templates select="@* | node()" mode="duplicate"/>
+    </xsl:element>
+  </xsl:template>
+  
+  <xsl:template match="@*|node()" mode="duplicate" priority="-3">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" mode="duplicate"/>
     </xsl:copy>
