@@ -17,6 +17,15 @@
 	
 	<xsl:param name="iiifRoot" required="yes" />
 	
+	<!-- 
+		In order to allow reuse of the mappings from the MODS metadata to SOLR fields
+		this parameter results in an incomplete SOLR document that does not make any
+		calls to get content from external sources.  The result should NOT be used by
+		SOLR and will indeed contain information to that effect.  Setting this to any
+		value is sufficient to enable this mode.
+	  -->
+	<xsl:param name="excludeExternallyGenerated" required="no" />
+	
 	<xsl:param name="permanentUrl" />
 
 	<!-- A base URL, for which when a page pid is appended will provide an endpoint to 
@@ -65,6 +74,12 @@
 
 		<add>
 			<doc>
+				<xsl:if test="$excludeExternallyGenerated">
+					<note>
+						This solr record is INCOMPLETE because it was requested to be generated that way using the "excludeExternallyGenerated" parameter.
+					</note>
+				</xsl:if>
+				
 				<field name="id">
 					<xsl:value-of select="$pid"/>
 				</field>
@@ -86,11 +101,13 @@
 				<field name="source_facet">UVA Library Digital Repository</field>
 				
 				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$exemplarPid" />/full/!125,125/0/default.jpg</field>
-				<field name="feature_facet">iiif</field>
-				<field name="feature_facet">dl_metadata</field>
-				<field name="iiif_presentation_metadata_display">
-					<xsl:value-of select="unparsed-text($iiifManifest)" />
-				</field>
+				<xsl:if test="not($excludeExternallyGenerated)">
+					<field name="feature_facet">iiif</field>
+					<field name="feature_facet">dl_metadata</field>
+					<field name="iiif_presentation_metadata_display">
+						<xsl:value-of select="unparsed-text($iiifManifest)" />
+					</field>
+				</xsl:if>
 				
 				<!-- The "right_wrapper" feature indicates that we should provide page-level links
 					 that include rights information and specifically that that rights information will be
