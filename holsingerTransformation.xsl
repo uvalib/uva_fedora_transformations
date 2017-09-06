@@ -45,6 +45,10 @@
 	
 	<xsl:param name="useRightsString" required="yes" />
 	
+	<xsl:param name="rightsstatementURI" required="no">
+		<xsl:value-of select="$rightsstatementMapping[1]/*[*[local-name() = 'string']/text()=$useRightsString]/*[local-name()='uri']/text()" />
+	</xsl:param>
+	
 	<!-- Date DL Ingest for the object being indexed for the creation of date_received_facet and date_received_text -->
 	<xsl:param name="dateReceived" />
 
@@ -64,10 +68,112 @@
 	<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz    '"/>
 	<!-- whitespace in select is meaningful -->
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ,;-:.'"/>
-
+	
 	<xsl:variable name='newline'><xsl:text>
 </xsl:text></xsl:variable>
 	
+	<xsl:variable name="rightsstatementMapping">
+		<statement>
+			<uri>http://rightsstatements.org/vocab/CNE/1.0/</uri>
+			<string>Copyright Not Evaluated</string>
+			<wrapperText>
+				<xsl:text>The UVA Library has not evaluated the copyright status of this work.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+			</wrapperText>
+		</statement>
+		<statement>
+			<uri>http://rightsstatements.org/vocab/NKC/1.0/</uri>
+			<string>No Known Copyright</string>
+			<use>Educational Use Permitted</use>
+			<use>Modifications Permitted</use>
+			<use>Commercial use Permitted</use>
+			<wrapperText>
+				<xsl:text>The UVA Library is not aware of any copyright interest in this work.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>This single copy was produced for purposes of private study, scholarship, or research. You are responsible for making a rights determination for your own uses.</xsl:text>
+			</wrapperText>
+		</statement>
+		<statement>
+			<uri>http://rightsstatements.org/vocab/InC/1.0/</uri>
+			<string>In Copyright</string>
+			<wrapperText>
+				<xsl:text>The UVA Library has determined that this work is in-copyright.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+			</wrapperText>
+		</statement>
+		<statement>
+			<uri>http://rightsstatements.org/vocab/InC-EDU/1.0/</uri>
+			<string>In Copyright Educational Use Permitted</string>
+			<use>Educational Use Permitted</use>
+			<wrapperText>
+				<xsl:text>The UVA Library has determined that this work is in-copyright.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+			</wrapperText>
+		</statement>
+		<statement>
+			<uri>http://rightsstatements.org/vocab/InC-NC/1.0/</uri>
+			<string>In Copyright Non-Commercial Use Permitted</string>
+			<use>Educational Use Permitted</use>
+			<wrapperText>
+				<xsl:text>The UVA Library has determined that this work is in-copyright.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+			</wrapperText>
+		</statement>
+		<statement>
+			<uri>http://rightsstatements.org/vocab/InC-RUU/1.0/</uri>
+			<string>In Copyright Rights Holder Unlocatable</string>
+			<xsl:text>The UVA Library has not determined the copyright status of this work.</xsl:text>
+			<xsl:value-of select="$newline" />
+			<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+			<xsl:value-of select="$newline" />
+			<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+		</statement>
+		<statement>
+			<uri>http://rightsstatements.org/vocab/NoC-OKLR/1.0/</uri>
+			<string>No Copyright Other Known Legal Restrictions</string>
+			<xsl:text>The UVA Library is not aware of any copyright interest in this work, but other legal restrictions apply.</xsl:text>
+			<xsl:value-of select="$newline" />
+			<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+			<xsl:value-of select="$newline" />
+			<xsl:text>Legal restrictions may apply to further use of this image.</xsl:text>
+		</statement>
+		<statement>
+			<uri>http://rightsstatements.org/vocab/NoC-US/1.0/</uri>
+			<string>No Copyright United States</string>
+			<use>Educational Use Permitted</use>
+			<use>Modifications Permitted</use>
+			<use>Commercial use Permitted</use>
+			<wrapperText>
+				<xsl:text>The UVA Library is not aware of any copyright interest in this work.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>This single copy was produced for purposes of private study, scholarship, or research. You are responsible for making a rights determination for your own uses.</xsl:text>
+			</wrapperText>
+		</statement>
+		<statement>
+			<uri>http://rightsstatements.org/vocab/UND/1.0/</uri>
+			<string>Copyright Undetermined</string>
+			<wrapperText>
+				<xsl:text>The UVA Library has been unable to determine the copyright status of this work.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+			</wrapperText>
+		</statement>
+	</xsl:variable>
+
 	<xsl:output byte-order-mark="no" encoding="UTF-8" media-type="text/xml" xml:space="preserve" indent="yes"/>
 
 	<xsl:template match="/">
@@ -151,7 +257,12 @@
 						</xsl:if>
 					</xsl:variable>
 
-					<xsl:comment select="concat('Use Rights: ', $useRightsString)" />
+					<field name="rs_uri_display"><xsl:value-of select="$rightsstatementURI"/></field>
+					<xsl:for-each select="$rightsstatementMapping[1]/*[*[local-name()='uri']/text()=$rightsstatementURI]/*[local-name()='use']">
+						<field name="use_facet"><xsl:value-of select="text()"/></field>
+					</xsl:for-each>
+
+					<xsl:comment select="concat('Use Rights: ', $useRightsString, ' (', $rightsstatementURI, ')')" />
 					<field name="rights_wrapper_display">
 						<xsl:value-of select="$citation" />
 						<xsl:value-of select="$newline" />
@@ -160,34 +271,16 @@
 							<xsl:value-of select="$newline" />
 						</xsl:if>
 						<xsl:value-of select="$newline" />
-						<xsl:choose>
-							<xsl:when test="$useRightsString = 'In Copyright'">
-								<xsl:text>The UVA Library has determined that this work is in-copyright.</xsl:text>
-								<xsl:value-of select="$newline" />
-								<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
-								<xsl:value-of select="$newline" />
-								<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
-								<xsl:value-of select="$newline" />
-								<xsl:text>See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
-							</xsl:when>
-							<xsl:when test="$useRightsString = 'No Known Copyright'">
-								<xsl:text>The UVA Library is not aware of any copyright interest in this work.</xsl:text>
-								<xsl:value-of select="$newline" />
-								<xsl:text>This single copy was produced for purposes of private study, scholarship, or research. You are responsible for making a rights determination for your own uses.</xsl:text>
-								<xsl:value-of select="$newline" />
-								<xsl:text>See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<!-- Default to Copyright Not Evaluated -->
-								<xsl:text>The UVA Library has not evaluated the copyright status of this work.</xsl:text>
-								<xsl:value-of select="$newline" />
-								<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
-								<xsl:value-of select="$newline" />
-								<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
-								<xsl:value-of select="$newline" />
-								<xsl:text>See the full Virgo Terms of Use at http://search.lib.virginia.edu/terms.html for more information.</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:variable name="rightsSummary">
+							<xsl:value-of select="$rightsstatementMapping[1]/*[*[local-name()='uri']/text()=$rightsstatementURI]/*[local-name()='wrapperText']/text()"/>
+						</xsl:variable>
+						<xsl:value-of select="$rightsSummary"/>
+						<xsl:if test="$rightsSummary  = ''">
+							<xsl:value-of select="$rightsstatementMapping[1]/*[1]/*[local-name()='wrapperText']/text()" />
+						</xsl:if>
+						
+						<xsl:value-of select="$newline" />
+						<xsl:text>Find more information about permission to use the library's materials at http://search.lib.virginia.edu/terms.html</xsl:text>
 					</field>
 				</xsl:if>
 				
