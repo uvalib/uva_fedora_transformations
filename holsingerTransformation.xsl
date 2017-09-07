@@ -89,7 +89,7 @@
 			<string>No Known Copyright</string>
 			<use>Educational Use Permitted</use>
 			<use>Modifications Permitted</use>
-			<use>Commercial use Permitted</use>
+			<use>Commercial Use Permitted</use>
 			<wrapperText>
 				<xsl:text>The UVA Library is not aware of any copyright interest in this work.</xsl:text>
 				<xsl:value-of select="$newline" />
@@ -154,7 +154,7 @@
 			<string>No Copyright United States</string>
 			<use>Educational Use Permitted</use>
 			<use>Modifications Permitted</use>
-			<use>Commercial use Permitted</use>
+			<use>Commercial Use Permitted</use>
 			<wrapperText>
 				<xsl:text>The UVA Library is not aware of any copyright interest in this work.</xsl:text>
 				<xsl:value-of select="$newline" />
