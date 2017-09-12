@@ -134,20 +134,24 @@
 		<statement>
 			<uri>http://rightsstatements.org/vocab/InC-RUU/1.0/</uri>
 			<string>In Copyright Rights Holder Unlocatable</string>
-			<xsl:text>The UVA Library has not determined the copyright status of this work.</xsl:text>
-			<xsl:value-of select="$newline" />
-			<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
-			<xsl:value-of select="$newline" />
-			<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+			<wrapperText>
+				<xsl:text>The UVA Library has not determined the copyright status of this work.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>Copyright and other restrictions may apply to any further use of this image.</xsl:text>
+			</wrapperText>
 		</statement>
 		<statement>
 			<uri>http://rightsstatements.org/vocab/NoC-OKLR/1.0/</uri>
 			<string>No Copyright Other Known Legal Restrictions</string>
-			<xsl:text>The UVA Library is not aware of any copyright interest in this work, but other legal restrictions apply.</xsl:text>
-			<xsl:value-of select="$newline" />
-			<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
-			<xsl:value-of select="$newline" />
-			<xsl:text>Legal restrictions may apply to further use of this image.</xsl:text>
+			<wrapperText>
+				<xsl:text>The UVA Library is not aware of any copyright interest in this work, but other legal restrictions apply.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>This single copy was produced for purposes of private study, scholarship, or research, pursuant to the library's rights under the Copyright Act.</xsl:text>
+				<xsl:value-of select="$newline" />
+				<xsl:text>Legal restrictions may apply to further use of this image.</xsl:text>
+			</wrapperText>
 		</statement>
 		<statement>
 			<uri>http://rightsstatements.org/vocab/NoC-US/1.0/</uri>
