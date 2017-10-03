@@ -944,6 +944,10 @@
 						<xsl:value-of select="$accessUse"/>
 					</field>
 				</xsl:for-each>
+				<xsl:for-each select="//accessCondition[@type='local rights statements']">
+					<field name="local_rights_statement_display"><xsl:value-of select="current()"/></field>
+					<field name="local_rights_statement_text"><xsl:value-of select="current()"/></field>
+				</xsl:for-each>
 
 				<!-- 		this (arbitary) dateTime gets added to every record 			-->
 				<!-- default blacklight behavior is to sort by this date (newest first) 			-->
