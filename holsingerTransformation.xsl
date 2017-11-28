@@ -2,7 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 	xpath-default-namespace="http://www.loc.gov/mods/v3" xmlns:mods="http://www.loc.gov/mods/v3"
 	xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	exclude-result-prefixes="mods fn xs">
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" exclude-result-prefixes="mods fn xs nuds rdf skos nmo xlink">
 
 	<!-- UVA-LIB stylesheet for converting Holsinger Collection MODS to SOLR -->
 	<!-- created by M. Stephens (ms3uf) on Jan 14/2010 	-->
@@ -38,7 +40,7 @@
 	
 	<!-- Datetime that this index record was produced.  Defaults to now. Format:YYYYMMDDHHMM -->
 	<xsl:param name="dateIngestNow" >
-		<xsl:value-of select="format-dateTime(current-dateTime(), 'YYYYMMDDHHmm')"/>
+		<xsl:value-of select="format-dateTime(current-dateTime(), '[Y0001][M01][D01][H01][m01]')"/>
 	</xsl:param>
 	
 	<xsl:param name="policyFacet" />
@@ -1001,9 +1003,110 @@
 						<field name="shadowed_location_facet">VISIBLE</field>
 					</xsl:otherwise>
 				</xsl:choose>
+				<xsl:apply-templates select="*" />
 			</doc>
 		</add>
 	</xsl:template>
+
+    <xsl:template match="*">
+    	<xsl:apply-templates select="*" />
+    </xsl:template>
+	
+	<xsl:template match="*" mode="text">
+	  <xsl:value-of select="text()" /><xsl:text> </xsl:text>
+	  <xsl:apply-templates select="*" mode="text" />
+	</xsl:template>
+	
+	<xsl:template match="nuds:nuds">
+		<xsl:apply-templates select="*" />
+		<xsl:variable name="notes"><xsl:apply-templates select="*" mode="text" /></xsl:variable>
+		<field name="notes_text">
+			<xsl:value-of select="normalize-space($notes)"/>
+		</field>
+	</xsl:template>
+    	
+    <xsl:template match="nuds:objectType">
+    	<field name="format_facet">Physical Object</field>
+    	<field name="format_facet"><xsl:value-of select="text()"/></field>
+    </xsl:template>	
+    	
+    <xsl:template match="nuds:title">
+    	<field name="main_title_display">
+    		<xsl:value-of select="current()"/>
+    	</field>
+    	<!-- there can be only one! title facet will BREAK solr sorting if multiple values found -->
+    	<field name="title_facet">
+    		<xsl:value-of select="current()"/>
+    	</field>
+    	<field name="title_text">
+    		<xsl:value-of select="current()"/>
+    	</field>
+    	<field name="title_display">
+    		<xsl:value-of select="current()"/>
+    	</field>
+    	<field name="title_sort_facet">
+    		<xsl:value-of select="translate(current(), $uppercase, $lowercase)"/>
+    	</field>
+    </xsl:template>
+
+    <xsl:template match="nuds:collection">
+    	<xsl:variable name="collection"><xsl:value-of select="text()" /></xsl:variable>
+    	<field name="source_facet"><xsl:value-of select="$collection" /></field>
+    	<xsl:if test="starts-with($collection, 'The ')">
+    		<field name="collection_facet">Coins of the <xsl:value-of select="substring-after($collection, 'The ')"/></field>    		
+    	</xsl:if>
+    	<xsl:if test="not(starts-with($collection, 'The '))">
+    		<field name="collection_facet">Coins of <xsl:value-of select="$collection"/></field>
+    	</xsl:if>
+    </xsl:template>
+	<xsl:template match="nuds:findspotDesc">
+		<xsl:variable name="findspotUrl"><xsl:value-of select="@xlink:href"/><xsl:if test="starts-with(@xlink:href, 'http://nomisma.org')">.rdf</xsl:if></xsl:variable> 
+		<xsl:comment>Retreived content from <xsl:value-of select="$findspotUrl" /></xsl:comment>
+		<field name="collection_facet"><xsl:value-of select="document($findspotUrl)/rdf:RDF/nmo:Hoard/skos:prefLabel"/></field>
+	</xsl:template>
+	
+	<xsl:template match="nuds:otherRecordId[@semantic = 'dcterms:replaces']">
+		<field name="url_display"><xsl:value-of select="text()"/></field>
+	</xsl:template>
+	
+	<xsl:template match="nuds:geogname">
+		<field name="region_facet"><xsl:value-of select="text()" /></field>
+	</xsl:template>
+	
+	<xsl:template match="nuds:geogname[@xlink:role='mint']">
+		<field name="mint_display"><xsl:value-of select="text()"/></field>
+	</xsl:template>
+	
+	<xsl:template match="nuds:denomination">
+		<field name="denomination_display"><xsl:value-of select="text()"/></field>
+	</xsl:template>
+    
+	<xsl:template match="nuds:material">
+		<field name="material_display"><xsl:value-of select="text()"/></field>
+	</xsl:template>
+    
+	<xsl:template match="nuds:persname">
+		<field name="subject_facet"><xsl:value-of select="text()" /></field>
+	</xsl:template>
+	
+	<xsl:template match="nuds:control/nuds:recordId">
+		<field name="alternate_id_facet"><xsl:value-of select="concat('n', translate(text(), '.', '_'))"/></field>
+		<field name="accession_display"><xsl:value-of select="text()"/></field>
+	</xsl:template>
+	
+	<xsl:template match="nuds:dateRange/nuds:fromDate">
+	    <xsl:call-template name="addDateFields"><xsl:with-param name="standardDate" select="@standardDate" /></xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="nuds:date">
+		<xsl:call-template name="addDateFields"><xsl:with-param name="standardDate" select="@standardDate" /></xsl:call-template>
+	</xsl:template>
+	
+
+    <xsl:template name="addDateFields">
+    	<xsl:param name="standardDate" required="yes" />
+    	<field name="year_multisort_i"><xsl:value-of select="$standardDate"/></field>
+    </xsl:template>
 
 	<xsl:template name="format-marc-date">
 		<xsl:param name="date"/>
