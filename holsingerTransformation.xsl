@@ -1052,6 +1052,7 @@
     <xsl:template match="nuds:collection">
     	<xsl:variable name="collection"><xsl:value-of select="text()" /></xsl:variable>
     	<field name="source_facet"><xsl:value-of select="$collection" /></field>
+    	<field name="location_facet"><xsl:value-of select="$collection" /></field>
     	<xsl:if test="starts-with($collection, 'The ')">
     		<field name="collection_facet">Coins of the <xsl:value-of select="substring-after($collection, 'The ')"/></field>    		
     	</xsl:if>
