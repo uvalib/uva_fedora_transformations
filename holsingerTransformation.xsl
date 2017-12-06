@@ -1095,11 +1095,11 @@
 		<field name="accession_display"><xsl:value-of select="text()"/></field>
 	</xsl:template>
 	
-	<xsl:template match="nuds:dateRange/nuds:fromDate">
+	<xsl:template match="nuds:typeDesc/nuds:dateRange/nuds:fromDate">
 	    <xsl:call-template name="addDateFields"><xsl:with-param name="standardDate" select="@standardDate" /></xsl:call-template>
 	</xsl:template>
 
-	<xsl:template match="nuds:date">
+	<xsl:template match="nuds:typeDesc/nuds:date">
 		<xsl:call-template name="addDateFields"><xsl:with-param name="standardDate" select="@standardDate" /></xsl:call-template>
 	</xsl:template>
 	
