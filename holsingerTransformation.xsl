@@ -1027,6 +1027,9 @@
     	
     <xsl:template match="nuds:objectType">
     	<field name="format_facet">Physical Object</field>
+    	<xsl:if test="not(text() = 'Coin')">
+    		<field name="format_facet">Coin</field>    		
+    	</xsl:if>
     	<field name="format_facet"><xsl:value-of select="text()"/></field>
     </xsl:template>	
     	
