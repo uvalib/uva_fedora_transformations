@@ -4075,6 +4075,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 	<!-- genre 047 655	-->
 
 	<xsl:template name="createGenreFrom047">
+		<!--
 		<mods:genre authority="marcgt">
 			<xsl:attribute name="authority">
 				<xsl:value-of select="marc:subfield[@code='2']"/>
@@ -4085,6 +4086,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 				<xsl:with-param name="delimeter">-</xsl:with-param>
 			</xsl:call-template>
 		</mods:genre>
+		-->
 	</xsl:template>
 	<xsl:template name="createGenreFrom655">
 		<mods:genre authority="marcgt">
