@@ -4096,7 +4096,7 @@ Revision 1.02 - Added Log Comment  2003/03/24 19:37:42  ckeith
 			<xsl:call-template name="xxx880"/>
 			<xsl:call-template name="subfieldSelect">
 				<xsl:with-param name="codes">abvxyz</xsl:with-param>
-				<xsl:with-param name="delimeter">-</xsl:with-param>
+				<xsl:with-param name="delimeter">--</xsl:with-param>
 			</xsl:call-template>
 		</mods:genre>
 	</xsl:template>
