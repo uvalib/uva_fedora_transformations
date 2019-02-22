@@ -19,6 +19,8 @@
 	
 	<xsl:param name="iiifRoot" required="yes" />
 	
+	<xsl:param name="flipped" required="no" />
+	
 	<!-- 
 		In order to allow reuse of the mappings from the MODS metadata to SOLR fields
 		this parameter results in an incomplete SOLR document that does not make any
@@ -211,8 +213,12 @@
 					</field>
 				</xsl:if>
 				<field name="source_facet">UVA Library Digital Repository</field>
-				
-				<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$exemplarPid" />/full/!125,125/0/default.jpg</field>
+				<xsl:if test="$flipped">
+					<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$exemplarPid" />/full/!125,125/!0/default.jpg</field>
+				</xsl:if>
+				<xsl:if test="not($flipped)">
+					<field name="thumbnail_url_display"><xsl:value-of select="$iiifRoot" /><xsl:value-of select="$exemplarPid" />/full/!125,125/0/default.jpg</field>
+				</xsl:if>
 				<xsl:if test="not($excludeExternallyGenerated)">
 					<field name="feature_facet">iiif</field>
 					<field name="feature_facet">dl_metadata</field>
